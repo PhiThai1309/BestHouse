@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Best House</string>
+    <string name="place_holder">Place holder</string>
 </resources>
