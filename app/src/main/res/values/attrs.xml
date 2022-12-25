@@ -1,12 +1,12 @@
 <resources>
-    <attr name="colorRED" format="color" />
-    <attr name="colorOnRED" format="color" />
-    <attr name="colorREDContainer" format="color" />
-    <attr name="colorOnREDContainer" format="color" />
-    <attr name="harmonizeRED" format="boolean" />
-    <attr name="colorCustomColor2" format="color" />
-    <attr name="colorOnCustomColor2" format="color" />
-    <attr name="colorCustomColor2Container" format="color" />
-    <attr name="colorOnCustomColor2Container" format="color" />
-    <attr name="harmonizeCustomColor2" format="boolean" />
+    <attr name="colorWHITE" format="color" />
+    <attr name="colorOnWHITE" format="color" />
+    <attr name="colorWHITEContainer" format="color" />
+    <attr name="colorOnWHITEContainer" format="color" />
+    <attr name="harmonizeWHITE" format="boolean" />
+    <attr name="colorBLACK" format="color" />
+    <attr name="colorOnBLACK" format="color" />
+    <attr name="colorBLACKContainer" format="color" />
+    <attr name="colorOnBLACKContainer" format="color" />
+    <attr name="harmonizeBLACK" format="boolean" />
 </resources>

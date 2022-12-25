@@ -5,6 +5,7 @@ plugins {
 android {
     namespace 'com.team5.besthouse'
     compileSdk 32
+    dataBinding { enabled = true }
 
     defaultConfig {
         applicationId "com.team5.besthouse"
