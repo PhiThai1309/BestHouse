@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
-    tools:context=".DetailActivity">
+    tools:context=".activities.DetailActivity">
 
     <ScrollView
         android:id="@+id/scrollView2"

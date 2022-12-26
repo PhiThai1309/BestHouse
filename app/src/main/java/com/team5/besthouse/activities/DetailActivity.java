@@ -1,4 +1,4 @@
-package com.team5.besthouse;
+package com.team5.besthouse.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -6,6 +6,8 @@ import android.media.Image;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
+import com.team5.besthouse.R;
 
 public class DetailActivity extends AppCompatActivity {
 

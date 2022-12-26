@@ -3,4 +3,11 @@
     <string name="place_holder">Place holder</string>
     <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras eget malesuada lacus. Maecenas blandit bibendum sem, ac laoreet ipsum. Mauris aliquet feugiat diam quis aliquet. Quisque mollis laoreet turpis id tempor. In hac habitasse platea dictumst. Sed vehicula id ligula quis convallis. Duis id arcu et sapien maximus molestie et nec est. In maximus lacus mi, sit amet interdum elit porta at. Donec et tempor felis. Pellentesque pulvinar nulla ipsum, vitae consectetur quam ullamcorper vitae. Quisque ut sagittis ligula, in eleifend dolor.</string>
     <string name="description">Description:</string>
+    <string name="login_title">Login</string>
+    <string name="signup_title">Sign Up</string>
+    <string name="email_hint">Email:</string>
+    <string name="password_hint">Password:</string>
+    <string name="confirm_password_hint">Re-Enter Password:</string>
+    <string name="fullname_hint">Full name:</string>
+    <string name="phone_hint">Phone Number:</string>
 </resources>
