@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     tools:context=".DetailActivity">
 
     <ScrollView
@@ -27,7 +26,7 @@
                 android:padding="20dp">
 
                 <include
-                    layout="@layout/navbar"
+                    layout="@layout/returnbar"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginBottom="25dp" />
@@ -36,7 +35,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/place_holder"
-                    style="@style/Heading"/>
+                    android:layout_marginBottom="10dp"
+                    style="@style/Bold_Heading"/>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -64,15 +64,15 @@
 
                     <include
                         android:id="@+id/details_location"
-                        layout="@layout/feature_layout" />
+                        layout="@layout/feature_component" />
 
                     <include
                         android:id="@+id/details_bedroom"
-                        layout="@layout/feature_layout" />
+                        layout="@layout/feature_component" />
 
                     <include
                         android:id="@+id/details_other"
-                        layout="@layout/feature_layout" />
+                        layout="@layout/feature_component" />
                 </LinearLayout>
 
                 <com.google.android.material.imageview.ShapeableImageView
@@ -96,8 +96,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
                     android:text="@string/description"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
+                    style="@style/Heading" />
 
                 <TextView
                     style="@style/NormalText"

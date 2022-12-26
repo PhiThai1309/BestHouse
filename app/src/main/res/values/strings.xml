@@ -3,4 +3,8 @@
     <string name="place_holder">Place holder</string>
     <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras eget malesuada lacus. Maecenas blandit bibendum sem, ac laoreet ipsum. Mauris aliquet feugiat diam quis aliquet. Quisque mollis laoreet turpis id tempor. In hac habitasse platea dictumst. Sed vehicula id ligula quis convallis. Duis id arcu et sapien maximus molestie et nec est. In maximus lacus mi, sit amet interdum elit porta at. Donec et tempor felis. Pellentesque pulvinar nulla ipsum, vitae consectetur quam ullamcorper vitae. Quisque ut sagittis ligula, in eleifend dolor.</string>
     <string name="description">Description:</string>
+    <string name="recommended">Recommended</string>
+    <string name="home">Home</string>
+    <string name="search">Search</string>
+    <string name="account">Account</string>
 </resources>

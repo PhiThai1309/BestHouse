@@ -14,19 +14,49 @@
         <item name="cornerSizeBottomLeft">20dp</item>
     </style>
 
+    <style name="Card">
+        <item name="cornerFamily">rounded</item>
+        <!-- below items does not work with normal ImageView -->
+        <item name="cornerSizeTopRight">20dp</item>
+        <item name="cornerSizeTopLeft">20dp</item>
+        <item name="cornerSizeBottomRight">20dp</item>
+        <item name="cornerSizeBottomLeft">20dp</item>
+    </style>
+
+    <style name="Card2">
+        <item name="cornerFamily">rounded</item>
+        <!-- below items does not work with normal ImageView -->
+        <item name="cornerSizeTopRight">16dp</item>
+        <item name="cornerSizeTopLeft">16dp</item>
+        <item name="cornerSizeBottomRight">16dp</item>
+        <item name="cornerSizeBottomLeft">16dp</item>
+    </style>
+
+    <style name="CardStyle">
+        <item name="android:layout_margin">16dp</item>
+        <item name="cardCornerRadius">20dp</item>
+        <item name="strokeWidth">0dp</item>
+        <item name="cardElevation">40dp</item>
+    </style>
+
     <style name="AppTheme.GrayStatusBar" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimaryDark">@color/md_theme_surface</item>
     </style>
 
     <style name="Heading" parent="@android:style/Widget.TextView">
-        <item name="android:textSize">30sp</item>
+        <item name="android:textSize">20sp</item>
         <item name="android:textColor">@color/md_theme_onPrimaryContainer</item>
         <item name="android:textStyle">bold</item>
-        <item name= "android:layout_marginBottom">10dp</item>
+    </style>
+
+    <style name="Bold_Heading" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">32sp</item>
+        <item name="android:textColor">@color/md_theme_onPrimaryContainer</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="SubHeading" parent="@android:style/Widget.TextView">
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">18sp</item>
         <item name="android:fontFamily">sans-serif-thin</item>
     </style>
 
