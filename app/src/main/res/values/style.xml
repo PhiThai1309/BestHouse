@@ -44,13 +44,13 @@
     </style>
 
     <style name="Heading" parent="@android:style/Widget.TextView">
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">24sp</item>
         <item name="android:textColor">@color/md_theme_onPrimaryContainer</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <style name="Bold_Heading" parent="@android:style/Widget.TextView">
-        <item name="android:textSize">32sp</item>
+        <item name="android:textSize">30sp</item>
         <item name="android:textColor">@color/md_theme_onPrimaryContainer</item>
         <item name="android:textStyle">bold</item>
     </style>
@@ -74,7 +74,7 @@
 
 <!--    Card View   -->
     <style name="Card_Heading" parent="@android:style/Widget.TextView">
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">22sp</item>
         <item name="android:textColor">@color/md_theme_onPrimaryContainer</item>
         <item name="android:textStyle">bold</item>
     </style>

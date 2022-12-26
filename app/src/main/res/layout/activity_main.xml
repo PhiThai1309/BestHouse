@@ -6,102 +6,23 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
+    <androidx.fragment.app.FragmentContainerView
+        android:name="com.team5.besthouse.HomeFragment"
+        android:id="@+id/content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_margin="20dp"
-            android:orientation="horizontal"
-            android:weightSum="1">
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    style="@style/SubHeading"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:text="Location" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-                        android:src="@drawable/ic_outline_location_on_24" />
-
-                    <TextView
-                        style="@style/Heading"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:text="@string/place_holder" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginLeft="20dp"
-                android:src="@drawable/ic_outline_account_circle_24" />
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="12dp"
-            android:layout_margin="20dp"
-            style="@style/Bold_Heading"
-            android:text="Top near by"/>
-
-        <include
-            layout="@layout/feature_layout"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:layout_marginHorizontal="20dp"/>
-
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="12dp"
-            android:layout_margin="20dp"
-            style="@style/Bold_Heading"
-            android:text="@string/recommended"/>
-
-        <include
-            layout="@layout/main_layout"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:layout_marginHorizontal="20dp"/>
-
-    </LinearLayout>
-
-<!--    <LinearLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="90dp"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        android:orientation="vertical">-->
-<!--        <include-->
-<!--            android:id="@+id/main_navbar"-->
-<!--            layout="@layout/navbar"/>-->
-<!--    </LinearLayout>-->
+    <!--    <LinearLayout-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="90dp"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        android:orientation="vertical">-->
+    <!--        <include-->
+    <!--            android:id="@+id/main_navbar"-->
+    <!--            layout="@layout/navbar"/>-->
+    <!--    </LinearLayout>-->
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"

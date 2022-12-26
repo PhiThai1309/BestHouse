@@ -2,18 +2,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/item_1"
+        android:id="@+id/main"
         android:enabled="true"
         android:icon="@drawable/ic_outline_home_24"
         android:title="@string/home"/>
     <item
-        android:id="@+id/item_2"
+        android:id="@+id/search"
         android:enabled="true"
         android:icon="@drawable/ic_baseline_search_24"
         android:title="@string/search"/>
 
     <item
-        android:id="@+id/item_3"
+        android:id="@+id/account"
         android:enabled="true"
         android:icon="@drawable/ic_outline_account_circle_24"
         android:title="@string/account"/>
