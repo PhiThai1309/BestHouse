@@ -60,6 +60,15 @@ public class MainActivity extends AppCompatActivity {
         Window window = getWindow();
         window.setStatusBarColor(Color.TRANSPARENT);
 
+       String a = storeService.getStringValue(UnchangedValues.USER_ID_COL);
+
+        //mark user is login
+        storeService.storeBooleanValue(UnchangedValues.IS_LOGIN_TENANT, true);
+
+       showTextLong(a);
+
+
+    }
 
     private void showTextLong(String text)
     {
