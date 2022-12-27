@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.Window;
 
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.material.elevation.SurfaceColors;
 import com.google.android.material.navigation.NavigationBarView;
 import com.team5.besthouse.fragments.AccountFragment;
@@ -81,6 +82,8 @@ public class MainActivity extends AppCompatActivity {
                     FragmentTransaction fragmentTransaction3 = getSupportFragmentManager().beginTransaction();
                     fragmentTransaction3.replace(R.id.content, fragment3, "");
                     fragmentTransaction3.commit();
+
+
                     return true;
             }
             return false;
