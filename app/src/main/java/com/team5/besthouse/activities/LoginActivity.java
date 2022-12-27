@@ -53,6 +53,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void checkAlreadyLogin()
     {
+
         if(storeService.containValue(UnchangedValues.IS_LOGIN_LANDLORD) && storeService.containValue(UnchangedValues.LOGIN_USER))
         {
             Intent intent = new Intent(this, DetailActivity.class);
@@ -76,6 +77,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void setMoveToSignUpAction()
     {
+        storeService.clearTheStore();
         loginBinding.signupTitle.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -133,6 +135,13 @@ public class LoginActivity extends AppCompatActivity {
                             startActivity(intent);
                             finish();
                         }
+                        else
+                        {
+                            showTextLong("Invalid Credential!");
+                            // clear input
+                            loginBinding.email.getText().clear();
+                            loginBinding.password.getText().clear();
+                        }
                     }
                 });
             }
@@ -147,6 +156,7 @@ public class LoginActivity extends AppCompatActivity {
        if(!Pattern.compile(UnchangedValues.EMAIL_REGEX, Pattern.CASE_INSENSITIVE).matcher(inputEmail).matches())
        {
            showTextLong("Please Enter Valid Email");
+           return;
        }
        if(!Pattern.matches(UnchangedValues.PASSWORD_REGEX,inputPassword))
        {
@@ -198,12 +208,10 @@ public class LoginActivity extends AppCompatActivity {
                                      showTextLong(e.getMessage());
                                   }
                               }
-                              else
-                              {
-                                  direct.direct(false, null);
-                              }
-
-
+                          }
+                          else
+                          {
+                              direct.direct(false, null);
                           }
                       }
                   })
