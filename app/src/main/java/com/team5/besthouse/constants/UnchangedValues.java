@@ -3,6 +3,8 @@ package com.team5.besthouse.constants;
 public class UnchangedValues {
 
     public static final String ACCOUNT_CREATED_INTENT = "accountCreated";
+    public static final String LOGOUT_PERFORMED = "logout";
+
 
     public static final String USERS_TABLE = "users";
 
@@ -22,5 +24,6 @@ public class UnchangedValues {
     public static final String IS_LOGIN_LANDLORD = "landlordLoginSession";
 
     public static final String LOGIN_USER = "loginUser";
+
 
 }

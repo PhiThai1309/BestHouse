@@ -1,14 +1,21 @@
 package com.team5.besthouse.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.team5.besthouse.R;
+import com.team5.besthouse.activities.LoginActivity;
+import com.team5.besthouse.constants.UnchangedValues;
+import com.team5.besthouse.databinding.FragmentAccountBinding;
+import com.team5.besthouse.services.StoreService;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -21,6 +28,8 @@ public class AccountFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private FragmentAccountBinding binding;
+    private StoreService storeService;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -60,7 +69,38 @@ public class AccountFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        binding = FragmentAccountBinding.inflate(inflater, container, false);
+        storeService = new StoreService(getActivity().getApplicationContext());
+        setSignOutAction();
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_account, container, false);
+        return binding.getRoot();
+    }
+
+    private void setSignOutAction() {
+        binding.signOutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // make sure to clear the store service
+                if (storeService.clearTheStore()) {
+                    try {
+                        Intent intent = new Intent(getActivity(), LoginActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.putExtra(UnchangedValues.LOGOUT_PERFORMED, "logout");
+                        startActivity(intent);
+                    } catch (Exception e) {
+                        Log.d("ErrorLogout", e.getMessage());
+                        e.printStackTrace();
+                        showTextLong("Error: Can't Logout");
+                    }
+                } else {
+                    showTextLong("Error: Can't Logout");
+                }
+            }
+        });
+    }
+
+    private void showTextLong(String text)
+    {
+        Toast.makeText(getActivity().getApplicationContext(), text, Toast.LENGTH_LONG).show();
     }
 }

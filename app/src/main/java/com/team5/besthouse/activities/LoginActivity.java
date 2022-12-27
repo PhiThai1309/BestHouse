@@ -56,14 +56,14 @@ public class LoginActivity extends AppCompatActivity {
 
         if(storeService.containValue(UnchangedValues.IS_LOGIN_LANDLORD) && storeService.containValue(UnchangedValues.LOGIN_USER))
         {
-            Intent intent = new Intent(this, DetailActivity.class);
+            Intent intent = new Intent(getApplicationContext(), DetailActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             finish();
         }
         else if (storeService.containValue(UnchangedValues.IS_LOGIN_TENANT) && storeService.containValue(UnchangedValues.LOGIN_USER))
         {
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             finish();
@@ -77,7 +77,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private void setMoveToSignUpAction()
     {
-        storeService.clearTheStore();
         loginBinding.signupTitle.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -107,6 +106,16 @@ public class LoginActivity extends AppCompatActivity {
             if(accountCreated == true)
             {
                 showTextLong("Your Account Is Created");
+            }
+
+            try {
+               if(b.get(UnchangedValues.LOGOUT_PERFORMED) != null)
+               {
+                   showTextLong("Logout Successfully");
+               }
+            }catch (Exception e)
+            {
+                e.printStackTrace();
             }
         }
     }
