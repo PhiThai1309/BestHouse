@@ -3,11 +3,17 @@ package com.team5.besthouse;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 
+import com.google.android.material.elevation.SurfaceColors;
 import com.google.android.material.navigation.NavigationBarView;
 
 public class MainActivity extends AppCompatActivity {
@@ -17,6 +23,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //Set color to the navigation bar to match with the bottom navigation view
+        getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(this));
 
         actionBar = getSupportActionBar();
         NavigationBarView navigationView;
@@ -33,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         navigationView = findViewById(R.id.bottom_navigation);
         navigationView.setOnItemSelectedListener(selectedListener);
 
+
         // When we open the application first
         // time the fragment should be shown to the user
         // in this case it is home fragment
@@ -40,6 +50,9 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.content, fragment, "");
         fragmentTransaction.commit();
+
+        Window window = getWindow();
+        window.setStatusBarColor(Color.TRANSPARENT);
 
     }
 
@@ -60,6 +73,13 @@ public class MainActivity extends AppCompatActivity {
                     FragmentTransaction fragmentTransaction2 = getSupportFragmentManager().beginTransaction();
                     fragmentTransaction2.replace(R.id.content, fragment2, "");
                     fragmentTransaction2.commit();
+                    return true;
+
+                case R.id.search:
+                    MapsFragment fragment3 = new MapsFragment();
+                    FragmentTransaction fragmentTransaction3 = getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction3.replace(R.id.content, fragment3, "");
+                    fragmentTransaction3.commit();
                     return true;
             }
             return false;
