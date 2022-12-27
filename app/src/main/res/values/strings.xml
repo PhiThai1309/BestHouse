@@ -12,4 +12,11 @@
     <string name="location">Location</string>
     <string name="top_near_by">Top near by</string>
     <string name="search_location">Search location</string>
+    <string name="login_title">Login</string>
+    <string name="signup_title">Sign Up</string>
+    <string name="email_hint">Email:</string>
+    <string name="password_hint">Password:</string>
+    <string name="confirm_password_hint">Re-Enter Password:</string>
+    <string name="fullname_hint">Full name:</string>
+    <string name="phone_hint">Phone Number:</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.team5.besthouse;
+package com.team5.besthouse.fragments;
 
 import android.os.Bundle;
 
@@ -7,6 +7,8 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.team5.besthouse.R;
 
 /**
  * A simple {@link Fragment} subclass.

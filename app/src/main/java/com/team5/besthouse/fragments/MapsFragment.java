@@ -1,4 +1,4 @@
-package com.team5.besthouse;
+package com.team5.besthouse.fragments;
 
 import static android.content.ContentValues.TAG;
 
@@ -41,6 +41,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 import java.util.concurrent.Executor;
+import com.team5.besthouse.R;
 
 public class MapsFragment extends Fragment {
     public static final int PERMISSIONS_FINE_LOCATION = 99;

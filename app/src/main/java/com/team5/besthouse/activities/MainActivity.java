@@ -1,21 +1,22 @@
-package com.team5.besthouse;
+package com.team5.besthouse.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.material.elevation.SurfaceColors;
 import com.google.android.material.navigation.NavigationBarView;
+import com.team5.besthouse.fragments.AccountFragment;
+import com.team5.besthouse.fragments.HomeFragment;
+import com.team5.besthouse.fragments.MapsFragment;
+import com.team5.besthouse.R;
 
 public class MainActivity extends AppCompatActivity {
     ActionBar actionBar;
