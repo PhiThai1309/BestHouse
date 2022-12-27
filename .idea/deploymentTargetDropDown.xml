@@ -7,15 +7,6 @@
         <type value="RUNNING_DEVICE_TARGET" />
         <deviceKey>
           <Key>
-            <type value="SERIAL_NUMBER" />
-            <value value="R58MA6QC52B" />
-          </Key>
-        </deviceKey>
-      </Target>
-      <Target>
-        <type value="RUNNING_DEVICE_TARGET" />
-        <deviceKey>
-          <Key>
             <type value="VIRTUAL_DEVICE_PATH" />
             <value value="$USER_HOME$/.android/avd/Pixel_6_Pro_API_33.avd" />
           </Key>
