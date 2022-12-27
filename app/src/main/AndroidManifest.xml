@@ -33,12 +33,30 @@
             android:value="AIzaSyAd3X4HeqziXDjRmLNHkpcP18reu7n8Hn0" />
 
         <activity
-            android:name=".DetailActivity"
+            android:name=".activities.SignupActivity"
+            android:exported="false">
+
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".activities.LoginActivity"
+            android:exported="false">
+
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+
+        <activity
+            android:name=".activities.DetailActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+        
         <activity
             android:name=".MainActivity"
             android:exported="true">

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.SignupActivity">
+
+    <TextView
+        android:id="@+id/loginTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/login_title"
+        android:textSize="@dimen/_20sdp"
+        android:paddingStart="@dimen/_20sdp"
+        android:paddingBottom="@dimen/_10sdp"
+        android:paddingTop="@dimen/_10sdp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/md_theme_onPrimaryContainer"
+        android:textStyle="bold"
+        android:background="@drawable/login_background"
+        />
+
+    <LinearLayout
+        android:id="@+id/linearSignup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="@dimen/_20sdp"
+        android:paddingEnd="@dimen/_20sdp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loginTitle">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="@dimen/_200sdp"
+            android:layout_height="@dimen/_150sdp"
+            android:src="@drawable/besthouse_logo" />
+
+        <TextView
+            android:id="@+id/signupTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/signup_title"
+            android:textSize="@dimen/_30sdp"
+
+            android:paddingBottom="@dimen/_10sdp"
+            android:paddingTop="@dimen/_20sdp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:textColor="@color/md_theme_onPrimaryContainer"
+            android:textStyle="bold"
+            />
+
+        <EditText
+            android:id="@+id/email"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_50sdp"
+            android:layout_marginVertical="@dimen/_5sdp"
+            android:hint="@string/email_hint"
+            android:textSize="@dimen/_20ssp"
+            android:padding="@dimen/_10sdp"
+            android:imeOptions="actionNext"
+            android:inputType="textEmailAddress"
+            android:importantForAutofill="no"
+            android:background="@drawable/shadow_background"
+            android:textColor="@color/BLACK"/>
+
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_50sdp"
+            android:layout_marginVertical="@dimen/_5sdp"
+            android:hint="@string/password_hint"
+            android:textSize="@dimen/_20ssp"
+            android:padding="@dimen/_10sdp"
+            android:imeOptions="actionNext"
+            android:inputType="textPassword"
+            android:importantForAutofill="no"
+            android:background="@drawable/shadow_background"
+            android:textColor="@color/BLACK"/>
+
+
+        <EditText
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_50sdp"
+            android:layout_marginVertical="@dimen/_5sdp"
+            android:hint="@string/fullname_hint"
+            android:textSize="@dimen/_20ssp"
+            android:padding="@dimen/_10sdp"
+            android:imeOptions="actionNext"
+            android:inputType="textCapWords"
+            android:importantForAutofill="no"
+            android:background="@drawable/shadow_background"
+            android:textColor="@color/BLACK"/>
+
+        <EditText
+            android:id="@+id/phoneNumber"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_50sdp"
+            android:layout_marginVertical="@dimen/_5sdp"
+            android:hint="@string/phone_hint"
+            android:textSize="@dimen/_20ssp"
+            android:padding="@dimen/_10sdp"
+            android:imeOptions="actionDone"
+            android:inputType="phone"
+            android:importantForAutofill="no"
+            android:background="@drawable/shadow_background"
+            android:textColor="@color/BLACK"/>
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:orientation="horizontal">
+            <RadioButton
+                android:id="@+id/radio_landlord"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Landlord"
+                android:textSize="@dimen/_15ssp"
+                android:textColor="@color/md_theme_onPrimaryContainer"/>
+            <RadioButton
+                android:id="@+id/radio_tenant"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_100sdp"
+                android:text="Tenant"
+                android:textSize="@dimen/_15ssp"
+                android:textColor="@color/md_theme_onPrimaryContainer"/>
+        </RadioGroup>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/signupButton"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_50sdp"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:text="@string/signup_title"
+            android:textSize="@dimen/_15ssp"
+            android:textColor="@color/WHITE"
+            android:background="@drawable/button_background"/>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

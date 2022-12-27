@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "989436101239",
+    "project_id": "besthouse-5e55e",
+    "storage_bucket": "besthouse-5e55e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:989436101239:android:076fe17a31c50ead6b7c72",
+        "android_client_info": {
+          "package_name": "com.team5.besthouse"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "989436101239-m5c8v64515a9ka9c243u64elm79mpnjh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBrAV6Tt-m_hy5bWSlrjMZAaJVVBoPo8Gg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "989436101239-m5c8v64515a9ka9c243u64elm79mpnjh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
