@@ -19,7 +19,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="3"
-            android:hint="Search location"/>
+            android:hint="@string/search_location"/>
 
         <ImageButton
             android:layout_width="wrap_content"
