@@ -11,4 +11,10 @@
         android:layout_height="match_parent"
         android:text="asdasd" />
 
+    <Button
+        android:id="@+id/signOutButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sign out"/>
+
 </FrameLayout>
