@@ -9,18 +9,22 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.Window;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.material.elevation.SurfaceColors;
 import com.google.android.material.navigation.NavigationBarView;
+import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.fragments.AccountFragment;
 import com.team5.besthouse.fragments.HomeFragment;
 import com.team5.besthouse.fragments.MapsFragment;
 import com.team5.besthouse.R;
+import com.team5.besthouse.services.StoreService;
+import com.team5.besthouse.constants.UnchangedValues;
 
 public class MainActivity extends AppCompatActivity {
     ActionBar actionBar;
-
+    private StoreService storeService;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
         actionBar = getSupportActionBar();
         NavigationBarView navigationView;
-
+        storeService = new StoreService(getApplicationContext());
 //        LinearLayout navbar = findViewById(R.id.main_navbar);
 //
 //        ImageView home = navbar.findViewById(R.id.home);
@@ -56,6 +60,10 @@ public class MainActivity extends AppCompatActivity {
         Window window = getWindow();
         window.setStatusBarColor(Color.TRANSPARENT);
 
+
+    private void showTextLong(String text)
+    {
+        Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
     }
 
     private final NavigationBarView.OnItemSelectedListener selectedListener = new NavigationBarView.OnItemSelectedListener() {
