@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PatternMatcher;
 import android.view.View;
 import android.widget.Toast;
 
@@ -16,7 +15,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
-import com.team5.besthouse.R;
 import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.databinding.ActivityLoginBinding;
 import com.team5.besthouse.interfaces.DirectUICallback;
@@ -26,7 +24,6 @@ import com.team5.besthouse.models.User;
 import com.team5.besthouse.models.UserRole;
 import com.team5.besthouse.services.StoreService;
 
-import java.security.cert.Extension;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;

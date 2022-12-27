@@ -1,4 +1,4 @@
-package com.team5.besthouse;
+package com.team5.besthouse.fragments;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,6 +20,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.team5.besthouse.R;
 
 public class MapsFragment extends Fragment {
     private Activity mActivity;
