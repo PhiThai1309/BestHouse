@@ -63,7 +63,7 @@ public class LoginActivity extends AppCompatActivity {
         }
         else if (storeService.containValue(UnchangedValues.IS_LOGIN_TENANT) && storeService.containValue(UnchangedValues.LOGIN_USER))
         {
-            Intent intent = new Intent(this, DetailActivity.class);
+            Intent intent = new Intent(this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             finish();
@@ -128,8 +128,9 @@ public class LoginActivity extends AppCompatActivity {
                             }
                             else if (loginUserRole == UserRole.TENANT)
                             {
-                                intent = new Intent(getApplicationContext(), DetailActivity.class);
+                                intent = new Intent(getApplicationContext(), MainActivity.class);
                             }
+
 
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
