@@ -45,9 +45,6 @@ public class SignupActivity extends AppCompatActivity {
         //Set color to the navigation bar to match with the bottom navigation view
         getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(this));
 
-        Window window = getWindow();
-        window.setStatusBarColor(Color.TRANSPARENT);
-
 
         setSignUpAction();
         setActionBackToLogin();

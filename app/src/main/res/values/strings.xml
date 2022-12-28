@@ -14,6 +14,8 @@
     <string name="search_location">Search location</string>
     <string name="login_title">Login</string>
     <string name="signup_title">Sign Up</string>
+    <string name="signup_here">Have an account? Login Here</string>
+    <string name="login_here">Don\'t have an account? Sign Up Here</string>
     <string name="email_hint">Email:</string>
     <string name="password_hint">Password:</string>
     <string name="confirm_password_hint">Re-Enter Password:</string>
