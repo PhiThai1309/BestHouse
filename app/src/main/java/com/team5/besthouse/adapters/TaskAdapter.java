@@ -1,6 +1,5 @@
-package com.team5.besthouse;
+package com.team5.besthouse.adapters;
 
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,11 +8,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.card.MaterialCardView;
+import com.team5.besthouse.R;
 import com.team5.besthouse.activities.MainActivity;
 import com.team5.besthouse.models.Property;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 
