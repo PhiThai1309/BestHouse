@@ -119,6 +119,10 @@ public class HomeFragment extends Fragment {
         adapter2 = new PropertyAdapter2((MainActivity) getContext(), list);
         propertyView.setAdapter(adapter2);
 
+        featureView.setHasFixedSize(true);
+        propertyView.setHasFixedSize(true);
+
+
         // Inflate the layout for this fragment
         return view;
     }
