@@ -1,8 +1,6 @@
 package com.team5.besthouse.models;
 
 public class Coordinates {
-
-
     private double elevation;
     private double longitude;
     private double latitude;

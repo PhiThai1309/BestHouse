@@ -12,11 +12,10 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="20dp"
-        android:weightSum="3.25">
+        android:weightSum="3.1">
         <com.google.android.material.imageview.ShapeableImageView
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:maxHeight="100dp"
+            android:layout_height="100dp"
             android:layout_weight="1.1"
             android:scaleType="centerCrop"
             app:shapeAppearanceOverlay="@style/Card2"
@@ -32,6 +31,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/property_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/place_holder"
@@ -47,6 +47,7 @@
                     android:layout_height="15dp"
                     android:src="@drawable/ic_outline_location_on_grey_24"/>
                 <TextView
+                    android:id="@+id/property_address"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     style="@style/Card_SubHeading"
@@ -55,6 +56,7 @@
 
 
             <TextView
+                android:id="@+id/property_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/place_holder"

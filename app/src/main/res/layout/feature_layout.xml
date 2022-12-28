@@ -11,12 +11,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:weightSum="3">
+        android:weightSum="2.75">
         <com.google.android.material.imageview.ShapeableImageView
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:maxHeight="150dp"
-            android:layout_weight="3"
+            android:layout_weight="1.75"
             android:scaleType="centerCrop"
             app:shapeAppearanceOverlay="@style/Card"
             android:adjustViewBounds="true"
@@ -24,8 +24,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
+            android:layout_height="0dp"
             android:layout_margin="20dp"
             android:layout_weight="1"
             android:orientation="vertical">

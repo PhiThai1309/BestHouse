@@ -1,8 +1,6 @@
 package com.team5.besthouse.models;
 
 public class PropertyAddress {
-
-
     private String street;
     private String ward;
     private String city;
