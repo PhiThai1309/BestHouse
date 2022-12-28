@@ -19,4 +19,6 @@
     <string name="confirm_password_hint">Re-Enter Password:</string>
     <string name="fullname_hint">Full name:</string>
     <string name="phone_hint">Phone Number:</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>
