@@ -4,7 +4,9 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SnapHelper;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -90,6 +92,9 @@ public class HomeFragment extends Fragment {
         featureView.setHasFixedSize(true);
         featureView.setLayoutManager(linearLayoutManager);
 
+        SnapHelper helper = new LinearSnapHelper();
+        helper.attachToRecyclerView(featureView);
+
         list = new ArrayList<>();
         adapter1 = new PropertyAdapter((MainActivity) getContext(), list);
         featureView.setAdapter(adapter1);
@@ -113,6 +118,7 @@ public class HomeFragment extends Fragment {
         propertyView.setNestedScrollingEnabled(false);
         adapter2 = new PropertyAdapter2((MainActivity) getContext(), list);
         propertyView.setAdapter(adapter2);
+
         // Inflate the layout for this fragment
         return view;
     }
