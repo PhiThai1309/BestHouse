@@ -34,6 +34,22 @@
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="10dp"
                 app:strokeWidth="0dp">
+                <EditText
+                    android:id="@+id/name"
+                    style="@style/Widget.Material3.TextInputEditText.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/fullname_hint"
+                    android:imeOptions="actionNext"
+                    android:importantForAutofill="no"
+                    android:inputType="textCapWords"/>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="10dp"
+                app:strokeWidth="0dp">
 
                 <EditText
                     android:id="@+id/email"
@@ -63,21 +79,7 @@
                     android:inputType="textPassword" />
             </com.google.android.material.card.MaterialCardView>
 
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="10dp"
-                app:strokeWidth="0dp">
-                <EditText
-                    android:id="@+id/name"
-                    style="@style/Widget.Material3.TextInputEditText.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/fullname_hint"
-                    android:imeOptions="actionNext"
-                    android:importantForAutofill="no"
-                    android:inputType="textCapWords"/>
-            </com.google.android.material.card.MaterialCardView>
+
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
@@ -119,24 +121,23 @@
                     android:textSize="@dimen/_15ssp" />
             </RadioGroup>
 
-            <Button
-                android:id="@+id/signupButton"
-                style="@style/Widget.Material3.Button.Icon"
+            <TextView
+                android:id="@+id/loginTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_20sdp"
+                android:gravity="end"
                 android:paddingVertical="18dp"
-                android:text="@string/signup_title"/>
+                android:text="@string/signup_here"
+                style="@style/SubHeading"/>
         </LinearLayout>
     </ScrollView>
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/loginTitle"
+        android:id="@+id/signupButton"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_margin="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginVertical="40dp"
+        android:layout_marginHorizontal="20dp"
         android:layout_weight="0.75"
         app:cardCornerRadius="20dp"
         app:cardElevation="20dp"
@@ -153,16 +154,16 @@
             android:paddingHorizontal="20dp"
             android:paddingVertical="14dp">
             <TextView
-                style="@style/Bold_Heading"
+                style="@style/Heading"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:text="@string/login_title"
+                android:text="@string/signup_title"
                 android:layout_weight="2.5"/>
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:src="@drawable/ic_round_arrow_back_24"
+                android:src="@drawable/ic_round_arrow_forward_24"
                 android:layout_weight="0.5"/>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
