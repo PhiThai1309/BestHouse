@@ -50,7 +50,13 @@
     </style>
 
     <style name="Bold_Heading" parent="@android:style/Widget.TextView">
-        <item name="android:textSize">30sp</item>
+        <item name="android:textSize">34sp</item>
+        <item name="android:textColor">@color/md_theme_onPrimaryContainer</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Bold_Large_Heading" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">38sp</item>
         <item name="android:textColor">@color/md_theme_onPrimaryContainer</item>
         <item name="android:textStyle">bold</item>
     </style>

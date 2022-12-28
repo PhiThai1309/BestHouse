@@ -2,14 +2,23 @@ package com.team5.besthouse.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.elevation.SurfaceColors;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -28,6 +37,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import dev.chrisbanes.insetter.Insetter;
+
 public class LoginActivity extends AppCompatActivity {
 
     private ActivityLoginBinding loginBinding;
@@ -41,6 +52,11 @@ public class LoginActivity extends AppCompatActivity {
 
         // set up store service
         storeService = new StoreService(getApplicationContext());
+
+//        Window window = getWindow();
+//        window.setStatusBarColor(Color.TRANSPARENT);
+
+        getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(this));
 
         // check if user already login
         checkAlreadyLogin();
@@ -242,4 +258,5 @@ public class LoginActivity extends AppCompatActivity {
     {
         Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
     }
+
 }

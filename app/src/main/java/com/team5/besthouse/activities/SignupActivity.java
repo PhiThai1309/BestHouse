@@ -2,14 +2,20 @@ package com.team5.besthouse.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.elevation.SurfaceColors;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -35,6 +41,13 @@ public class SignupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         signupBinding = ActivitySignupBinding.inflate(getLayoutInflater());
         setContentView(signupBinding.getRoot());
+
+        //Set color to the navigation bar to match with the bottom navigation view
+        getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(this));
+
+        Window window = getWindow();
+        window.setStatusBarColor(Color.TRANSPARENT);
+
 
         setSignUpAction();
         setActionBackToLogin();
