@@ -84,7 +84,8 @@
                 android:layout_height="wrap_content"
                 android:gravity="end"
                 android:paddingVertical="18dp"
-                android:text="@string/login_here" />
+                android:text="@string/login_here"
+                style="@style/SubHeading"/>
         </LinearLayout>
     </LinearLayout>
 

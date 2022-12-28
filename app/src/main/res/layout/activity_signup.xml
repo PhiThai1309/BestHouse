@@ -34,6 +34,22 @@
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="10dp"
                 app:strokeWidth="0dp">
+                <EditText
+                    android:id="@+id/name"
+                    style="@style/Widget.Material3.TextInputEditText.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/fullname_hint"
+                    android:imeOptions="actionNext"
+                    android:importantForAutofill="no"
+                    android:inputType="textCapWords"/>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="10dp"
+                app:strokeWidth="0dp">
 
                 <EditText
                     android:id="@+id/email"
@@ -63,21 +79,7 @@
                     android:inputType="textPassword" />
             </com.google.android.material.card.MaterialCardView>
 
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="10dp"
-                app:strokeWidth="0dp">
-                <EditText
-                    android:id="@+id/name"
-                    style="@style/Widget.Material3.TextInputEditText.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/fullname_hint"
-                    android:imeOptions="actionNext"
-                    android:importantForAutofill="no"
-                    android:inputType="textCapWords"/>
-            </com.google.android.material.card.MaterialCardView>
+
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
@@ -125,7 +127,8 @@
                 android:layout_height="wrap_content"
                 android:gravity="end"
                 android:paddingVertical="18dp"
-                android:text="@string/signup_here" />
+                android:text="@string/signup_here"
+                style="@style/SubHeading"/>
         </LinearLayout>
     </ScrollView>
 
