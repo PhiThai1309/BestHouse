@@ -17,6 +17,7 @@ import com.google.android.material.navigation.NavigationBarView;
 import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.fragments.AccountFragment;
 import com.team5.besthouse.fragments.HomeFragment;
+import com.team5.besthouse.fragments.LandlordHomeFragment;
 import com.team5.besthouse.fragments.MapsFragment;
 import com.team5.besthouse.R;
 import com.team5.besthouse.services.StoreService;

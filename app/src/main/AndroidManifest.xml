@@ -17,7 +17,7 @@
         android:theme="@style/AppTheme"
         tools:targetApi="31">
         <activity
-            android:name=".LandlordActivity"
+            android:name=".activities.LandlordActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

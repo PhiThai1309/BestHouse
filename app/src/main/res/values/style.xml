@@ -97,6 +97,8 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-
-
+<!--   Floating Button  -->
+    <style name="floating_Button" parent="Widget.Design.FloatingActionButton">
+        <item name="cornerFamily">rounded</item>
+    </style>
 </resources>

@@ -31,6 +31,7 @@
     <color name="md_theme_surfaceTint">#895100</color>
     <color name="md_theme_outlineVariant">#D5C3B5</color>
     <color name="md_theme_scrim">#000000</color>
+    <color name="floatButtonColor">#A8927D</color>
 
     <color name="WHITE">#FFFFFF</color>
     <color name="BLACK">#000000</color>

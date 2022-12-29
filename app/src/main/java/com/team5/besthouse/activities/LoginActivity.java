@@ -56,7 +56,7 @@ public class LoginActivity extends AppCompatActivity {
 
         if(storeService.containValue(UnchangedValues.IS_LOGIN_LANDLORD) && storeService.containValue(UnchangedValues.LOGIN_USER))
         {
-            Intent intent = new Intent(getApplicationContext(), DetailActivity.class);
+            Intent intent = new Intent(getApplicationContext(), LandlordActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             finish();

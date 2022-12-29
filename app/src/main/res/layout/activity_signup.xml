@@ -4,141 +4,168 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.SignupActivity">
+    tools:context=".activities.SignupActivity"
+    android:orientation="vertical"
+    android:background="@color/md_theme_outlineVariant">
 
-    <TextView
-        android:id="@+id/loginTitle"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/login_title"
-        android:textSize="@dimen/_20sdp"
-        android:paddingStart="@dimen/_20sdp"
-        android:paddingBottom="@dimen/_10sdp"
-        android:paddingTop="@dimen/_10sdp"
+        android:padding="20dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:textColor="@color/md_theme_onPrimaryContainer"
-        android:textStyle="bold"
-        android:background="@drawable/login_background"
-        />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <LinearLayout
-        android:id="@+id/linearSignup"
+        <LinearLayout
+            android:id="@+id/linearSignup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/signupTitle"
+                style="@style/Bold_Heading"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="30dp"
+                android:text="@string/signup_title" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="10dp"
+                app:strokeWidth="0dp">
+                <EditText
+                    android:id="@+id/name"
+                    style="@style/Widget.Material3.TextInputEditText.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/fullname_hint"
+                    android:imeOptions="actionNext"
+                    android:importantForAutofill="no"
+                    android:inputType="textCapWords"/>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="10dp"
+                app:strokeWidth="0dp">
+
+                <EditText
+                    android:id="@+id/email"
+                    style="@style/Widget.Material3.TextInputEditText.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/email_hint"
+                    android:imeOptions="actionNext"
+                    android:importantForAutofill="no"
+                    android:inputType="textEmailAddress" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="10dp"
+                app:strokeWidth="0dp">
+
+                <EditText
+                    android:id="@+id/password"
+                    style="@style/Widget.Material3.TextInputEditText.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/password_hint"
+                    android:imeOptions="actionNext"
+                    android:importantForAutofill="no"
+                    android:inputType="textPassword" />
+            </com.google.android.material.card.MaterialCardView>
+
+
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="10dp"
+                app:strokeWidth="0dp">
+                <EditText
+                    android:id="@+id/phoneNumber"
+                    style="@style/Widget.Material3.TextInputEditText.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/phone_hint"
+                    android:imeOptions="actionDone"
+                    android:importantForAutofill="no"
+                    android:inputType="phone"/>
+            </com.google.android.material.card.MaterialCardView>
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/radio_landlord"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Landlord"
+                    android:textColor="@color/md_theme_onPrimaryContainer"
+                    android:textSize="@dimen/_15ssp" />
+
+                <RadioButton
+                    android:id="@+id/radio_tenant"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_100sdp"
+                    android:text="Tenant"
+                    android:textColor="@color/md_theme_onPrimaryContainer"
+                    android:textSize="@dimen/_15ssp" />
+            </RadioGroup>
+
+            <TextView
+                android:id="@+id/loginTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:paddingVertical="18dp"
+                android:text="signup_here"
+                style="@style/SubHeading"/>
+        </LinearLayout>
+    </ScrollView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/signupButton"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingStart="@dimen/_20sdp"
-        android:paddingEnd="@dimen/_20sdp"
+        android:layout_height="0dp"
+        android:layout_marginVertical="40dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_weight="0.75"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/loginTitle">
+        app:strokeWidth="0dp">
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:layout_width="@dimen/_200sdp"
-            android:layout_height="@dimen/_150sdp"
-            android:src="@drawable/besthouse_logo" />
-
-        <TextView
-            android:id="@+id/signupTitle"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/signup_title"
-            android:textSize="@dimen/_30sdp"
-
-            android:paddingBottom="@dimen/_10sdp"
-            android:paddingTop="@dimen/_20sdp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:textColor="@color/md_theme_onPrimaryContainer"
-            android:textStyle="bold"
-            />
-
-        <EditText
-            android:id="@+id/email"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_50sdp"
-            android:layout_marginVertical="@dimen/_5sdp"
-            android:hint="@string/email_hint"
-            android:textSize="@dimen/_20ssp"
-            android:padding="@dimen/_10sdp"
-            android:imeOptions="actionNext"
-            android:inputType="textEmailAddress"
-            android:importantForAutofill="no"
-            android:background="@drawable/shadow_background"
-            android:textColor="@color/BLACK"/>
-
-        <EditText
-            android:id="@+id/password"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_50sdp"
-            android:layout_marginVertical="@dimen/_5sdp"
-            android:hint="@string/password_hint"
-            android:textSize="@dimen/_20ssp"
-            android:padding="@dimen/_10sdp"
-            android:imeOptions="actionNext"
-            android:inputType="textPassword"
-            android:importantForAutofill="no"
-            android:background="@drawable/shadow_background"
-            android:textColor="@color/BLACK"/>
-
-
-        <EditText
-            android:id="@+id/name"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_50sdp"
-            android:layout_marginVertical="@dimen/_5sdp"
-            android:hint="@string/fullname_hint"
-            android:textSize="@dimen/_20ssp"
-            android:padding="@dimen/_10sdp"
-            android:imeOptions="actionNext"
-            android:inputType="textCapWords"
-            android:importantForAutofill="no"
-            android:background="@drawable/shadow_background"
-            android:textColor="@color/BLACK"/>
-
-        <EditText
-            android:id="@+id/phoneNumber"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_50sdp"
-            android:layout_marginVertical="@dimen/_5sdp"
-            android:hint="@string/phone_hint"
-            android:textSize="@dimen/_20ssp"
-            android:padding="@dimen/_10sdp"
-            android:imeOptions="actionDone"
-            android:inputType="phone"
-            android:importantForAutofill="no"
-            android:background="@drawable/shadow_background"
-            android:textColor="@color/BLACK"/>
-
-        <RadioGroup
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:orientation="horizontal">
-            <RadioButton
-                android:id="@+id/radio_landlord"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:weightSum="3"
+            android:paddingHorizontal="20dp"
+            android:paddingVertical="14dp">
+            <TextView
+                style="@style/Heading"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Landlord"
-                android:textSize="@dimen/_15ssp"
-                android:textColor="@color/md_theme_onPrimaryContainer"/>
-            <RadioButton
-                android:id="@+id/radio_tenant"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="@string/signup_title"
+                android:layout_weight="2.5"/>
+            <ImageView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_100sdp"
-                android:text="Tenant"
-                android:textSize="@dimen/_15ssp"
-                android:textColor="@color/md_theme_onPrimaryContainer"/>
-        </RadioGroup>
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/signupButton"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_50sdp"
-            android:layout_marginTop="@dimen/_20sdp"
-            android:text="@string/signup_title"
-            android:textSize="@dimen/_15ssp"
-            android:textColor="@color/WHITE"
-            android:background="@drawable/button_background"/>
-    </LinearLayout>
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_round_arrow_forward_24"
+                android:layout_weight="0.5"/>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

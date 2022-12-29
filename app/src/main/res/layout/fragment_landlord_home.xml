@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.LandlordHomeFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".activities.MainActivity">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:id="@+id/linearLayout"
@@ -36,8 +37,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
-                        android:text="WELCOME!"
-                        />
+                        android:text="WELCOME!" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -45,7 +45,6 @@
                         android:gravity="center"
                         android:orientation="horizontal"
                         tools:ignore="UseCompoundDrawables">
-
 
                         <TextView
                             style="@style/Bold_SubHeading"
@@ -63,27 +62,25 @@
                     android:src="@drawable/ic_outline_account_circle_24" />
             </LinearLayout>
 
-            <include
-                layout="@layout/search_layout"/>
+            <include layout="@layout/search_layout" />
 
             <TextView
+                style="@style/Bold_Heading"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="12dp"
                 android:layout_margin="20dp"
-                style="@style/Bold_Heading"
-                android:text="Your Listing"/>
+                android:paddingTop="12dp"
+                android:text="Your Listing" />
 
             <include
                 layout="@layout/feature_layout"
-                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:layout_marginHorizontal="20dp"/>
-
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp" />
 
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
 </FrameLayout>
+
