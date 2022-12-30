@@ -133,7 +133,7 @@ public class LoginActivity extends AppCompatActivity {
                             Intent intent = null;
                             if(loginUserRole == UserRole.LANDLORD)
                             {
-                                intent = new Intent(getApplicationContext(), DetailActivity.class);
+                                intent = new Intent(getApplicationContext(), LandlordActivity.class);
                             }
                             else if (loginUserRole == UserRole.TENANT)
                             {

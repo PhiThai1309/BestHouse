@@ -4,9 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
+
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.Toast;
 import com.google.android.material.elevation.SurfaceColors;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -33,6 +36,7 @@ public class LandlordActivity extends AppCompatActivity {
 
         actionBar = getSupportActionBar();
         NavigationBarView navigationView;
+        storeService = new StoreService(getApplicationContext());
 
         navigationView = findViewById(R.id.landlord_bottom_navigation);
         navigationView.setOnItemSelectedListener(selectedListener);
@@ -44,6 +48,9 @@ public class LandlordActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.content, fragment, "");
         fragmentTransaction.commit();
+
+        Window window = getWindow();
+        window.setStatusBarColor(Color.TRANSPARENT);
 
         String a = storeService.getStringValue(UnchangedValues.LOGIN_USER);
         storeService.storeBooleanValue(UnchangedValues.IS_LOGIN_LANDLORD, true);
