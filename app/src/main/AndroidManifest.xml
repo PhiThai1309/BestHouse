@@ -17,6 +17,13 @@
         android:theme="@style/AppTheme"
         tools:targetApi="31">
         <activity
+            android:name=".activities.AddPropertyActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".activities.LandlordActivity"
             android:exported="false">
             <meta-data
@@ -42,7 +49,6 @@
             android:name=".activities.SignupActivity"
             android:exported="false"
             android:windowSoftInputMode="stateHidden|adjustPan">
-
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />

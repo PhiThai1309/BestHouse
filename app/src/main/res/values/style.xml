@@ -105,4 +105,10 @@
     <style name="floating_Button" parent="Widget.Design.FloatingActionButton">
         <item name="cornerFamily">rounded</item>
     </style>
+
+<!--   Continue Button  -->
+    <style name="continue_button">
+        <item name="android:backgroundTint">@color/almost_dark</item>
+        <item name="cornerRadius">10dp</item>
+    </style>
 </resources>

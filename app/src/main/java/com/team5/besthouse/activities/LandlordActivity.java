@@ -5,6 +5,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -20,6 +21,7 @@ import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.fragments.AccountFragment;
 import com.team5.besthouse.fragments.HomeFragment;
 import com.team5.besthouse.fragments.LandlordHomeFragment;
+import com.team5.besthouse.models.Landlord;
 import com.team5.besthouse.services.StoreService;
 
 
@@ -61,8 +63,10 @@ public class LandlordActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Adding Properties", Snackbar.LENGTH_LONG)
-                        .setAction("Testing", null).show();
+               Intent intent = new Intent(LandlordActivity.this, AddPropertyActivity.class);
+               intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+               startActivity(intent);
+               finish();
             }
         });
     }

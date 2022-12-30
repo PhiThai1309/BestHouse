@@ -32,7 +32,7 @@
     <color name="md_theme_outlineVariant">#D5C3B5</color>
     <color name="md_theme_scrim">#000000</color>
     <color name="floatButtonColor">#A8927D</color>
-
+    <color name="almost_dark">#333532</color>
     <color name="WHITE">#FFFFFF</color>
     <color name="BLACK">#000000</color>
     <color name="light_blue_600">#FF039BE5</color>
