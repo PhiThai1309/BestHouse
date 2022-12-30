@@ -127,7 +127,6 @@
                 android:layout_height="wrap_content"
                 android:gravity="end"
                 android:paddingVertical="18dp"
-                android:text="signup_here"
                 android:text="@string/signup_here"
                 style="@style/SubHeading"/>
         </LinearLayout>
