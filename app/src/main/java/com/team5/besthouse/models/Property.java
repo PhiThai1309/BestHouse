@@ -6,6 +6,7 @@ public class Property {
 
     private String id;
     private String landlordEmail;
+    private String propertyName;
     private PropertyAddress address;
     private PropertyStatus status;
     private PropertyType type;
@@ -15,8 +16,9 @@ public class Property {
     private float monthlyPrice;
     private float area;
 
-    public Property(String id, String landlordEmail, PropertyAddress address, PropertyType type, int bedrooms, int bathrooms, List<Utilities> utilities, float monthlyPrice, float area) {
+    public Property(String id, String propertyName, String landlordEmail, PropertyAddress address, PropertyType type, int bedrooms, int bathrooms, List<Utilities> utilities, float monthlyPrice, float area) {
         this.id = id;
+        this.propertyName = propertyName;
         this.landlordEmail = landlordEmail;
         this.address = address;
         this.type = type;
@@ -29,6 +31,10 @@ public class Property {
 
     public String getId() {
         return id;
+    }
+
+    public String getPropertyName() {
+        return propertyName;
     }
 
     public String getLandlordEmail() {

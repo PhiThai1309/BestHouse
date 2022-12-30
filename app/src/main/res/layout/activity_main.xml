@@ -11,7 +11,9 @@
         android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home"
+        android:clipToPadding="false"
+        android:paddingBottom="80dp"/>
 
     <!--    <LinearLayout-->
     <!--        android:layout_width="match_parent"-->

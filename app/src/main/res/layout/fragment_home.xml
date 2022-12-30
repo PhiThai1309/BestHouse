@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".fragments.HomeFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".activities.MainActivity">
@@ -14,7 +14,7 @@
         <LinearLayout
             android:id="@+id/linearLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <LinearLayout
@@ -74,33 +74,44 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="12dp"
-                android:layout_margin="20dp"
+                android:layout_marginHorizontal="20dp"
                 style="@style/Bold_Heading"
                 android:text="@string/top_near_by"/>
 
-            <include
-                layout="@layout/feature_layout"
-                android:layout_height="wrap_content"
+<!--            <include-->
+<!--                layout="@layout/feature_layout"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_marginHorizontal="20dp"/>-->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/feature_property"
                 android:layout_width="match_parent"
-                android:layout_marginHorizontal="20dp"/>
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                tools:listitem="@layout/feature_layout"/>
 
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="12dp"
-                android:layout_margin="20dp"
+                android:layout_marginHorizontal="20dp"
                 style="@style/Bold_Heading"
                 android:text="@string/recommended"/>
 
-            <include
-                layout="@layout/main_layout"
-                android:layout_height="wrap_content"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/main_property"
                 android:layout_width="match_parent"
-                android:layout_marginHorizontal="20dp"/>
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                tools:listitem="@layout/main_layout"/>
 
         </LinearLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
 
 </FrameLayout>

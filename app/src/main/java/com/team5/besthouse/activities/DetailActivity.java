@@ -2,11 +2,14 @@ package com.team5.besthouse.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Color;
 import android.media.Image;
 import android.os.Bundle;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.google.android.material.elevation.SurfaceColors;
 import com.team5.besthouse.R;
 
 public class DetailActivity extends AppCompatActivity {
@@ -15,6 +18,12 @@ public class DetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+
+        Window window = getWindow();
+        window.setStatusBarColor(Color.TRANSPARENT);
+
+        //Set color to the navigation bar to match with the bottom navigation view
+        getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(this));
 
         LinearLayout bedroom = findViewById(R.id.details_bedroom);
         LinearLayout other = findViewById(R.id.details_other);
