@@ -3,6 +3,8 @@ package com.team5.besthouse.fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,17 @@ import android.widget.Toast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.team5.besthouse.R;
+import com.team5.besthouse.activities.LandlordActivity;
+import com.team5.besthouse.adapters.LandlordPropertyAdapter;
+import com.team5.besthouse.models.Coordinates;
+import com.team5.besthouse.models.Property;
+import com.team5.besthouse.models.PropertyAddress;
+import com.team5.besthouse.models.PropertyType;
+import com.team5.besthouse.models.Utilities;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -19,6 +32,10 @@ import com.team5.besthouse.R;
  * create an instance of this fragment.
  */
 public class LandlordHomeFragment extends Fragment {
+    private RecyclerView postedPropertyView;
+    private List<Property> list;
+    private LandlordPropertyAdapter landlordAdapter;
+
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -63,7 +80,29 @@ public class LandlordHomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_landlord_home, container, false);
+
+        list = new ArrayList<>();
+        Coordinates coordinates = new Coordinates(12, 32, 12);
+        PropertyAddress address = new PropertyAddress("123", "123", "123", "123", "123", "123", coordinates);
+        list.add(new Property("213", "123", "213", address, PropertyType.APARTMENT, 12, 12, Collections.singletonList(Utilities.ELECTRIC), (float) 12.0, (float) 12.0));
+        list.add(new Property("213", "123", "213", address, PropertyType.APARTMENT, 12, 12, Collections.singletonList(Utilities.ELECTRIC), (float) 12.0, (float) 12.0));
+        list.add(new Property("213", "123", "213", address, PropertyType.APARTMENT, 12, 12, Collections.singletonList(Utilities.ELECTRIC), (float) 12.0, (float) 12.0));
+        list.add(new Property("213", "123", "213", address, PropertyType.APARTMENT, 12, 12, Collections.singletonList(Utilities.ELECTRIC), (float) 12.0, (float) 12.0));
+        list.add(new Property("213", "123", "213", address, PropertyType.APARTMENT, 12, 12, Collections.singletonList(Utilities.ELECTRIC), (float) 12.0, (float) 12.0));
+
+        postedPropertyView = (RecyclerView) view.findViewById(R.id.posted_property);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        //Set the layout manager
+        linearLayoutManager.setStackFromEnd(true);
+        linearLayoutManager.setReverseLayout(true);
+        postedPropertyView.setHasFixedSize(true);
+        postedPropertyView.setLayoutManager(linearLayoutManager);
+
+        postedPropertyView.setNestedScrollingEnabled(false);
+        landlordAdapter = new LandlordPropertyAdapter((LandlordActivity) getContext(), list);
+        postedPropertyView.setAdapter(landlordAdapter);
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_landlord_home, container, false);
+        return view;
     }
 }

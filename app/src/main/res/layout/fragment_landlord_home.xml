@@ -7,9 +7,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.LandlordHomeFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        tools:context=".activities.MainActivity">
 
         <LinearLayout
             android:id="@+id/linearLayout"
@@ -72,15 +73,19 @@
                 android:paddingTop="12dp"
                 android:text="Your Listing" />
 
-            <include
-                layout="@layout/feature_layout"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/posted_property"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="20dp" />
+                android:paddingHorizontal="@dimen/_25sdp"
+                android:orientation="vertical"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                tools:listitem="@layout/feature_layout"/>
 
         </LinearLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
 
 </FrameLayout>
 

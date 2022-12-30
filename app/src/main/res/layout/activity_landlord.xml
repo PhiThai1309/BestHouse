@@ -15,7 +15,8 @@
             android:id="@+id/content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:layout="@layout/fragment_landlord_home" />
+            tools:layout="@layout/fragment_landlord_home"
+            android:paddingBottom="80dp"/>
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/landlord_bottom_navigation"

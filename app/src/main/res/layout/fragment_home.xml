@@ -83,6 +83,8 @@
 <!--                android:layout_height="wrap_content"-->
 <!--                android:layout_width="match_parent"-->
 <!--                android:layout_marginHorizontal="20dp"/>-->
+
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/feature_property"
                 android:layout_width="match_parent"
@@ -90,8 +92,7 @@
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                tools:listitem="@layout/feature_layout"/>
-
+                tools:listitem="@layout/feature_layout" />
 
             <TextView
                 android:layout_width="match_parent"
