@@ -31,4 +31,5 @@
     <string name="bedroom_hint">Bedroom Quantity:</string>
     <string name="bathroom_hint">Bathroom Quantity:</string>
     <string name="price_hint">Monthly Price:</string>
+    <string name="title_activity_land_lord_maps">LandLordMapsActivity</string>
 </resources>

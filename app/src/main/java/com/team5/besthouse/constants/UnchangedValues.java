@@ -26,4 +26,9 @@ public class UnchangedValues {
     public static final String LOGIN_USER = "loginUser";
 
 
+    //Landlord add property activity
+    public static final String LOCATION_ADDRESS = "la";
+    public static final String ACTIVITY_REQUEST_CODE = "requestCode";
+
+
 }
