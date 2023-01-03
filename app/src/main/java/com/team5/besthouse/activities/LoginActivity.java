@@ -43,6 +43,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private ActivityLoginBinding loginBinding;
     private StoreService storeService;
+    FirebaseFirestore database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +53,8 @@ public class LoginActivity extends AppCompatActivity {
 
         // set up store service
         storeService = new StoreService(getApplicationContext());
+
+        database = FirebaseFirestore.getInstance();
 
 //        Window window = getWindow();
 //        window.setStatusBarColor(Color.TRANSPARENT);
@@ -156,7 +159,6 @@ public class LoginActivity extends AppCompatActivity {
                                 intent = new Intent(getApplicationContext(), MainActivity.class);
                             }
 
-
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                             finish();
@@ -189,9 +191,7 @@ public class LoginActivity extends AppCompatActivity {
            return;
        }
 
-       // validate credential()
-        FirebaseFirestore database = FirebaseFirestore.getInstance();
-
+        // validate credential()
        try{
           database.collection(UnchangedValues.USERS_TABLE)
                   .whereEqualTo(UnchangedValues.USER_EMAIL_COL, inputEmail)

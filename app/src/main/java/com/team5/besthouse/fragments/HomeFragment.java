@@ -1,21 +1,32 @@
 package com.team5.besthouse.fragments;
 
+import static android.content.ContentValues.TAG;
+
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.team5.besthouse.PropertyAdapter;
 import com.team5.besthouse.PropertyAdapter2;
 import com.team5.besthouse.R;
 import com.team5.besthouse.activities.MainActivity;
+import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.models.Coordinates;
 import com.team5.besthouse.models.Property;
 import com.team5.besthouse.models.PropertyAddress;
@@ -37,6 +48,8 @@ public class HomeFragment extends Fragment {
     private List<Property> list;
     private PropertyAdapter adapter1;
     private PropertyAdapter2 adapter2;
+
+    FirebaseFirestore db;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -83,6 +96,11 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+
+        //get db instance
+
+        db = FirebaseFirestore.getInstance();
+
         //Get the recycler view and
         featureView = (RecyclerView) view.findViewById(R.id.feature_property);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false);
@@ -99,13 +117,36 @@ public class HomeFragment extends Fragment {
         adapter1 = new PropertyAdapter((MainActivity) getContext(), list);
         featureView.setAdapter(adapter1);
 
-        Coordinates coordinates = new Coordinates(12, 32, 12);
-        PropertyAddress address = new PropertyAddress("123", "123", "123", "123", "123", "123", coordinates);
-        list.add(new Property("213", "123", "213", address, PropertyType.APARTMENT, 12, 12, Collections.singletonList(Utilities.ELECTRIC), (float) 12.0, (float) 12.0));
-        list.add(new Property("213", "123", "213", address, PropertyType.APARTMENT, 12, 12, Collections.singletonList(Utilities.ELECTRIC), (float) 12.0, (float) 12.0));
-        list.add(new Property("213", "123", "213", address, PropertyType.APARTMENT, 12, 12, Collections.singletonList(Utilities.ELECTRIC), (float) 12.0, (float) 12.0));
-        list.add(new Property("213", "123", "213", address, PropertyType.APARTMENT, 12, 12, Collections.singletonList(Utilities.ELECTRIC), (float) 12.0, (float) 12.0));
-        list.add(new Property("213", "123", "213", address, PropertyType.APARTMENT, 12, 12, Collections.singletonList(Utilities.ELECTRIC), (float) 12.0, (float) 12.0));
+        //add 5 static properties to list
+//        list.addAll(Collections.nCopies(5, Property.STATICPROPERTY));
+
+        //add properties from db to list
+        //this does not update the recycler view
+        db.collection(UnchangedValues.PROPERTIES_TABLE)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @SuppressLint("NotifyDataSetChanged")
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                try {
+                                    list.add(document.toObject(Property.class));
+                                } catch (Exception e) {
+                                    Log.d(TAG, "Error adding object : " + document.toString() + ", Exception " + e.getMessage());
+                                }
+
+                                Log.d(TAG, "Found property " + document.getId() + " => " + document.getData());
+                            }
+                            adapter1.notifyDataSetChanged();
+                            adapter2.notifyDataSetChanged();
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+
+
 
         propertyView = (RecyclerView) view.findViewById(R.id.main_property);
         LinearLayoutManager linearLayoutManager2 = new LinearLayoutManager(getContext());

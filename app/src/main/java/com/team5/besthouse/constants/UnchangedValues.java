@@ -7,6 +7,7 @@ public class UnchangedValues {
 
 
     public static final String USERS_TABLE = "users";
+    public static final String PROPERTIES_TABLE = "properties";
 
     public static final String NAME_REGEX = "^[a-zA-Z\\s]+";
     public static final String EMAIL_REGEX = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";

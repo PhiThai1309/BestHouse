@@ -1,6 +1,8 @@
 package com.team5.besthouse.models;
 
-public class PropertyAddress {
+import java.io.Serializable;
+
+public class PropertyAddress implements Serializable {
     private String street;
     private String ward;
     private String city;
@@ -8,6 +10,11 @@ public class PropertyAddress {
     private String buildingName;
     private String extraNote;
     private Coordinates coordinates;
+
+    public PropertyAddress(){
+        // Default constructor required for calls to DataSnapshot.getValue(PropertyAddress.class)
+        // Do not delete
+    }
 
     public PropertyAddress(String street, String ward, String city, String floor, String buildingName, String extraNote, Coordinates coordinates) {
         this.street = street;
@@ -86,4 +93,6 @@ public class PropertyAddress {
                 ", extraNote='" + extraNote + '\'' +
                 '}';
     }
+
+    public static PropertyAddress STATICADDRESS = new PropertyAddress("123", "123", "123", "123", "123", "123", Coordinates.STATICCOORD());
 }

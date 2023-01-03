@@ -32,17 +32,19 @@
                     android:layout_marginBottom="25dp" />
 
                 <TextView
+                    android:id="@+id/property_name"
+                    style="@style/Bold_Heading"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/place_holder"
                     android:layout_marginBottom="10dp"
-                    style="@style/Bold_Heading"/>
+                    android:text="@string/place_holder" />
 
                 <TextView
+                    android:id="@+id/property_location"
+                    style="@style/SubHeading"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/place_holder"
-                    style="@style/SubHeading"/>
+                    android:text="@string/place_holder" />
             </LinearLayout>
 
             <LinearLayout
@@ -130,11 +132,13 @@
             android:text="@string/place_holder"
             style="@style/Price"
             android:layout_weight="2"/>
+
         <Button
+            android:id="@+id/createPropertyBtn"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:text="@string/place_holder"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:text="@string/place_holder" />
     </LinearLayout>
 
 
