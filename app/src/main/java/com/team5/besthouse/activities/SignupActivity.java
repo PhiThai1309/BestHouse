@@ -140,14 +140,17 @@ public class SignupActivity extends AppCompatActivity {
         else if (!Pattern.matches(UnchangedValues.NAME_REGEX, inputName))
         {
             showTextLong("Please Enter Valid Name");
+            return;
         }
         else if(!Pattern.matches(UnchangedValues.PHONE_REGEX, inputPhone))
         {
             showTextLong("Please Enter Valid Phone Number");
+            return;
         }
         else if(!signupBinding.radioLandlord.isChecked() && !signupBinding.radioTenant.isChecked())
         {
             showTextLong("Please Select Your Role");
+            return;
         }
 
         checkUsedEmail(inputEmail, new SetEmailExistedCallback() {

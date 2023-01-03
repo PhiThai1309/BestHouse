@@ -3,12 +3,28 @@ package com.team5.besthouse.fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSnapHelper;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SnapHelper;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.team5.besthouse.PropertyAdapter;
+import com.team5.besthouse.PropertyAdapter2;
 import com.team5.besthouse.R;
+import com.team5.besthouse.activities.MainActivity;
+import com.team5.besthouse.models.Coordinates;
+import com.team5.besthouse.models.Property;
+import com.team5.besthouse.models.PropertyAddress;
+import com.team5.besthouse.models.PropertyType;
+import com.team5.besthouse.models.Utilities;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -16,6 +32,11 @@ import com.team5.besthouse.R;
  * create an instance of this fragment.
  */
 public class HomeFragment extends Fragment {
+    private RecyclerView featureView;
+    private RecyclerView propertyView;
+    private List<Property> list;
+    private PropertyAdapter adapter1;
+    private PropertyAdapter2 adapter2;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -48,6 +69,7 @@ public class HomeFragment extends Fragment {
         return fragment;
     }
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +82,48 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        //Get the recycler view and
+        featureView = (RecyclerView) view.findViewById(R.id.feature_property);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false);
+        //Set the layout manager
+        linearLayoutManager.setStackFromEnd(true);
+        linearLayoutManager.setReverseLayout(true);
+        featureView.setHasFixedSize(true);
+        featureView.setLayoutManager(linearLayoutManager);
+
+        SnapHelper helper = new LinearSnapHelper();
+        helper.attachToRecyclerView(featureView);
+
+        list = new ArrayList<>();
+        adapter1 = new PropertyAdapter((MainActivity) getContext(), list);
+        featureView.setAdapter(adapter1);
+
+        Coordinates coordinates = new Coordinates(12, 32, 12);
+        PropertyAddress address = new PropertyAddress("123", "123", "123", "123", "123", "123", coordinates);
+        list.add(new Property("213", "123", "213", address, PropertyType.APARTMENT, 12, 12, Collections.singletonList(Utilities.ELECTRIC), (float) 12.0, (float) 12.0));
+        list.add(new Property("213", "123", "213", address, PropertyType.APARTMENT, 12, 12, Collections.singletonList(Utilities.ELECTRIC), (float) 12.0, (float) 12.0));
+        list.add(new Property("213", "123", "213", address, PropertyType.APARTMENT, 12, 12, Collections.singletonList(Utilities.ELECTRIC), (float) 12.0, (float) 12.0));
+        list.add(new Property("213", "123", "213", address, PropertyType.APARTMENT, 12, 12, Collections.singletonList(Utilities.ELECTRIC), (float) 12.0, (float) 12.0));
+        list.add(new Property("213", "123", "213", address, PropertyType.APARTMENT, 12, 12, Collections.singletonList(Utilities.ELECTRIC), (float) 12.0, (float) 12.0));
+
+        propertyView = (RecyclerView) view.findViewById(R.id.main_property);
+        LinearLayoutManager linearLayoutManager2 = new LinearLayoutManager(getContext());
+        //Set the layout manager
+        linearLayoutManager2.setStackFromEnd(true);
+        linearLayoutManager2.setReverseLayout(true);
+        propertyView.setHasFixedSize(true);
+        propertyView.setLayoutManager(linearLayoutManager2);
+
+        propertyView.setNestedScrollingEnabled(false);
+        adapter2 = new PropertyAdapter2((MainActivity) getContext(), list);
+        propertyView.setAdapter(adapter2);
+
+        featureView.setHasFixedSize(true);
+        propertyView.setHasFixedSize(true);
+
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        return view;
     }
 }
