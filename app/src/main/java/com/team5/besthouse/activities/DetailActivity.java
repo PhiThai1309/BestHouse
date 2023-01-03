@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.graphics.Color;
 import android.media.Image;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -33,5 +34,13 @@ public class DetailActivity extends AppCompatActivity {
 
         ImageView featureOther = other.findViewById(R.id.feature_image);
         featureOther.setImageResource(R.drawable.ic_outline_done_outline_24);
+
+        ImageView backBtn = findViewById(R.id.details_backBtn);
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
 }
