@@ -55,6 +55,10 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="Bold_SubHeading" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">20sp</item>
+    </style>
+
     <style name="Bold_Large_Heading" parent="@android:style/Widget.TextView">
         <item name="android:textSize">34sp</item>
         <item name="android:textColor">@color/md_theme_onPrimaryContainer</item>
@@ -97,6 +101,14 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+<!--   Floating Button  -->
+    <style name="floating_Button" parent="Widget.Design.FloatingActionButton">
+        <item name="cornerFamily">rounded</item>
+    </style>
 
-
+<!--   Continue Button  -->
+    <style name="continue_button">
+        <item name="android:backgroundTint">@color/almost_dark</item>
+        <item name="cornerRadius">10dp</item>
+    </style>
 </resources>

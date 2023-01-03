@@ -21,4 +21,14 @@
     <string name="confirm_password_hint">Re-Enter Password:</string>
     <string name="fullname_hint">Full name:</string>
     <string name="phone_hint">Phone Number:</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="welcome">WELCOME!</string>
+    <string name="continue_text">CONTINUE</string>
+    <string name="pname_hint">Property Name:</string>
+    <string name="ptype_hint">Property Type:</string>
+    <string name="padress_hint">Address:</string>
+    <string name="bedroom_hint">Bedroom Quantity:</string>
+    <string name="bathroom_hint">Bathroom Quantity:</string>
+    <string name="price_hint">Monthly Price:</string>
 </resources>
