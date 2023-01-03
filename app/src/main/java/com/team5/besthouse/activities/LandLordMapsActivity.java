@@ -33,7 +33,9 @@ public class LandLordMapsActivity extends FragmentActivity implements OnMapReady
         setContentView(binding.getRoot());
 
 
-        returnImageBtn = binding.returnBar.returnButton;
+        returnImageBtn = binding.searchBar.returnButton;
+
+        setReturnButtonAction();
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);

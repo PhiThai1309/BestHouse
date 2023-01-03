@@ -14,10 +14,12 @@
         android:gravity="center"
         android:weightSum="3">
 
-        <ImageView
+        <ImageButton
+            android:id="@+id/returnButton"
             android:layout_width="@dimen/_30sdp"
             android:layout_height="match_parent"
-            android:src="@drawable/ic_outline_location_searching_24"
+            android:background="@color/md_theme_background"
+            android:src="@drawable/ic_round_arrow_back_24"
             />
 
         <EditText

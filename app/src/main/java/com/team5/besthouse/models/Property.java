@@ -1,5 +1,7 @@
 package com.team5.besthouse.models;
 
+import android.location.Address;
+
 import java.util.List;
 
 public class Property {
@@ -7,7 +9,7 @@ public class Property {
     private String id;
     private String landlordEmail;
     private String propertyName;
-    private PropertyAddress address;
+    private Address address;
     private PropertyStatus status;
     private PropertyType type;
     private int bedrooms;
@@ -16,7 +18,7 @@ public class Property {
     private float monthlyPrice;
     private float area;
 
-    public Property(String id, String propertyName, String landlordEmail, PropertyAddress address, PropertyType type, int bedrooms, int bathrooms, List<Utilities> utilities, float monthlyPrice, float area) {
+    public Property(String id, String propertyName, String landlordEmail, Address address, PropertyType type, int bedrooms, int bathrooms, List<Utilities> utilities, float monthlyPrice, float area) {
         this.id = id;
         this.propertyName = propertyName;
         this.landlordEmail = landlordEmail;
@@ -41,7 +43,7 @@ public class Property {
         return landlordEmail;
     }
 
-    public PropertyAddress getAddress() {
+    public Address getAddress() {
         return address;
     }
 
