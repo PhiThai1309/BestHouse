@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -67,6 +68,14 @@ public class DetailActivity extends AppCompatActivity {
             db.collection(UnchangedValues.PROPERTIES_TABLE).add(property);
 
             Toast.makeText(this, "New property added!", Toast.LENGTH_SHORT).show();
+        });
+
+        ImageView backBtn = findViewById(R.id.details_backBtn);
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
         });
     }
 }

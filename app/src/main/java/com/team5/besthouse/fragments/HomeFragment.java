@@ -105,8 +105,8 @@ public class HomeFragment extends Fragment {
         featureView = (RecyclerView) view.findViewById(R.id.feature_property);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false);
         //Set the layout manager
-        linearLayoutManager.setStackFromEnd(true);
-        linearLayoutManager.setReverseLayout(true);
+        linearLayoutManager.setStackFromEnd(false);
+        linearLayoutManager.setReverseLayout(false);
         featureView.setHasFixedSize(true);
         featureView.setLayoutManager(linearLayoutManager);
 
@@ -146,13 +146,11 @@ public class HomeFragment extends Fragment {
                     }
                 });
 
-
-
         propertyView = (RecyclerView) view.findViewById(R.id.main_property);
         LinearLayoutManager linearLayoutManager2 = new LinearLayoutManager(getContext());
         //Set the layout manager
-        linearLayoutManager2.setStackFromEnd(true);
-        linearLayoutManager2.setReverseLayout(true);
+        linearLayoutManager2.setStackFromEnd(false);
+        linearLayoutManager2.setReverseLayout(false);
         propertyView.setHasFixedSize(true);
         propertyView.setLayoutManager(linearLayoutManager2);
 
