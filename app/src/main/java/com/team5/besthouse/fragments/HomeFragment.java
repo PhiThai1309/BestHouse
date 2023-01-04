@@ -131,10 +131,6 @@ public class HomeFragment extends Fragment {
         //add properties from db to list
         //this does not update the recycler view
 
-
-
-
-
         propertyView = (RecyclerView) view.findViewById(R.id.main_property);
         LinearLayoutManager linearLayoutManager2 = new LinearLayoutManager(getContext());
         //Set the layout manager
@@ -178,6 +174,7 @@ public class HomeFragment extends Fragment {
                             Log.i("Property", p.getId());
                             Log.i("Property", newDoc.getType().toString());
                             if(newDoc.getType() == DocumentChange.Type.ADDED){
+                                list.remove(p);
                                 try {
                                     //get all contracts that have its end date after today and is from this property
 
