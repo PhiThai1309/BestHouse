@@ -3,7 +3,6 @@ package com.team5.besthouse.activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Color;
-import android.media.Image;
 import android.os.Bundle;
 import android.view.Window;
 import android.widget.Button;
@@ -18,13 +17,8 @@ import com.team5.besthouse.R;
 import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.models.Property;
 import com.team5.besthouse.models.PropertyAddress;
-import com.team5.besthouse.models.PropertyType;
-import com.team5.besthouse.models.Utilities;
-
-import java.util.Collections;
 
 public class DetailActivity extends AppCompatActivity {
-
     FirebaseFirestore db;
     Property property;
 
@@ -56,9 +50,9 @@ public class DetailActivity extends AppCompatActivity {
 
         Button newPropertyButton = findViewById(R.id.createPropertyBtn);
 
-        TextView nameText = findViewById(R.id.property_name);
+        TextView nameText = findViewById(R.id.details_name);
 
-        TextView locationText = findViewById(R.id.property_location);
+        TextView locationText = findViewById(R.id.details_address);
 
         //End of id get
 
