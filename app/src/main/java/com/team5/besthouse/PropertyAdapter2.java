@@ -46,11 +46,11 @@ public class PropertyAdapter2 extends RecyclerView.Adapter<PropertyAdapter2.Task
             // Get the task at the position
             Property current = propertyList.get(position);
             // Set the name of the view holder
-            holder.name.setText(current.getId());
+            holder.name.setText(current.getPropertyName());
             // Set the address of the view holder
             holder.address.setText(current.getAddress().toString());
             //Set the prize of the view holder
-            holder.price.setText("12");
+            holder.price.setText(String.valueOf(current.getMonthlyPrice()));
 
             holder.cardView.setOnClickListener(new View.OnClickListener() {
                 @SuppressLint("NotifyDataSetChanged")
