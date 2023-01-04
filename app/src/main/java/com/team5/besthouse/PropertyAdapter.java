@@ -46,7 +46,7 @@ public class PropertyAdapter extends RecyclerView.Adapter<PropertyAdapter.TaskVi
             // Get the task at the position
             Property current = propertyList.get(position);
             // Set the name of the view holder
-            holder.name.setText(current.getId());
+            holder.name.setText(current.getPropertyName());
             // Set the address of the view holder
             holder.address.setText(current.getAddress().toString());
             //Set the prize of the view holder
