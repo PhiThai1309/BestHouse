@@ -154,12 +154,13 @@ public class DetailActivity extends AppCompatActivity {
 
             dc.set(contract)
                     .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(this, "Contract created!", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(this, "Contract creation failed!", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    if (task.isSuccessful()) {
+                        Toast.makeText(this, "Contract created!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this, "Contract creation failed!", Toast.LENGTH_SHORT).show();
+                    }
+                    finish();
+            });
         });
 
     //code for landlords to get list of contracts
