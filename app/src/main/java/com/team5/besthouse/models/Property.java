@@ -5,6 +5,7 @@ import com.google.firebase.firestore.Exclude;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class Property implements Serializable {
 
@@ -36,6 +37,23 @@ public class Property implements Serializable {
         this.utilities = utilities;
         this.monthlyPrice = monthlyPrice;
         this.area = area;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Property property = (Property) o;
+        return id.equals(property.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getId() {
