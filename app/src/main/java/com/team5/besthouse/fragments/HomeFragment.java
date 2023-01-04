@@ -27,6 +27,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.gson.Gson;
 import com.team5.besthouse.PropertyAdapter;
 import com.team5.besthouse.PropertyAdapter2;
 import com.team5.besthouse.R;
@@ -38,7 +39,10 @@ import com.team5.besthouse.models.Coordinates;
 import com.team5.besthouse.models.Property;
 import com.team5.besthouse.models.PropertyAddress;
 import com.team5.besthouse.models.PropertyType;
+import com.team5.besthouse.models.Tenant;
+import com.team5.besthouse.models.User;
 import com.team5.besthouse.models.Utilities;
+import com.team5.besthouse.services.StoreService;
 
 import java.sql.Time;
 import java.util.ArrayList;
@@ -56,6 +60,7 @@ public class HomeFragment extends Fragment {
     private List<Property> list;
     private PropertyAdapter adapter1;
     private PropertyAdapter2 adapter2;
+    private StoreService storeService;
 
     FirebaseFirestore db;
 
@@ -109,6 +114,9 @@ public class HomeFragment extends Fragment {
 
         db = FirebaseFirestore.getInstance();
 
+        // set up store service
+        storeService = new StoreService(getContext());
+
         //Get the recycler view and
         featureView = (RecyclerView) view.findViewById(R.id.feature_property);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false);
@@ -157,6 +165,7 @@ public class HomeFragment extends Fragment {
         //filter for all rents such that its end date is after today on the db side
         FirebaseFirestore database = FirebaseFirestore.getInstance();
         database.collection(UnchangedValues.PROPERTIES_TABLE)
+                .orderBy("propertyName")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @SuppressLint("NotifyDataSetChanged")
                     @Override
@@ -169,6 +178,7 @@ public class HomeFragment extends Fragment {
 //                        Log.w("ERROR ERROR ", value.getDocumentChanges().get(0).getDocument().getData().toString());
 
                         //filter for rents that begins before today on the client side
+                        assert value != null;
                         for(DocumentChange newDoc : value.getDocumentChanges()){
                             Property p = newDoc.getDocument().toObject(Property.class);
                             Log.i("Property", p.getId());
@@ -178,10 +188,12 @@ public class HomeFragment extends Fragment {
                                 try {
                                     //get all contracts that have its end date after today and is from this property
 
+                                    Gson gson = new Gson();
+                                    User user = gson.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), Tenant.class);
+
                                     Log.i(TAG, "onEvent: " + p);
                                     database.collection(UnchangedValues.CONTRACTS_TABLE)
                                             .whereEqualTo("propertyId", p.getId())
-                                            .whereEqualTo("contractStatus", ContractStatus.ACTIVE)
                                             .whereGreaterThanOrEqualTo("endDate", Timestamp.now())
                                             .get()
                                             .addOnCompleteListener(v -> {
@@ -190,7 +202,7 @@ public class HomeFragment extends Fragment {
                                                     Log.i("TAG", "onEvent: " + v.getResult().getDocuments().size());
                                                     for (QueryDocumentSnapshot document : v.getResult()) {
                                                         Contract contract = document.toObject(Contract.class);
-                                                        if(contract.getStartDate().compareTo(Timestamp.now()) <= 0){
+                                                        if(contract.getStartDate().compareTo(Timestamp.now()) <= 0 && (contract.getContractStatus().equals(ContractStatus.ACTIVE) || (user.getEmail().equals(contract.getTenantEmail()) && contract.getContractStatus().equals(ContractStatus.PENDING)))){
                                                             ok = false;
                                                             break;
                                                         }
