@@ -1,32 +1,36 @@
 package com.team5.besthouse.models;
 
-import com.google.type.DateTime;
+import com.google.firebase.Timestamp;
 
-public class Contract {
+import java.io.Serializable;
+
+public class Contract implements Serializable {
 
     private String id;
     private ContractStatus contractStatus;
     private String landlordEmail;
     private String tenantEmail;
     private String propertyId;
-    private DateTime startDate;
-    final private int LENGTH_IN_MONTH = 12;
+    private Timestamp startDate = Timestamp.now();
+    private Timestamp endDate = Timestamp.now();
 
-    public Contract(ContractStatus contractStatus, String landlordEmail, String tenantEmail, String propertyId, DateTime startDate) {
-        this.contractStatus = contractStatus;
-        this.landlordEmail = landlordEmail;
-        this.tenantEmail = tenantEmail;
-        this.propertyId = propertyId;
-        this.startDate = startDate;
+
+    public Contract(){
+        // Default constructor required for calls to DataSnapshot.getValue(Property.class)
+        // Do not delete
     }
 
-    public Contract(String id, ContractStatus contractStatus, String landlordEmail, String tenantEmail, String propertyId, DateTime startDate) {
-        this.id = id;
+    public Contract(ContractStatus contractStatus, String landlordEmail, String tenantEmail, String propertyId, Timestamp startDate, Timestamp endDate) {
         this.contractStatus = contractStatus;
         this.landlordEmail = landlordEmail;
         this.tenantEmail = tenantEmail;
         this.propertyId = propertyId;
         this.startDate = startDate;
+        this.endDate = endDate;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getId() {
@@ -49,11 +53,19 @@ public class Contract {
         return propertyId;
     }
 
-    public DateTime getStartDate() {
+    public Timestamp getStartDate() {
         return startDate;
     }
 
-    public int getLENGTH_IN_MONTH() {
-        return LENGTH_IN_MONTH;
+    public void setStartDate(Timestamp startDate) {
+        this.startDate = startDate;
+    }
+
+    public Timestamp getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Timestamp endDate) {
+        this.endDate = endDate;
     }
 }

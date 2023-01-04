@@ -227,7 +227,7 @@ public class LoginActivity extends AppCompatActivity {
                                   try{
                                       Gson gson = new Gson();
                                       storeService.storeStringValue(UnchangedValues.LOGIN_USER, gson.toJson(loginUser).toString());
-                                      storeService.storeStringValue(UnchangedValues.USER_ID_COL, userId) ;
+                                      storeService.storeStringValue(UnchangedValues.USER_ID_COL, userId);
                                       direct.direct(true, userRole);
                                   } catch (Exception e)
                                   {

@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -31,12 +32,15 @@ import com.team5.besthouse.PropertyAdapter2;
 import com.team5.besthouse.R;
 import com.team5.besthouse.activities.MainActivity;
 import com.team5.besthouse.constants.UnchangedValues;
+import com.team5.besthouse.models.Contract;
+import com.team5.besthouse.models.ContractStatus;
 import com.team5.besthouse.models.Coordinates;
 import com.team5.besthouse.models.Property;
 import com.team5.besthouse.models.PropertyAddress;
 import com.team5.besthouse.models.PropertyType;
 import com.team5.besthouse.models.Utilities;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -128,35 +132,6 @@ public class HomeFragment extends Fragment {
         //this does not update the recycler view
 
 
-        FirebaseFirestore database = FirebaseFirestore.getInstance();
-        database.collection(UnchangedValues.PROPERTIES_TABLE).addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                if(error != null)
-                {
-                    Log.w("ERROR ERROR ", error);
-                    return;
-                }
-                Log.w("ERROR ERROR ", value.getDocumentChanges().get(0).getDocument().getData().toString());
-
-                    for(DocumentChange newDoc : value.getDocumentChanges())
-                    {
-                        if(newDoc.getType() == DocumentChange.Type.ADDED)
-                        {
-                            try {
-                                Property p = newDoc.getDocument().toObject(Property.class);
-                                Log.i("ERROR", "onEvent: " + p.getId());
-                                list.add(p);
-                                adapter1.notifyDataSetChanged();
-                                adapter2.notifyDataSetChanged();
-                            } catch (Exception e) {
-                                Log.d("ERROR 2", "Error adding object : " + newDoc.toString() + ", Exception " + e.getMessage());
-                            }
-                        }
-                    }
-
-            }
-        });
 
 
 
@@ -178,5 +153,73 @@ public class HomeFragment extends Fragment {
 
         // Inflate the layout for this fragment
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        //filter for all rents such that its end date is after today on the db side
+        FirebaseFirestore database = FirebaseFirestore.getInstance();
+        database.collection(UnchangedValues.PROPERTIES_TABLE)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @SuppressLint("NotifyDataSetChanged")
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        if(error != null)
+                        {
+                            Log.w("ERROR ERROR ", error);
+                            return;
+                        }
+//                        Log.w("ERROR ERROR ", value.getDocumentChanges().get(0).getDocument().getData().toString());
+
+                        //filter for rents that begins before today on the client side
+                        for(DocumentChange newDoc : value.getDocumentChanges()){
+                            Property p = newDoc.getDocument().toObject(Property.class);
+                            Log.i("Property", p.getId());
+                            Log.i("Property", newDoc.getType().toString());
+                            if(newDoc.getType() == DocumentChange.Type.ADDED){
+                                try {
+                                    //get all contracts that have its end date after today and is from this property
+
+                                    Log.i(TAG, "onEvent: " + p);
+                                    database.collection(UnchangedValues.CONTRACTS_TABLE)
+                                            .whereEqualTo("propertyId", p.getId())
+                                            .whereEqualTo("contractStatus", ContractStatus.ACTIVE)
+                                            .whereGreaterThanOrEqualTo("endDate", Timestamp.now())
+                                            .get()
+                                            .addOnCompleteListener(v -> {
+                                                if (v.isSuccessful()){
+                                                    boolean ok = true;
+                                                    Log.i("TAG", "onEvent: " + v.getResult().getDocuments().size());
+                                                    for (QueryDocumentSnapshot document : v.getResult()) {
+                                                        Contract contract = document.toObject(Contract.class);
+                                                        if(contract.getStartDate().compareTo(Timestamp.now()) <= 0){
+                                                            ok = false;
+                                                            break;
+                                                        }
+                                                    }
+                                                    if (ok) {
+                                                        list.add(p);
+                                                        Log.i("ADDED" , p.toString());
+                                                        adapter1.notifyDataSetChanged();
+                                                        adapter2.notifyDataSetChanged();
+                                                    }
+                                                }
+                                            });
+                                } catch (Exception e) {
+                                    Log.d("ERROR 2", "Error adding object : " + newDoc.toString() + ", Exception " + e.getMessage());
+                                }
+                            }
+                            else {
+                                list.remove(p);
+                                if (newDoc.getType().equals(DocumentChange.Type.MODIFIED)) {
+                                    list.add(p);
+                                }
+                                adapter1.notifyDataSetChanged();
+                                adapter2.notifyDataSetChanged();
+                            }
+                        }
+                    }
+                });
     }
 }
