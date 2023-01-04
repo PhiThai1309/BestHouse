@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -125,29 +126,39 @@ public class HomeFragment extends Fragment {
 
         //add properties from db to list
         //this does not update the recycler view
-        db.collection(UnchangedValues.PROPERTIES_TABLE)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @SuppressLint("NotifyDataSetChanged")
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                try {
-                                    list.add(document.toObject(Property.class));
-                                } catch (Exception e) {
-                                    Log.d(TAG, "Error adding object : " + document.toString() + ", Exception " + e.getMessage());
-                                }
 
-                                Log.d(TAG, "Found property " + document.getId() + " => " + document.getData());
+
+        FirebaseFirestore database = FirebaseFirestore.getInstance();
+        database.collection(UnchangedValues.PROPERTIES_TABLE).addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                if(error != null)
+                {
+                    Log.w("ERROR ERROR ", error);
+                    return;
+                }
+                Log.w("ERROR ERROR ", value.getDocumentChanges().get(0).getDocument().getData().toString());
+
+                    for(DocumentChange newDoc : value.getDocumentChanges())
+                    {
+                        if(newDoc.getType() == DocumentChange.Type.ADDED)
+                        {
+                            try {
+                                Property p = newDoc.getDocument().toObject(Property.class);
+                                Log.i("ERROR", "onEvent: " + p.getId());
+                                list.add(p);
+                                adapter1.notifyDataSetChanged();
+                                adapter2.notifyDataSetChanged();
+                            } catch (Exception e) {
+                                Log.d("ERROR 2", "Error adding object : " + newDoc.toString() + ", Exception " + e.getMessage());
                             }
-                            adapter1.notifyDataSetChanged();
-                            adapter2.notifyDataSetChanged();
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
                         }
                     }
-                });
+
+            }
+        });
+
+
 
         propertyView = (RecyclerView) view.findViewById(R.id.main_property);
         LinearLayoutManager linearLayoutManager2 = new LinearLayoutManager(getContext());
