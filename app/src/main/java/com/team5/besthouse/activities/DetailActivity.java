@@ -2,6 +2,7 @@ package com.team5.besthouse.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -10,6 +11,20 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.material.elevation.SurfaceColors;
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.gson.Gson;
+import com.team5.besthouse.R;
+import com.team5.besthouse.constants.UnchangedValues;
+import com.team5.besthouse.models.Property;
+import com.team5.besthouse.models.PropertyAddress;
+import com.team5.besthouse.models.Tenant;
+import com.team5.besthouse.models.User;
+import com.team5.besthouse.services.StoreService;
+
 import android.widget.Toast;
 
 import com.google.android.material.elevation.SurfaceColors;
@@ -29,14 +44,17 @@ import com.team5.besthouse.models.Tenant;
 import com.team5.besthouse.models.User;
 import com.team5.besthouse.services.StoreService;
 
+import org.w3c.dom.Text;
 import java.sql.Time;
 import java.time.Instant;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicReference;
 
+import org.w3c.dom.Text;
+
 public class DetailActivity extends AppCompatActivity {
-    FirebaseFirestore db;
-    Property property;
+    private FirebaseFirestore db;
+    private Property property;
     private StoreService storeService;
 
     @Override
@@ -96,7 +114,6 @@ public class DetailActivity extends AppCompatActivity {
         String location = address.getStreet() + ", " + address.getCity() + ", " + address.getWard();
         locationText.setText(location);
 
-
         //button to ask landlord for a contract
         makeContractButton.setOnClickListener(v -> {
 //            Property property = Property.STATICPROPERTY;
@@ -146,18 +163,6 @@ public class DetailActivity extends AppCompatActivity {
             });
         });
 
-        TextView price = findViewById(R.id.details_price);
-        price.setText((int) property.getMonthlyPrice() + ".000 VND / Month");
-
-        ImageView backBtn = findViewById(R.id.details_backBtn);
-        backBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
-    }
-
     //code for landlords to get list of contracts
 //    void getContracts(){
 //        Gson gson = new Gson();
@@ -176,4 +181,16 @@ public class DetailActivity extends AppCompatActivity {
 //                    }
 //                });
 //    }
+
+        TextView price = findViewById(R.id.details_price);
+        price.setText((int) property.getMonthlyPrice() + ".000 VND / Month");
+
+        ImageView backBtn = findViewById(R.id.details_backBtn);
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+    }
 }
