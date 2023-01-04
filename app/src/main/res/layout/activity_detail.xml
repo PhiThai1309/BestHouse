@@ -251,7 +251,7 @@
                 android:id="@+id/createPropertyBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
-                android:text="@string/place_holder"
+                android:text="Place reservation"
                 android:layout_weight="1"/>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>

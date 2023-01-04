@@ -2,6 +2,7 @@ package com.team5.besthouse.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -80,10 +81,12 @@ public class DetailActivity extends AppCompatActivity {
         locationText.setText(location);
 
         newPropertyButton.setOnClickListener(v -> {
-            Property property = Property.STATICPROPERTY;
-            db.collection(UnchangedValues.PROPERTIES_TABLE).add(property);
-
-            Toast.makeText(this, "New property added!", Toast.LENGTH_SHORT).show();
+//            Property property = Property.STATICPROPERTY;
+//            db.collection(UnchangedValues.PROPERTIES_TABLE).add(property);
+//
+//            Toast.makeText(this, "New property added!", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, ContractActivity.class);
+            startActivity(intent);
         });
 
         TextView price = findViewById(R.id.details_price);
