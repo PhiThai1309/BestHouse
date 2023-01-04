@@ -13,17 +13,31 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.elevation.SurfaceColors;
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.gson.Gson;
 import com.team5.besthouse.R;
 import com.team5.besthouse.constants.UnchangedValues;
+import com.team5.besthouse.models.Contract;
+import com.team5.besthouse.models.ContractStatus;
+import com.team5.besthouse.models.Landlord;
 import com.team5.besthouse.models.Property;
 import com.team5.besthouse.models.PropertyAddress;
+import com.team5.besthouse.models.Tenant;
+import com.team5.besthouse.models.User;
+import com.team5.besthouse.services.StoreService;
 
-import org.w3c.dom.Text;
+import java.sql.Time;
+import java.time.Instant;
+import java.util.Date;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class DetailActivity extends AppCompatActivity {
     FirebaseFirestore db;
     Property property;
+    private StoreService storeService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +45,9 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
 
         db = FirebaseFirestore.getInstance();
+
+        // set up store service
+        storeService = new StoreService(getApplicationContext());
 
         property = (Property) getIntent().getSerializableExtra("property");
 
@@ -65,7 +82,7 @@ public class DetailActivity extends AppCompatActivity {
 
         TextView desc = findViewById(R.id.details_desc);
 
-        Button newPropertyButton = findViewById(R.id.createPropertyBtn);
+        Button makeContractButton = findViewById(R.id.createPropertyBtn);
 
         TextView nameText = findViewById(R.id.details_name);
 
@@ -79,11 +96,53 @@ public class DetailActivity extends AppCompatActivity {
         String location = address.getStreet() + ", " + address.getCity() + ", " + address.getWard();
         locationText.setText(location);
 
-        newPropertyButton.setOnClickListener(v -> {
-            Property property = Property.STATICPROPERTY;
-            db.collection(UnchangedValues.PROPERTIES_TABLE).add(property);
 
-            Toast.makeText(this, "New property added!", Toast.LENGTH_SHORT).show();
+        //button to ask landlord for a contract
+        makeContractButton.setOnClickListener(v -> {
+//            Property property = Property.STATICPROPERTY;
+//            db.collection(UnchangedValues.PROPERTIES_TABLE).add(property);
+//
+//            Toast.makeText(this, "New property added!", Toast.LENGTH_SHORT).show();
+            Gson gson = new Gson();
+            User user = gson.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), Tenant.class);
+
+            //get final day to check for last day that the user can hire
+            AtomicReference<Timestamp> finalDayToHire = new AtomicReference<>(new Timestamp(Date.from(Instant.now().plusSeconds(68400L*30*12*100))));
+
+            db.collection(UnchangedValues.CONTRACTS_TABLE)
+                    .whereEqualTo("contractStatus", ContractStatus.ACTIVE)
+                    .whereGreaterThan("startDate", new Time(Date.from(Instant.now()).getTime()))
+                    .orderBy("startDate")
+                    .limit(1)
+                    .get().addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            if (task.getResult().size() > 0) {
+                                Contract contract = task.getResult().getDocuments().get(0).toObject(Contract.class);
+                                assert contract != null;
+                                finalDayToHire.set(contract.getStartDate());
+                            }
+                        }
+                    });
+
+            //crate timestamp that is 12 months from now
+            Timestamp endDate = new Timestamp(Date.from(Instant.now().plusSeconds(86400*30*12)));
+
+            //12 month contract
+            Contract contract = new Contract(ContractStatus.PENDING, property.getLandlordEmail(),  user.getEmail(), property.getId(), Timestamp.now(), endDate);
+
+            DocumentReference dc = db.collection(UnchangedValues.CONTRACTS_TABLE).document();
+
+            contract.setId(dc.getId());
+
+
+            dc.set(contract)
+                    .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(this, "Contract created!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this, "Contract creation failed!", Toast.LENGTH_SHORT).show();
+                    }
+            });
         });
 
         TextView price = findViewById(R.id.details_price);
@@ -97,4 +156,23 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
     }
+
+    //code for landlords to get list of contracts
+//    void getContracts(){
+//        Gson gson = new Gson();
+//        User user = gson.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), Landlord.class);
+//
+//        db.collection(UnchangedValues.CONTRACTS_TABLE)
+//                .whereEqualTo("contractStatus", ContractStatus.PENDING)
+//                .whereEqualTo("landlordEmail", user.getEmail())
+//                .get().addOnCompleteListener(task -> {
+//                    if (task.isSuccessful()) {
+//                        for (QueryDocumentSnapshot document : task.getResult()) {
+//                            Contract contract = document.toObject(Contract.class);
+//
+//                           //add to list and notify adapter
+//                        }
+//                    }
+//                });
+//    }
 }
