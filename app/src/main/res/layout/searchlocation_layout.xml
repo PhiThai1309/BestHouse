@@ -29,6 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="3"
             android:paddingHorizontal="@dimen/_5sdp"
+            android:hint="@string/search_location"
             android:singleLine="true"
             />
 

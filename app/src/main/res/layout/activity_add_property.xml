@@ -52,11 +52,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-
             <include
                 android:id="@+id/property_type"
-                layout="@layout/addproperty_bigbox_layout"/>
-
+                layout="@layout/spinner_property_select_layout"/>
         </LinearLayout>
 
         <LinearLayout

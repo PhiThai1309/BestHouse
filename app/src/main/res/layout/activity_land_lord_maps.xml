@@ -25,5 +25,14 @@
             layout="@layout/searchlocation_layout"/>
     </LinearLayout>
 
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/selectAddressBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/_20sdp"
+        android:text="SELECT LOCATION"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        />
 
 </RelativeLayout>

@@ -11,6 +11,7 @@ import android.text.Editable;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.Status;
@@ -26,7 +27,8 @@ public class AddPropertyActivity extends AppCompatActivity {
 
     ImageButton returnButton;
     private EditText pAddressEditText;
-    private EditText pnameEditText, ptypeEditText, priceEditText;
+    private EditText pnameEditText, priceEditText;
+    private Spinner ptypeSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +42,7 @@ public class AddPropertyActivity extends AppCompatActivity {
 
         //Set hint for adding property type textbox
         View ptype = findViewById(R.id.property_type);
-         ptypeEditText = (EditText) ptype.findViewById(R.id.box);
-        ptypeEditText.setHint("Property Type:");
+        ptypeSpinner = (Spinner) ptype.findViewById(R.id.box);
 
         //Set hint for adding property address textbox
         View pAddress = findViewById(R.id.property_address);
@@ -77,7 +78,12 @@ public class AddPropertyActivity extends AppCompatActivity {
             i.putExtra(UnchangedValues.ACTIVITY_REQUEST_CODE, 100);
             startActivityForResult(i, 100);
         });
+
+
     }
+
+
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

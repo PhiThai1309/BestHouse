@@ -12,6 +12,7 @@
     <string name="location">Location</string>
     <string name="top_near_by">Top near by</string>
     <string name="search_location">Search location</string>
+    <string name="select_property">Select property type</string>
     <string name="login_title">Login</string>
     <string name="signup_title">Sign Up</string>
     <string name="signup_here">Have an account? Login Here</string>

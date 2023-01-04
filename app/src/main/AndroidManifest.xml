@@ -16,7 +16,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:targetApi="31">
+        <activity
+            android:name=".activities.SearchLocationWithSuggestionActivity"
+            android:exported="false">
 
+        </activity>
         <!--
              TODO: Before you run your application, you need a Google Maps API key.
 
@@ -30,7 +34,7 @@
         -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="YOUR_API_KEY" />
+            android:value="AIzaSyAd3X4HeqziXDjRmLNHkpcP18reu7n8Hn0" />
 
         <activity
             android:name=".activities.LandLordMapsActivity"
