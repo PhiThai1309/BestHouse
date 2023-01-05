@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.material.elevation.SurfaceColors;
 import com.google.android.material.navigation.NavigationBarView;
+import com.team5.besthouse.broadcastreceiver.ConnectionCheck;
 import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.fragments.AccountFragment;
 import com.team5.besthouse.fragments.HomeFragment;
@@ -22,7 +23,7 @@ import com.team5.besthouse.R;
 import com.team5.besthouse.services.StoreService;
 import com.team5.besthouse.constants.UnchangedValues;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
     ActionBar actionBar;
     private StoreService storeService;
     @Override
@@ -65,9 +66,7 @@ public class MainActivity extends AppCompatActivity {
         //mark user is login
         storeService.storeBooleanValue(UnchangedValues.IS_LOGIN_TENANT, true);
 
-       showTextLong(a);
-
-
+        showTextLong(a);
     }
 
     private void showTextLong(String text)

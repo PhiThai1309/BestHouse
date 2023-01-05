@@ -32,7 +32,7 @@ import org.checkerframework.checker.initialization.qual.Initialized;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class SignupActivity extends AppCompatActivity {
+public class SignupActivity extends BaseActivity {
 
     private ActivitySignupBinding signupBinding;
 
