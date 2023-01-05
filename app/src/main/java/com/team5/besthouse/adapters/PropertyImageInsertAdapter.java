@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.team5.besthouse.R;
+import com.team5.besthouse.activities.AddPropertyActivity;
 import com.team5.besthouse.interfaces.RecyclerViewInterface;
 
 import java.util.ArrayList;
@@ -21,11 +22,7 @@ public class PropertyImageInsertAdapter extends RecyclerView.Adapter<PropertyIma
     private ArrayList<Bitmap> imageList;
     private ArrayList<String> testList = new ArrayList<>();
 
-
-
-
-
-    public PropertyImageInsertAdapter(Context context, ArrayList<Bitmap> imageList  ) {
+    public PropertyImageInsertAdapter(AddPropertyActivity context, ArrayList<Bitmap> imageList  ) {
         this.imageList = imageList;
 
         testList.add("Heello");

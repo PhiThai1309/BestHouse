@@ -106,9 +106,9 @@ public class AddPropertyActivity extends AppCompatActivity {
     private void settleRecyclerView() {
         try {
             propertyImageList = new ArrayList<>();
-            Bitmap addIconBitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_baseline_add_35);
-            propertyImageList.add(addIconBitmap);
-            piiAdapter = new PropertyImageInsertAdapter(getApplicationContext(), propertyImageList);
+//            Bitmap addIconBitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_baseline_add_35);
+//            propertyImageList.add(addIconBitmap);
+            piiAdapter = new PropertyImageInsertAdapter(this, propertyImageList);
             LinearLayoutManager lm = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
             RecyclerView rv = findViewById(R.id.property_image_select_recycler_view);
             rv.setLayoutManager(lm);
