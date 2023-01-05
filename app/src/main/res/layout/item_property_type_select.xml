@@ -5,27 +5,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal">
 
-    <ImageView
-        android:id="@+id/iconImageView"
-        android:layout_width="@dimen/_50sdp"
-        android:layout_height="@dimen/_50sdp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
-
     <TextView
         android:id="@+id/spinItemName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Appartment"
         android:textStyle="bold"
-        android:textSize="@dimen/_30ssp"
+        android:textSize="@dimen/_12ssp"
         android:textColor="@color/BLACK"
         android:maxLines="1"
         android:ellipsize="end"
-        app:layout_constraintStart_toEndOf="@id/iconImageView"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

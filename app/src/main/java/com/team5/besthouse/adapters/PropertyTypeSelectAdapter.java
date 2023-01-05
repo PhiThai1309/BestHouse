@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -47,11 +48,8 @@ public class PropertyTypeSelectAdapter extends ArrayAdapter<PropertyType> {
 
         PropertyType p = getItem(position);
 
-        if(p == PropertyType.APARTMENT)
-        {
-//            ImageView image =  (ImageView) convertView.findViewById(R.id.iconImageView);
-//            View d = convertView.findViewById(R.drawable.ic_baseline_house_24);
-        }
+        TextView type = convertView.findViewById(R.id.spinItemName);
+        type.setText(p.toString());
 
 
         return convertView;

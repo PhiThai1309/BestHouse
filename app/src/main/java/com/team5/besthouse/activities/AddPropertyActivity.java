@@ -2,15 +2,27 @@ package com.team5.besthouse.activities;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Editable;
+import android.text.InputType;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -18,9 +30,18 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.team5.besthouse.R;
+import com.team5.besthouse.adapters.LocationSuggestionAdapter;
+import com.team5.besthouse.adapters.PropertyImageInsertAdapter;
+import com.team5.besthouse.adapters.PropertyTypeSelectAdapter;
 import com.team5.besthouse.constants.UnchangedValues;
+import com.team5.besthouse.interfaces.RecyclerViewInterface;
+import com.team5.besthouse.models.Property;
+import com.team5.besthouse.models.PropertyType;
+
+import org.checkerframework.checker.units.qual.A;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class AddPropertyActivity extends AppCompatActivity {
@@ -29,7 +50,9 @@ public class AddPropertyActivity extends AppCompatActivity {
     private EditText pAddressEditText;
     private EditText pnameEditText, priceEditText;
     private Spinner ptypeSpinner;
-
+    private String selectPropertyType;
+    private PropertyImageInsertAdapter piiAdapter;
+    private ArrayList<Bitmap> propertyImageList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,13 +75,64 @@ public class AddPropertyActivity extends AppCompatActivity {
         //Set hint for adding property price textbox
         View price = findViewById(R.id.property_price);
         priceEditText = (EditText) price.findViewById(R.id.box);
+        priceEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
         priceEditText.setHint("Monthly Price:");
 
         //config the return button
         returnButton = findViewById(R.id.returnBar).findViewById(R.id.returnButton);
         setReturnButtonAction();
         setAddAddressAction();
+        initializeSpinner();
+//        setSpinSelectAction();
+        settleRecyclerView();
 
+
+    }
+
+
+    private void initializeSpinner()
+    {
+        ArrayList<PropertyType> pList = new ArrayList<>();
+        pList.add(PropertyType.APARTMENT);
+        pList.add(PropertyType.HOUSE);
+        pList.add(PropertyType.FLOOR);
+        pList.add(PropertyType.ROOM);
+        ptypeSpinner.setAdapter(new PropertyTypeSelectAdapter(this, pList));
+    }
+
+    /**
+     *
+     */
+    private void settleRecyclerView() {
+        try {
+            propertyImageList = new ArrayList<>();
+            Bitmap addIconBitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_baseline_add_35);
+            propertyImageList.add(addIconBitmap);
+            piiAdapter = new PropertyImageInsertAdapter(getApplicationContext(), propertyImageList);
+            LinearLayoutManager lm = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
+            RecyclerView rv = findViewById(R.id.property_image_select_recycler_view);
+            rv.setLayoutManager(lm);
+            rv.setAdapter(piiAdapter);
+            rv.setItemAnimator(new DefaultItemAnimator());
+        } catch (Exception e) {
+            Log.i("ERROR", "settleRecyclerView: " + e.getMessage());
+        }
+
+    }
+
+        private void setSpinSelectAction()
+    {
+//        ptypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//               selectPropertyType = (String) parent.getItemAtPosition(position);
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//                selectPropertyType = null;
+//            }
+//        });
     }
 
     private void setReturnButtonAction()
@@ -96,6 +170,24 @@ public class AddPropertyActivity extends AppCompatActivity {
                 pAddressEditText.setText(pAddress);
            }
         }
+    }
+
+    private Bitmap convertUriToBitmap(Uri inputUriImage)
+    {
+        try {
+            Bitmap imageBitmap  = MediaStore.Images.Media.getBitmap(this.getContentResolver(),inputUriImage );
+            // resize the image
+//            ImageView iv = findViewById(R.id.cardViewImage) ;
+//            imageBitmap = Bitmap.createScaledBitmap(imageBitmap,iv.getWidth() , iv.getHeight(), false );
+            return  imageBitmap;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    private void showTextLong(String text)
+    {
+        Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
     }
 
 
