@@ -2,6 +2,7 @@ package com.team5.besthouse.activities;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -9,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
@@ -44,7 +47,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AddPropertyActivity extends AppCompatActivity {
+public class AddPropertyActivity extends AppCompatActivity implements RecyclerViewInterface{
 
     ImageButton returnButton;
     private EditText pAddressEditText;
@@ -106,9 +109,13 @@ public class AddPropertyActivity extends AppCompatActivity {
     private void settleRecyclerView() {
         try {
             propertyImageList = new ArrayList<>();
-//            Bitmap addIconBitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_baseline_add_35);
-//            propertyImageList.add(addIconBitmap);
-            piiAdapter = new PropertyImageInsertAdapter(this, propertyImageList);
+            Bitmap addIconBitmap = convertVectorDrawableToBitmap (R.drawable.ic_baseline_add_35);
+            if(addIconBitmap == null)
+            {
+                showTextLong("NULLL bitmap");
+            }
+            propertyImageList.add(addIconBitmap) ;
+            piiAdapter = new PropertyImageInsertAdapter(this, propertyImageList, this);
             LinearLayoutManager lm = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
             RecyclerView rv = findViewById(R.id.property_image_select_recycler_view);
             rv.setLayoutManager(lm);
@@ -170,6 +177,15 @@ public class AddPropertyActivity extends AppCompatActivity {
                 pAddressEditText.setText(pAddress);
            }
         }
+        else if(requestCode == 200 && resultCode == RESULT_OK)
+        {
+            final Uri imageUri = data.getData();
+            Bitmap bitmap = convertUriToBitmap(imageUri);
+           if(!piiAdapter.addNewItem(bitmap))
+           {
+              showTextLong("Add Image Unsuccessfully. Maximum is 3 images");
+           }
+        }
     }
 
     private Bitmap convertUriToBitmap(Uri inputUriImage)
@@ -177,8 +193,8 @@ public class AddPropertyActivity extends AppCompatActivity {
         try {
             Bitmap imageBitmap  = MediaStore.Images.Media.getBitmap(this.getContentResolver(),inputUriImage );
             // resize the image
-//            ImageView iv = findViewById(R.id.cardViewImage) ;
-//            imageBitmap = Bitmap.createScaledBitmap(imageBitmap,iv.getWidth() , iv.getHeight(), false );
+
+            imageBitmap = Bitmap.createScaledBitmap(imageBitmap,200 , 200, false );
             return  imageBitmap;
         } catch (IOException e) {
             e.printStackTrace();
@@ -190,6 +206,29 @@ public class AddPropertyActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
     }
 
+    /**
+     * learn from https://www.geeksforgeeks.org/how-to-convert-a-vector-to-bitmap-in-android/
+     * @param id
+     * @return
+     */
+    private Bitmap convertVectorDrawableToBitmap(int id)
+    {
+        Drawable drawable = ContextCompat.getDrawable(this, id);
+        Bitmap bitmap = Bitmap.createBitmap(200,200, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+        return bitmap;
+    }
 
 
+    @Override
+    public void onItemClick(int position) {
+        if(position == 0) // add image
+        {
+            Intent i = new Intent(Intent.ACTION_PICK);
+            i.setType("image/*");
+            startActivityForResult(i, 200);
+        }
+    }
 }

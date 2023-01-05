@@ -21,19 +21,11 @@
             android:layout_width="@dimen/_200sdp"
             android:layout_height="@dimen/_200sdp"
             >
-<!--            <ImageView-->
-<!--                android:id="@+id/cardViewImage"-->
-<!--                android:layout_width="@dimen/_200sdp"-->
-<!--                android:layout_height="@dimen/_200sdp"-->
-<!--                android:src="@drawable/ic_baseline_add_35"/>-->
-            <TextView
-                android:id="@+id/cardViewText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentStart="true"
-                android:text="Hellooo"
-                android:layout_alignParentBottom="true"/>
+            <ImageView
+                android:id="@+id/cardViewImage"
+                android:layout_width="@dimen/_200sdp"
+                android:layout_height="@dimen/_200sdp"
+                android:src="@drawable/ic_baseline_add_35"/>
 
         </RelativeLayout>
 

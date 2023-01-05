@@ -1,12 +1,12 @@
 package com.team5.besthouse.adapters;
 
-import android.content.Context;
+
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
+
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,14 +20,11 @@ import java.util.ArrayList;
 public class PropertyImageInsertAdapter extends RecyclerView.Adapter<PropertyImageInsertAdapter.PropertyImageHolder>{
     LayoutInflater mInflater;
     private ArrayList<Bitmap> imageList;
-    private ArrayList<String> testList = new ArrayList<>();
+    private final RecyclerViewInterface recyclerViewInterface;
 
-    public PropertyImageInsertAdapter(AddPropertyActivity context, ArrayList<Bitmap> imageList  ) {
+    public PropertyImageInsertAdapter(AddPropertyActivity context, ArrayList<Bitmap> imageList, RecyclerViewInterface recyclerViewInterface  ) {
         this.imageList = imageList;
-
-        testList.add("Heello");
-        testList.add("Hahah");
-
+        this.recyclerViewInterface = recyclerViewInterface;
         mInflater = LayoutInflater.from(context);
     }
 
@@ -58,40 +55,36 @@ public class PropertyImageInsertAdapter extends RecyclerView.Adapter<PropertyIma
     public PropertyImageHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View view = mInflater.inflate(R.layout.item_property_image_add, parent, false);
-        PropertyImageInsertAdapter.PropertyImageHolder holder = new PropertyImageInsertAdapter.PropertyImageHolder(view);
+        PropertyImageInsertAdapter.PropertyImageHolder holder = new PropertyImageInsertAdapter.PropertyImageHolder(view, this.recyclerViewInterface);
         return holder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull PropertyImageInsertAdapter.PropertyImageHolder holder, int position) {
-       holder.textView.setText(testList.get(position));
+       holder.imageView.setImageBitmap(imageList.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return testList.size();
+        return imageList.size();
     }
 
     public static class PropertyImageHolder extends RecyclerView.ViewHolder
     {
         ImageView imageView;
-        TextView textView;
-        public PropertyImageHolder(@NonNull View itemView) {
+        public PropertyImageHolder(@NonNull View itemView,  RecyclerViewInterface recyclerViewInterface) {
             super(itemView);
-
-
-//            imageView = itemView.findViewById(R.id.cardViewImage);
-            textView = itemView.findViewById(R.id.cardViewText);
-//            itemView.setOnClickListener(v->{
-//                if(recyclerViewInterface != null)
-//                {
-//                    int pos = getAdapterPosition();
-//                    if(pos != RecyclerView.NO_POSITION)
-//                    {
-//                        recyclerViewInterface.onItemClick(pos);
-//                    }
-//                }
-//            });
+            imageView = itemView.findViewById(R.id.cardViewImage);
+            itemView.setOnClickListener(v->{
+                if(recyclerViewInterface != null)
+                {
+                    int pos = getAdapterPosition();
+                    if(pos != RecyclerView.NO_POSITION)
+                    {
+                        recyclerViewInterface.onItemClick(pos);
+                    }
+                }
+            });
 
         }
     }
