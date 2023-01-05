@@ -151,6 +151,7 @@
                         android:layout_height="wrap_content"
                         android:src="@drawable/ic_round_person_24"/>
                     <TextView
+                        android:id="@+id/details_lanlordID"
                         style="@style/NormalText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

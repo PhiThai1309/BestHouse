@@ -1,10 +1,14 @@
 package com.team5.besthouse.activities;
 
+import static android.content.ContentValues.TAG;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -13,9 +17,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.elevation.SurfaceColors;
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 import com.team5.besthouse.R;
 import com.team5.besthouse.constants.UnchangedValues;
@@ -47,7 +57,9 @@ import com.team5.besthouse.services.StoreService;
 import org.w3c.dom.Text;
 import java.sql.Time;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.w3c.dom.Text;
@@ -56,6 +68,7 @@ public class DetailActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private Property property;
     private StoreService storeService;
+    private Landlord landlord;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,7 +137,7 @@ public class DetailActivity extends AppCompatActivity {
             User user = gson.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), Tenant.class);
 
             //get final day to check for last day that the user can hire
-            AtomicReference<Timestamp> finalDayToHire = new AtomicReference<>(new Timestamp(Date.from(Instant.now().plusSeconds(68400L*30*12*100))));
+            AtomicReference<Timestamp> finalDayToHire = new AtomicReference<>(new Timestamp(Date.from(Instant.now().plusSeconds(68400L * 30 * 12 * 100))));
 
             db.collection(UnchangedValues.CONTRACTS_TABLE)
                     .whereEqualTo("contractStatus", ContractStatus.ACTIVE)
@@ -142,10 +155,10 @@ public class DetailActivity extends AppCompatActivity {
                     });
 
             //crate timestamp that is 12 months from now
-            Timestamp endDate = new Timestamp(Date.from(Instant.now().plusSeconds(86400*30*12)));
+            Timestamp endDate = new Timestamp(Date.from(Instant.now().plusSeconds(86400 * 30 * 12)));
 
             //12 month contract
-            Contract contract = new Contract(ContractStatus.PENDING, property.getLandlordEmail(),  user.getEmail(), property.getId(), Timestamp.now(), endDate);
+            Contract contract = new Contract(ContractStatus.PENDING, property.getLandlordEmail(), user.getEmail(), property.getId(), Timestamp.now(), endDate);
 
             DocumentReference dc = db.collection(UnchangedValues.CONTRACTS_TABLE).document();
 
@@ -154,16 +167,16 @@ public class DetailActivity extends AppCompatActivity {
 
             dc.set(contract)
                     .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        Toast.makeText(this, "Contract created!", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(this, "Contract creation failed!", Toast.LENGTH_SHORT).show();
-                    }
-                    finish();
-            });
+                        if (task.isSuccessful()) {
+                            Toast.makeText(this, "Contract created!", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(this, "Contract creation failed!", Toast.LENGTH_SHORT).show();
+                        }
+                        finish();
+                    });
         });
 
-    //code for landlords to get list of contracts
+        //code for landlords to get list of contracts
 //    void getContracts(){
 //        Gson gson = new Gson();
 //        User user = gson.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), Landlord.class);
@@ -181,6 +194,61 @@ public class DetailActivity extends AppCompatActivity {
 //                    }
 //                });
 //    }
+
+//        Log.d(TAG, property.getLandlordEmail());
+        FirebaseFirestore database = FirebaseFirestore.getInstance();
+//        database1.collection(UnchangedValues.USERS_TABLE)
+//                .whereEqualTo("email",true)
+//                .get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        if (task.isSuccessful()) {
+//                            for (QueryDocumentSnapshot document : task.getResult()) {
+//                                User user = document.toObject(User.class);
+//                                TextView landlordID = findViewById(R.id.details_lanlordID);
+//                                if(user.getEmail() == property.getLandlordEmail()) {
+//                                    landlordID.setText(user.getEmail());
+//                                    Log.d("Hello", document.get("propertyName").toString());
+////                                Log.d(TAG, user.getEmail());
+//                                }
+//                            }
+//                        } else {
+//                            Log.d(TAG, "Error getting documents: ", task.getException());
+//                        }
+//
+//                    }
+//                });
+
+        database.collection(UnchangedValues.USERS_TABLE).whereEqualTo("email", property.getLandlordEmail()).get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
+                        List<DocumentSnapshot> docList = queryDocumentSnapshots.getDocuments();
+                        ArrayList<User> insList = new ArrayList<>();
+                        for(DocumentSnapshot ds : docList)
+                        {
+                            if(ds.exists())
+                           {
+//                               User user = ds.toObject(User.class);
+                                TextView landlordID = findViewById(R.id.details_lanlordID);
+
+                                    landlordID.setText(ds.getString("email"));
+                                   Log.d("TESSSSS", ds.getString("email"));
+
+                            }
+                        }
+                        // load data in to the spinner
+                        Log.d("NewQuestFragment", insList.toString());
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
 
         TextView price = findViewById(R.id.details_price);
         price.setText((int) property.getMonthlyPrice() + ".000 VND / Month");
