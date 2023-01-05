@@ -21,17 +21,45 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="14dp"
+                android:layout_marginBottom="20dp">
+
+                <ImageView
+                    android:id="@+id/details_backBtn"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_round_arrow_back_24"/>
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"/>
+                <ImageButton
+                    android:layout_width="40dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/md_theme_surface"
+                    android:src="@drawable/ic_round_more_horiz_24"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="20dp">
+                android:paddingHorizontal="20dp">
 
-                <include
-                    layout="@layout/returnbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginBottom="25dp" />
+                <!--                <include-->
+                <!--                    layout="@layout/returnbar"-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="50dp"-->
+                <!--                    android:layout_marginBottom="25dp" />-->
+
 
                 <TextView
+                    android:id="@+id/details_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/place_holder"
@@ -39,6 +67,7 @@
                     style="@style/Bold_Heading"/>
 
                 <TextView
+                    android:id="@+id/details_address"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/place_holder"
@@ -50,7 +79,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:orientation="horizontal"
-                android:paddingVertical="40dp"
+                android:paddingTop="40dp"
                 android:weightSum="2.5">
 
                 <LinearLayout
@@ -63,11 +92,11 @@
                     android:paddingEnd="20dp">
 
                     <include
-                        android:id="@+id/details_location"
+                        android:id="@+id/details_bedroom"
                         layout="@layout/feature_component" />
 
                     <include
-                        android:id="@+id/details_bedroom"
+                        android:id="@+id/details_bathroom"
                         layout="@layout/feature_component" />
 
                     <include
@@ -96,13 +125,93 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
                     android:text="@string/description"
-                    style="@style/Heading" />
+                    style="@style/Heading_Details" />
 
                 <TextView
+                    android:id="@+id/details_desc"
                     style="@style/NormalText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/lorem_ipsum" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:text="Landlord information"
+                    style="@style/Heading_Details" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_round_person_24"/>
+                    <TextView
+                        style="@style/NormalText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/place_holder" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_round_email_24"/>
+                    <TextView
+                        style="@style/NormalText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/place_holder" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:text="Property details"
+                    style="@style/Heading_Details" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_round_home_work_24"/>
+                    <TextView
+                        style="@style/NormalText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/place_holder" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_round_map_24"/>
+                    <TextView
+                        style="@style/NormalText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/place_holder" />
+                </LinearLayout>
+
+
             </LinearLayout>
             <View
                 android:layout_width="match_parent"
@@ -111,31 +220,40 @@
 
     </ScrollView>
 
-    <LinearLayout
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
-        android:layout_height="90dp"
-        android:orientation="horizontal"
+        android:layout_height="wrap_content"
+
+        app:strokeWidth="0dp"
+        app:cardCornerRadius="0dp"
+
+        app:cardElevation="3dp"
+        app:cardBackgroundColor="@color/md_theme_surface"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:paddingVertical="10dp"
-        android:paddingHorizontal="40dp"
-        android:gravity="center"
-        android:background="@color/md_theme_surface"
-        android:weightSum="2">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/place_holder"
-            style="@style/Price"
-            android:layout_weight="2"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:text="@string/place_holder"
-            android:layout_weight="1"/>
-    </LinearLayout>
-
+        app:layout_constraintStart_toStartOf="parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            android:orientation="horizontal"
+            android:paddingVertical="10dp"
+            android:paddingHorizontal="20dp"
+            android:gravity="center"
+            android:weightSum="2">
+            <TextView
+                android:id="@+id/details_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/place_holder"
+                style="@style/Price"
+                android:layout_weight="2"/>
+            <Button
+                android:id="@+id/createPropertyBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:text="Place reservation"
+                android:layout_weight="1"/>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
