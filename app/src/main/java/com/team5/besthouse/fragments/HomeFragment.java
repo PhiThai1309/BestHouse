@@ -62,6 +62,7 @@ public class HomeFragment extends Fragment {
     private PropertyAdapter adapter1;
     private PropertyAdapter2 adapter2;
     private StoreService storeService;
+    private View progressIndicator;
 
     FirebaseFirestore db;
 
@@ -110,6 +111,9 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+
+        progressIndicator = view.findViewById(R.id.home_progressBar);
+        progressIndicator.setVisibility(View.VISIBLE);
 
         //get db instance
 
@@ -212,6 +216,7 @@ public class HomeFragment extends Fragment {
                                                         Log.i("ADDED" , p.toString());
                                                         adapter1.notifyDataSetChanged();
                                                         adapter2.notifyDataSetChanged();
+                                                        progressIndicator.setVisibility(View.GONE);
                                                     }
                                                 }
                                             });
@@ -226,6 +231,7 @@ public class HomeFragment extends Fragment {
                                 }
                                 adapter1.notifyDataSetChanged();
                                 adapter2.notifyDataSetChanged();
+                                progressIndicator.setVisibility(View.GONE);
                             }
                         }
                     }

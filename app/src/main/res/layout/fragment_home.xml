@@ -68,6 +68,12 @@
                     android:src="@drawable/ic_outline_account_circle_24" />
             </LinearLayout>
 
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/home_progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"/>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

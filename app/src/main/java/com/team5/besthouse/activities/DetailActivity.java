@@ -1,11 +1,8 @@
 package com.team5.besthouse.activities;
 
-import static android.content.ContentValues.TAG;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,10 +14,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.elevation.SurfaceColors;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -35,34 +30,17 @@ import com.team5.besthouse.models.Tenant;
 import com.team5.besthouse.models.User;
 import com.team5.besthouse.services.StoreService;
 
-import android.widget.Toast;
-
-import com.google.android.material.elevation.SurfaceColors;
-import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.gson.Gson;
-import com.team5.besthouse.R;
-import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.models.Contract;
 import com.team5.besthouse.models.ContractStatus;
 import com.team5.besthouse.models.Landlord;
-import com.team5.besthouse.models.Property;
-import com.team5.besthouse.models.PropertyAddress;
-import com.team5.besthouse.models.Tenant;
-import com.team5.besthouse.models.User;
-import com.team5.besthouse.services.StoreService;
 
-import org.w3c.dom.Text;
 import java.sql.Time;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
-
-import org.w3c.dom.Text;
 
 public class DetailActivity extends AppCompatActivity {
     private FirebaseFirestore db;
@@ -220,6 +198,9 @@ public class DetailActivity extends AppCompatActivity {
 //                    }
 //                });
 
+        View progressIndicator = findViewById(R.id.progressBar);
+        progressIndicator.setVisibility(View.VISIBLE);
+
         database.collection(UnchangedValues.USERS_TABLE).whereEqualTo("email", property.getLandlordEmail()).get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
@@ -231,11 +212,16 @@ public class DetailActivity extends AppCompatActivity {
                         {
                             if(ds.exists())
                            {
-//                               User user = ds.toObject(User.class);
-                                TextView landlordID = findViewById(R.id.details_lanlordID);
+                               progressIndicator.setVisibility(View.GONE);
+                               TextView landlordName = findViewById(R.id.details_landlordName);
+                               landlordName.setText(ds.getString("fullName"));
+//                                   Log.d("TESSSSS", ds.getString("email"));
 
-                                    landlordID.setText(ds.getString("email"));
-                                   Log.d("TESSSSS", ds.getString("email"));
+                               TextView landlordEmail = findViewById(R.id.details_landlordEmail);
+                               landlordEmail.setText(ds.getString("email"));
+
+                               TextView landlordPhone = findViewById(R.id.details_landlordPhone);
+                               landlordPhone.setText(ds.getString("phoneNumber"));
 
                             }
                         }
@@ -249,6 +235,8 @@ public class DetailActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
+
+
 
         TextView price = findViewById(R.id.details_price);
         price.setText((int) property.getMonthlyPrice() + ".000 VND / Month");
