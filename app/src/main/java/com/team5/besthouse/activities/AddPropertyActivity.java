@@ -49,8 +49,11 @@ import com.team5.besthouse.adapters.PropertyImageInsertAdapter;
 import com.team5.besthouse.adapters.PropertyTypeSelectAdapter;
 import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.interfaces.RecyclerViewInterface;
+import com.team5.besthouse.interfaces.SetReceiveImageURLCallBack;
 import com.team5.besthouse.models.Property;
+import com.team5.besthouse.models.PropertyStatus;
 import com.team5.besthouse.models.PropertyType;
+import com.team5.besthouse.models.Utilities;
 
 import org.checkerframework.checker.units.qual.A;
 
@@ -64,9 +67,10 @@ public class AddPropertyActivity extends AppCompatActivity implements RecyclerVi
     ImageButton returnButton;
     private EditText pAddressEditText;
     private EditText pnameEditText, priceEditText, pdescEditText;
+    private EditText pBedRoomEditText, pBathRoomEditText;
     private Button submitButton;
     private Spinner ptypeSpinner;
-    private String selectPropertyType;
+    private PropertyType selectPropertyType = PropertyType.HOUSE;
     private int currentPropertyImagePosition = -1;
     private PropertyImageInsertAdapter piiAdapter;
     private ArrayList<Bitmap> propertyImageList;
@@ -92,6 +96,12 @@ public class AddPropertyActivity extends AppCompatActivity implements RecyclerVi
         View pAddress = findViewById(R.id.property_address);
         pAddressEditText = (EditText) pAddress.findViewById(R.id.box);
         pAddressEditText.setHint("Address:");
+
+        View pBedRoomEditTextView = findViewById(R.id.bedroomQuantity);
+        pBedRoomEditText = (EditText) pBedRoomEditTextView.findViewById(R.id.box);
+
+        View pBathRoomEditTextView = findViewById(R.id.bathroomQuantity);
+         pBathRoomEditText= (EditText) pBathRoomEditTextView.findViewById(R.id.box);
 
         //Set hint for adding property price textbox
         View price = findViewById(R.id.property_price);
@@ -260,7 +270,7 @@ public class AddPropertyActivity extends AppCompatActivity implements RecyclerVi
         return bitmap;
     }
 
-    private ArrayList<String> uploadImageToFireStorage()
+    private ArrayList<String> uploadImageToFireStorage(final SetReceiveImageURLCallBack callBack)
     {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         ArrayList<String> imageURL = new ArrayList<>();
@@ -277,6 +287,10 @@ public class AddPropertyActivity extends AppCompatActivity implements RecyclerVi
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         showTextLong("Success");
                         imageURL.add(taskSnapshot.getStorage().getDownloadUrl().toString());
+                        if(imageURL.size() >= 3)
+                        {
+                           callBack.onCallback(imageURL); ;
+                        }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -303,17 +317,119 @@ public class AddPropertyActivity extends AppCompatActivity implements RecyclerVi
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(uploadImageToFireStorage().size() > 0)
+                if(!validateInputs())
                 {
+                   return;
+                }
+               uploadImageToFireStorage(new SetReceiveImageURLCallBack() {
+                    @Override
+                    public void onCallback(List<String> imageURLs) {
+                        if(imageURLs.size() > 0)
+                        {
+                            Property newProperty = createNewProperty((ArrayList<String>) imageURLs);
+                            newProperty.setStatus(PropertyStatus.AVAILABLE);
+                            if(newProperty != null)
+                            {
+                                FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+                                firestore.collection(UnchangedValues.PROPERTY_TABLE).add(newProperty)
+                                        .addOnSuccessListener(
+                                                documentReference -> {
+                                                    // display successful message
+                                                    showTextLong("New Property is Added");
+                                                }
+                                        )
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                showTextLong(e.getMessage());
+                                            }
+                                        });
+                            }
+                        }
+                        else
+                        {
+                            showTextLong("Added Property fail because of. Upload Image Fail");
+                        }
+                    }
+                });
 
-                }
-                else
-                {
-                    showTextLong("Added Property fail because of. Upload Image Fail");
-                }
+
             }
         });
     }
+
+
+    private Property createNewProperty(ArrayList<String> imageURLList)
+    {
+       Geocoder geocoder = new Geocoder(this) ;
+        try {
+            List<Address> alist = geocoder.getFromLocationName(pAddressEditText.getText().toString(), 1);
+            List<Utilities> listU = new ArrayList<>();
+            listU.add(Utilities.ELECTRIC);
+            listU.add(Utilities.INTERNET);
+            Property property = new Property(null, pnameEditText.getText().toString(), "minhlandlord@gmail.com"
+                    ,alist.get(0), selectPropertyType,  Integer.parseInt(pBedRoomEditText.getText().toString()),
+                    Integer.parseInt(pBathRoomEditText.getText().toString()), listU,
+                    Float.parseFloat(priceEditText.getText().toString()), 30 );
+            property.setPropertyDescription(pdescEditText.getText().toString());
+            property.setImageURLList(imageURLList) ;
+            return property;
+        } catch (IOException e) {
+            Log.e("ERRRROORRR", "createNewProperty: " + e.getMessage() );
+        }
+
+   return null;
+    }
+
+    private boolean validateInputs()
+    {
+        if(pnameEditText.getText().toString().trim().isEmpty())
+        {
+            showTextLong("Please Enter a valid property Name");
+            return false;
+        }
+        else if(selectPropertyType == null)
+        {
+            showTextLong("Please Select the property type");
+            return false;
+        }
+        else if (pAddressEditText.getText().toString().trim().isEmpty())
+        {
+            showTextLong("Please Select property address");
+        }
+        else if(pBedRoomEditText.getText().toString().isEmpty())
+        {
+            showTextLong("Please enter valid bedroom number");
+            return false;
+        }
+        else if(pBathRoomEditText.getText().toString().isEmpty())
+        {
+            showTextLong("Please enter valid bathroom number");
+            return false;
+        }
+        else if(priceEditText.getText().toString().isEmpty())
+        {
+            showTextLong("Please enter valid property price");
+            return false;
+        }
+
+        else if(propertyImageList.size() < 3)
+        {
+            showTextLong("Please upload 3 images");
+            return false;
+        }
+        else if(pdescEditText.getText().toString().isEmpty())
+        {
+            showTextLong("Please enter property description");
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+       return false;
+    }
+
 
 
     @Override

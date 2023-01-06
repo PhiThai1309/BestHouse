@@ -2,11 +2,12 @@ package com.team5.besthouse.models;
 
 import android.location.Address;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Property {
-
+public class Property implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String id;
     private String landlordEmail;
     private String propertyName;
@@ -45,6 +46,11 @@ public class Property {
            this.imageURLList = imageURLList;
            return true;
        }
+    }
+
+    public void  setStatus(PropertyStatus pstatus)
+    {
+        this.status = pstatus;
     }
 
     public ArrayList<String> getImageURLList()

@@ -26,6 +26,7 @@
             android:ems="2"
             android:textColor="@color/BLACK"
             android:textAlignment="center"
+            android:id="@+id/box"
             />
 
     </LinearLayout>
