@@ -260,9 +260,10 @@ public class AddPropertyActivity extends AppCompatActivity implements RecyclerVi
         return bitmap;
     }
 
-    private boolean uploadImageToFireStorage()
+    private ArrayList<String> uploadImageToFireStorage()
     {
         FirebaseStorage storage = FirebaseStorage.getInstance();
+        ArrayList<String> imageURL = new ArrayList<>();
         int count = 0;
         for(Bitmap bitmap : propertyImageList)
         {
@@ -275,6 +276,7 @@ public class AddPropertyActivity extends AppCompatActivity implements RecyclerVi
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         showTextLong("Success");
+                        imageURL.add(taskSnapshot.getStorage().getDownloadUrl().toString());
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -292,9 +294,7 @@ public class AddPropertyActivity extends AppCompatActivity implements RecyclerVi
                 count++;
             }
         }
-
-
-        return false;
+        return imageURL;
     }
 
 
@@ -303,7 +303,14 @@ public class AddPropertyActivity extends AppCompatActivity implements RecyclerVi
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                uploadImageToFireStorage();
+                if(uploadImageToFireStorage().size() > 0)
+                {
+
+                }
+                else
+                {
+                    showTextLong("Added Property fail because of. Upload Image Fail");
+                }
             }
         });
     }
