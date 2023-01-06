@@ -6,7 +6,7 @@ import android.os.Bundle;
 
 import com.team5.besthouse.R;
 
-public class ContractActivity extends AppCompatActivity {
+public class ContractActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

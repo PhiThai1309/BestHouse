@@ -27,7 +27,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
-import com.team5.besthouse.broadcastreceiver.ConnectionCheck;
 import com.team5.besthouse.broadcastreceiver.ConnectionReceiver;
 import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.databinding.ActivityLoginBinding;

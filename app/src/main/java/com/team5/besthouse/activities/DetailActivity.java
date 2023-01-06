@@ -52,7 +52,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.w3c.dom.Text;
 
-public class DetailActivity extends AppCompatActivity {
+public class DetailActivity extends BaseActivity {
     private FirebaseFirestore db;
     private Property property;
     private StoreService storeService;

@@ -14,7 +14,6 @@ import android.widget.Toast;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.material.elevation.SurfaceColors;
 import com.google.android.material.navigation.NavigationBarView;
-import com.team5.besthouse.broadcastreceiver.ConnectionCheck;
 import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.fragments.AccountFragment;
 import com.team5.besthouse.fragments.HomeFragment;

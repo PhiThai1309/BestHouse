@@ -8,7 +8,7 @@ import android.widget.EditText;
 
 import com.team5.besthouse.R;
 
-public class AddPropertyActivity extends AppCompatActivity {
+public class AddPropertyActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

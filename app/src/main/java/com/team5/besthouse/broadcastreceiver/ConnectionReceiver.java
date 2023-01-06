@@ -9,6 +9,8 @@ import android.net.NetworkInfo;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Toast;
+
 import androidx.appcompat.widget.AppCompatButton;
 import com.team5.besthouse.R;
 
@@ -24,9 +26,32 @@ public class ConnectionReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         ConnectivityManager connectivityManager = (ConnectivityManager)
                 context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+        NetworkInfo activeNetInfo = connectivityManager.getActiveNetworkInfo();
         boolean isConnected = activeNetInfo != null && activeNetInfo.isConnectedOrConnecting();
         listener.onConnectivityChanged(isConnected);
+
+        if (!isConnected) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            View layout_dialog = LayoutInflater.from(context).inflate(R.layout.wifi_connection_alert, null);
+            builder.setView(layout_dialog);
+
+            AppCompatButton btnRetry = layout_dialog.findViewById(R.id.btnRetry);
+
+            //Show dialog
+            AlertDialog dialog = builder.create();
+            dialog.show();
+            dialog.setCancelable(false);
+
+            dialog.getWindow().setGravity(Gravity.CENTER);
+
+            btnRetry.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialog.dismiss();
+                    onReceive(context, intent);
+                }
+            });
+        }
     }
 
     public interface OnConnectivityChangedListener {

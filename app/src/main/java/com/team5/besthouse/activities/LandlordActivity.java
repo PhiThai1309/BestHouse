@@ -25,7 +25,7 @@ import com.team5.besthouse.models.Landlord;
 import com.team5.besthouse.services.StoreService;
 
 
-public class LandlordActivity extends AppCompatActivity {
+public class LandlordActivity extends BaseActivity {
     ActionBar actionBar;
     private StoreService storeService;
     @Override
