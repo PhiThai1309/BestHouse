@@ -47,6 +47,7 @@ public class PropertyImageInsertAdapter extends RecyclerView.Adapter<PropertyIma
            return false;
        }
         imageList.set(pos, newItem);
+       notifyItemChanged(pos);
        return true;
     }
 

@@ -1,5 +1,6 @@
 package com.team5.besthouse.activities;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -20,9 +21,12 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.InputType;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -32,6 +36,13 @@ import android.widget.Toast;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.team5.besthouse.R;
 import com.team5.besthouse.adapters.LocationSuggestionAdapter;
 import com.team5.besthouse.adapters.PropertyImageInsertAdapter;
@@ -43,6 +54,7 @@ import com.team5.besthouse.models.PropertyType;
 
 import org.checkerframework.checker.units.qual.A;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,11 +63,17 @@ public class AddPropertyActivity extends AppCompatActivity implements RecyclerVi
 
     ImageButton returnButton;
     private EditText pAddressEditText;
-    private EditText pnameEditText, priceEditText;
+    private EditText pnameEditText, priceEditText, pdescEditText;
+    private Button submitButton;
     private Spinner ptypeSpinner;
     private String selectPropertyType;
+    private int currentPropertyImagePosition = -1;
     private PropertyImageInsertAdapter piiAdapter;
     private ArrayList<Bitmap> propertyImageList;
+    private Uri test;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,6 +99,19 @@ public class AddPropertyActivity extends AppCompatActivity implements RecyclerVi
         priceEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
         priceEditText.setHint("Monthly Price:");
 
+        //Set hint for add property description text box
+       View description = findViewById(R.id.property_description);
+       pdescEditText = description.findViewById(R.id.box);
+       pdescEditText.setHint("Describe the Property in Detail");
+
+       // set the submit button
+        View submitButtonHolder = findViewById(R.id.continue_button);
+        submitButton = submitButtonHolder.findViewById(R.id.button);
+
+
+
+
+
         //config the return button
         returnButton = findViewById(R.id.returnBar).findViewById(R.id.returnButton);
         setReturnButtonAction();
@@ -88,6 +119,7 @@ public class AddPropertyActivity extends AppCompatActivity implements RecyclerVi
         initializeSpinner();
 //        setSpinSelectAction();
         settleRecyclerView();
+        setSubmitButton();
 
 
     }
@@ -159,11 +191,7 @@ public class AddPropertyActivity extends AppCompatActivity implements RecyclerVi
             i.putExtra(UnchangedValues.ACTIVITY_REQUEST_CODE, 100);
             startActivityForResult(i, 100);
         });
-
-
     }
-
-
 
 
     @Override
@@ -180,11 +208,22 @@ public class AddPropertyActivity extends AppCompatActivity implements RecyclerVi
         else if(requestCode == 200 && resultCode == RESULT_OK)
         {
             final Uri imageUri = data.getData();
+            test = imageUri;
             Bitmap bitmap = convertUriToBitmap(imageUri);
            if(!piiAdapter.addNewItem(bitmap))
            {
               showTextLong("Add Image Unsuccessfully. Maximum is 3 images");
            }
+        }
+        else if(requestCode == 201 && resultCode == RESULT_OK)
+        {
+            final Uri imageUri = data.getData();
+            Bitmap bitmap = convertUriToBitmap(imageUri);
+            if(this.currentPropertyImagePosition != -1)
+            {
+                piiAdapter.replaceItem(bitmap, currentPropertyImagePosition);
+            }
+
         }
     }
 
@@ -221,14 +260,68 @@ public class AddPropertyActivity extends AppCompatActivity implements RecyclerVi
         return bitmap;
     }
 
+    private boolean uploadImageToFireStorage()
+    {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        int count = 0;
+        for(Bitmap bitmap : propertyImageList)
+        {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] data = baos.toByteArray();
+            if(bitmap != null && count > 0) {
+                StorageReference storageRef =  storage.getReference("images/").child(System.currentTimeMillis()+"_"+"currentuserid"+".JPEG");
+                storageRef.putBytes(data).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        showTextLong("Success");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        showTextLong(e.getMessage());
+                    }
+                }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
+                        showTextLong("Wait");
+                    }
+                });
+            }
+            else {
+                count++;
+            }
+        }
+
+
+        return false;
+    }
+
+
+    private void setSubmitButton()
+    {
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                uploadImageToFireStorage();
+            }
+        });
+    }
+
 
     @Override
     public void onItemClick(int position) {
+        Intent i = new Intent(Intent.ACTION_PICK);
+        i.setType("image/*");
         if(position == 0) // add image
         {
-            Intent i = new Intent(Intent.ACTION_PICK);
-            i.setType("image/*");
             startActivityForResult(i, 200);
+
+        }
+        else
+        {
+            currentPropertyImagePosition = position;
+            startActivityForResult(i, 201);
         }
     }
 }

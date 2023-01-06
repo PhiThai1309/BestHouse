@@ -2,6 +2,7 @@ package com.team5.besthouse.models;
 
 import android.location.Address;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Property {
@@ -9,7 +10,9 @@ public class Property {
     private String id;
     private String landlordEmail;
     private String propertyName;
+    private String propertyDescription;
     private Address address;
+    private ArrayList<String> imageURLList;
     private PropertyStatus status;
     private PropertyType type;
     private int bedrooms;
@@ -31,8 +34,34 @@ public class Property {
         this.area = area;
     }
 
+    public boolean setImageURLList(ArrayList<String> imageURLList)
+    {
+       if(imageURLList.size() == 0)
+       {
+            return false;
+       }
+       else
+       {
+           this.imageURLList = imageURLList;
+           return true;
+       }
+    }
+
+    public ArrayList<String> getImageURLList()
+    {
+        return this.imageURLList;
+    }
     public String getId() {
         return id;
+    }
+
+    public void setPropertyDescription(String pd)
+    {
+        this.propertyDescription = pd;
+    }
+    public String getPropertyDescription()
+    {
+        return this.getPropertyDescription();
     }
 
     public String getPropertyName() {
