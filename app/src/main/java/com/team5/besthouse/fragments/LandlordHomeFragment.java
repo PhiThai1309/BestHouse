@@ -81,11 +81,6 @@ public class LandlordHomeFragment extends Fragment {
 
         list = new ArrayList<>();
         Address address = new Address(Locale.US);
-        list.add(new Property("213", "123", "213", address, PropertyType.APARTMENT, 12, 12, Collections.singletonList(Utilities.ELECTRIC), (float) 12.0, (float) 12.0));
-        list.add(new Property("213", "123", "213", address, PropertyType.APARTMENT, 12, 12, Collections.singletonList(Utilities.ELECTRIC), (float) 12.0, (float) 12.0));
-        list.add(new Property("213", "123", "213", address, PropertyType.APARTMENT, 12, 12, Collections.singletonList(Utilities.ELECTRIC), (float) 12.0, (float) 12.0));
-        list.add(new Property("213", "123", "213", address, PropertyType.APARTMENT, 12, 12, Collections.singletonList(Utilities.ELECTRIC), (float) 12.0, (float) 12.0));
-        list.add(new Property("213", "123", "213", address, PropertyType.APARTMENT, 12, 12, Collections.singletonList(Utilities.ELECTRIC), (float) 12.0, (float) 12.0));
 
         postedPropertyView = (RecyclerView) view.findViewById(R.id.posted_property);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());

@@ -1,18 +1,17 @@
 package com.team5.besthouse.models;
 
-import android.location.Address;
+
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Property implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class Property implements  Serializable {
     private String id;
     private String landlordEmail;
     private String propertyName;
     private String propertyDescription;
-    private Address address;
+    private PropertyAddress address;
     private ArrayList<String> imageURLList;
     private PropertyStatus status;
     private PropertyType type;
@@ -22,7 +21,7 @@ public class Property implements Serializable {
     private float monthlyPrice;
     private float area;
 
-    public Property(String id, String propertyName, String landlordEmail, Address address, PropertyType type, int bedrooms, int bathrooms, List<Utilities> utilities, float monthlyPrice, float area) {
+    public Property(String id, String propertyName, String landlordEmail, PropertyAddress address, PropertyType type, int bedrooms, int bathrooms, List<Utilities> utilities, float monthlyPrice, float area) {
         this.id = id;
         this.propertyName = propertyName;
         this.landlordEmail = landlordEmail;
@@ -78,7 +77,7 @@ public class Property implements Serializable {
         return landlordEmail;
     }
 
-    public Address getAddress() {
+    public PropertyAddress getAddress() {
         return address;
     }
 

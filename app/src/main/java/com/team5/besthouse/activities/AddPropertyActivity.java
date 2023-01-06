@@ -50,7 +50,9 @@ import com.team5.besthouse.adapters.PropertyTypeSelectAdapter;
 import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.interfaces.RecyclerViewInterface;
 import com.team5.besthouse.interfaces.SetReceiveImageURLCallBack;
+import com.team5.besthouse.models.Coordinates;
 import com.team5.besthouse.models.Property;
+import com.team5.besthouse.models.PropertyAddress;
 import com.team5.besthouse.models.PropertyStatus;
 import com.team5.besthouse.models.PropertyType;
 import com.team5.besthouse.models.Utilities;
@@ -60,6 +62,7 @@ import org.checkerframework.checker.units.qual.A;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class AddPropertyActivity extends AppCompatActivity implements RecyclerViewInterface{
@@ -331,19 +334,28 @@ public class AddPropertyActivity extends AppCompatActivity implements RecyclerVi
                             if(newProperty != null)
                             {
                                 FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-                                firestore.collection(UnchangedValues.PROPERTY_TABLE).add(newProperty)
-                                        .addOnSuccessListener(
-                                                documentReference -> {
-                                                    // display successful message
-                                                    showTextLong("New Property is Added");
+                                try {
+                                    HashMap<String,String> hash = new HashMap<>();
+                                    hash.put("aaa", "bbbjhjA");
+                                    firestore.collection(UnchangedValues.PROPERTY_TABLE).add(newProperty)
+                                            .addOnSuccessListener(
+                                                    documentReference -> {
+                                                        // display successful message
+                                                        showTextLong("New Property is Added");
+                                                    }
+                                            )
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    showTextLong(e.getMessage());
                                                 }
-                                        )
-                                        .addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                showTextLong(e.getMessage());
-                                            }
-                                        });
+                                            });
+                                }
+                                catch (Exception e)
+                                {
+                                   showTextLong(e.getMessage());
+                                }
+
                             }
                         }
                         else
@@ -367,8 +379,12 @@ public class AddPropertyActivity extends AppCompatActivity implements RecyclerVi
             List<Utilities> listU = new ArrayList<>();
             listU.add(Utilities.ELECTRIC);
             listU.add(Utilities.INTERNET);
+            PropertyAddress padress = new PropertyAddress();
+            padress.setStreet(alist.get(0).getAddressLine(0));
+            padress.setCoordinates(new Coordinates(0, alist.get(0).getLongitude(), alist.get(0).getLatitude()));
+
             Property property = new Property(null, pnameEditText.getText().toString(), "minhlandlord@gmail.com"
-                    ,alist.get(0), selectPropertyType,  Integer.parseInt(pBedRoomEditText.getText().toString()),
+                    ,padress, selectPropertyType,  Integer.parseInt(pBedRoomEditText.getText().toString()),
                     Integer.parseInt(pBathRoomEditText.getText().toString()), listU,
                     Float.parseFloat(priceEditText.getText().toString()), 30 );
             property.setPropertyDescription(pdescEditText.getText().toString());

@@ -100,11 +100,6 @@ public class HomeFragment extends Fragment {
         featureView.setAdapter(adapter1);
 
         Address address = new Address(Locale.US);
-        list.add(new Property("213", "123", "213", address, PropertyType.APARTMENT, 12, 12, Collections.singletonList(Utilities.ELECTRIC), (float) 12.0, (float) 12.0));
-        list.add(new Property("213", "123", "213", address, PropertyType.APARTMENT, 12, 12, Collections.singletonList(Utilities.ELECTRIC), (float) 12.0, (float) 12.0));
-        list.add(new Property("213", "123", "213", address, PropertyType.APARTMENT, 12, 12, Collections.singletonList(Utilities.ELECTRIC), (float) 12.0, (float) 12.0));
-        list.add(new Property("213", "123", "213", address, PropertyType.APARTMENT, 12, 12, Collections.singletonList(Utilities.ELECTRIC), (float) 12.0, (float) 12.0));
-        list.add(new Property("213", "123", "213", address, PropertyType.APARTMENT, 12, 12, Collections.singletonList(Utilities.ELECTRIC), (float) 12.0, (float) 12.0));
 
         propertyView = (RecyclerView) view.findViewById(R.id.main_property);
         LinearLayoutManager linearLayoutManager2 = new LinearLayoutManager(getContext());
