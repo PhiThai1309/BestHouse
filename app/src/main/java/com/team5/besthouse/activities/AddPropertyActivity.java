@@ -388,7 +388,7 @@ public class AddPropertyActivity extends AppCompatActivity implements RecyclerVi
                     Integer.parseInt(pBathRoomEditText.getText().toString()), listU,
                     Float.parseFloat(priceEditText.getText().toString()), 30 );
             property.setPropertyDescription(pdescEditText.getText().toString());
-            property.setImageURLList(imageURLList) ;
+//            property.setImageURLList(imageURLList) ;
             return property;
         } catch (IOException e) {
             Log.e("ERRRROORRR", "createNewProperty: " + e.getMessage() );

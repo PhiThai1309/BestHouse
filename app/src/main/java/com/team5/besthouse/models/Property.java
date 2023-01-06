@@ -31,6 +31,11 @@ public class Property implements  Serializable {
         this.area = area;
     }
 
+    public Property()
+    {
+
+    }
+
     public boolean setImageURLList(ArrayList<String> imageURLList)
     {
        if(imageURLList.size() == 0)
