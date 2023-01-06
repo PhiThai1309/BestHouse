@@ -1,7 +1,4 @@
 package com.team5.besthouse.models;
-
-
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
