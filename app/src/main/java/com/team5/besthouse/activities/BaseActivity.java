@@ -9,6 +9,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
 
     private ConnectionReceiver connectionReceiver;
 
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         connectionReceiver = new ConnectionReceiver(this);
