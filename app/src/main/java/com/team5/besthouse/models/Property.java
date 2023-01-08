@@ -9,7 +9,7 @@ public class Property implements  Serializable {
     private String propertyName;
     private String propertyDescription;
     private PropertyAddress address;
-    private ArrayList<String> imageURLList;
+    private List<String> imageURLList;
     private PropertyStatus status;
     private PropertyType type;
     private int bedrooms;
@@ -49,61 +49,107 @@ public class Property implements  Serializable {
        }
     }
 
-    public void  setStatus(PropertyStatus pstatus)
-    {
-        this.status = pstatus;
-    }
-
-    public ArrayList<String> getImageURLList()
-    {
-        return this.imageURLList;
-    }
     public String getId() {
         return id;
     }
 
-    public void setPropertyDescription(String pd)
-    {
-        this.propertyDescription = pd;
-    }
-    public String getPropertyDescription()
-    {
-        return this.getPropertyDescription();
-    }
-
-    public String getPropertyName() {
-        return propertyName;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getLandlordEmail() {
         return landlordEmail;
     }
 
+    public void setLandlordEmail(String landlordEmail) {
+        this.landlordEmail = landlordEmail;
+    }
+
+    public String getPropertyName() {
+        return propertyName;
+    }
+
+    public void setPropertyName(String propertyName) {
+        this.propertyName = propertyName;
+    }
+
+    public String getPropertyDescription() {
+        return propertyDescription;
+    }
+
+    public void setPropertyDescription(String propertyDescription) {
+        this.propertyDescription = propertyDescription;
+    }
+
     public PropertyAddress getAddress() {
         return address;
     }
 
-    public PropertyType getPropertyType() {
+    public void setAddress(PropertyAddress address) {
+        this.address = address;
+    }
+
+    public List<String> getImageURLList() {
+        return imageURLList;
+    }
+
+    public void setImageURLList(List<String> imageURLList) {
+        this.imageURLList = imageURLList;
+    }
+
+    public PropertyStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(PropertyStatus status) {
+        this.status = status;
+    }
+
+    public PropertyType getType() {
         return type;
+    }
+
+    public void setType(PropertyType type) {
+        this.type = type;
     }
 
     public int getBedrooms() {
         return bedrooms;
     }
 
+    public void setBedrooms(int bedrooms) {
+        this.bedrooms = bedrooms;
+    }
+
     public int getBathrooms() {
         return bathrooms;
+    }
+
+    public void setBathrooms(int bathrooms) {
+        this.bathrooms = bathrooms;
     }
 
     public List<Utilities> getUtilities() {
         return utilities;
     }
 
+    public void setUtilities(List<Utilities> utilities) {
+        this.utilities = utilities;
+    }
+
     public float getMonthlyPrice() {
         return monthlyPrice;
     }
 
+    public void setMonthlyPrice(float monthlyPrice) {
+        this.monthlyPrice = monthlyPrice;
+    }
+
     public float getArea() {
         return area;
+    }
+
+    public void setArea(float area) {
+        this.area = area;
     }
 }

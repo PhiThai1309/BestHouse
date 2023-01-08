@@ -74,6 +74,66 @@
                     layout="@layout/addproperty_bigbox_layout"/>
 
             </LinearLayout>
+            
+            <LinearLayout
+                android:paddingHorizontal="@dimen/_30sdp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/_10sdp"
+                        android:orientation="vertical">
+                        <CheckBox
+                            android:id="@+id/electric_option_checkbox"
+                            android:layout_width="@dimen/_120sdp"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/_18sdp"
+                            android:paddingHorizontal="@dimen/_5sdp"
+                            android:text="@string/electric_property_checkbox"
+                            android:layout_marginBottom="@dimen/_5sdp"
+                            android:background="@drawable/bg_utilities_checkbox_btn"
+                            android:layoutDirection="rtl"/>
+
+                        <CheckBox
+                            android:id="@+id/water_option_checkbox"
+                            android:layout_width="@dimen/_120sdp"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/_18sdp"
+                            android:text="@string/water_property_checkbox"
+                            android:paddingHorizontal="@dimen/_5sdp"
+                            android:background="@drawable/bg_utilities_checkbox_btn"
+                            android:layoutDirection="rtl"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <CheckBox
+                            android:id="@+id/internet_option_checkbox"
+                            android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                            android:textSize="@dimen/_18sdp"
+                            android:layout_marginBottom="@dimen/_3sdp"
+                            android:paddingHorizontal="@dimen/_3sdp"
+                            android:text="@string/internet_property_checkbox"
+                            android:background="@drawable/bg_utilities_checkbox_btn"
+                            android:layoutDirection="rtl"/>
+
+                        <CheckBox
+                            android:id="@+id/gas_option_checkbox"
+                            android:layout_width="@dimen/_120sdp"
+                            android:layout_height="wrap_content"
+                            android:paddingHorizontal="@dimen/_5sdp"
+                            android:textSize="@dimen/_18sdp"
+                            android:text="@string/gas_property_checkbox"
+                            android:background="@drawable/bg_utilities_checkbox_btn"
+                            android:layoutDirection="rtl"/>
+                    </LinearLayout>
+
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -134,6 +194,37 @@
                     layout="@layout/addproperty_smallbox_layout"/>
 
             </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/areaText"
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="45dp"
+                        android:layout_weight="1"
+                        android:text="@string/property_area_hint"
+                        android:paddingTop="20dp"
+                        style="@style/SubHeading"/>
+
+                </LinearLayout>
+
+                <include
+                    android:id="@+id/propertyArea"
+                    layout="@layout/addproperty_smallbox_layout"/>
+
+            </LinearLayout>
+
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -177,11 +268,12 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingHorizontal="@dimen/_20sdp">
 
                 <include
-                    android:id="@+id/continue_button"
-                    layout="@layout/continue_button"/>
+                    android:id="@+id/progress_button"
+                    layout="@layout/progressbar_button"/>
 
             </LinearLayout>
 

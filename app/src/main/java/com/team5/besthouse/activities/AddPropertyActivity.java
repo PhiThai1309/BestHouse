@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.core.util.LruCacheKt;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,9 +28,11 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -43,6 +46,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.gson.Gson;
 import com.team5.besthouse.R;
 import com.team5.besthouse.adapters.LocationSuggestionAdapter;
 import com.team5.besthouse.adapters.PropertyImageInsertAdapter;
@@ -51,11 +55,14 @@ import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.interfaces.RecyclerViewInterface;
 import com.team5.besthouse.interfaces.SetReceiveImageURLCallBack;
 import com.team5.besthouse.models.Coordinates;
+import com.team5.besthouse.models.Landlord;
 import com.team5.besthouse.models.Property;
 import com.team5.besthouse.models.PropertyAddress;
 import com.team5.besthouse.models.PropertyStatus;
 import com.team5.besthouse.models.PropertyType;
+import com.team5.besthouse.models.User;
 import com.team5.besthouse.models.Utilities;
+import com.team5.besthouse.services.StoreService;
 
 import org.checkerframework.checker.units.qual.A;
 
@@ -67,17 +74,23 @@ import java.util.List;
 
 public class AddPropertyActivity extends AppCompatActivity implements RecyclerViewInterface{
 
-    ImageButton returnButton;
+    private ImageButton returnButton;
     private EditText pAddressEditText;
     private EditText pnameEditText, priceEditText, pdescEditText;
-    private EditText pBedRoomEditText, pBathRoomEditText;
+    private EditText pBedRoomEditText, pBathRoomEditText, pAreaEditText;
     private Button submitButton;
+    private ProgressBar progressBar;
+
     private Spinner ptypeSpinner;
     private PropertyType selectPropertyType = PropertyType.HOUSE;
     private int currentPropertyImagePosition = -1;
     private PropertyImageInsertAdapter piiAdapter;
     private ArrayList<Bitmap> propertyImageList;
-    private Uri test;
+    private CheckBox checkBoxElectric, checkBoxWater, checkBoxInternet, checkBoxGas;
+    private StoreService storeService;
+    private Landlord loginLandlord;
+
+
 
 
 
@@ -85,7 +98,10 @@ public class AddPropertyActivity extends AppCompatActivity implements RecyclerVi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_property);
-
+        // set storage service
+        storeService = new StoreService(getApplicationContext());
+        Gson json = new Gson();
+        loginLandlord= json.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), Landlord.class );
         //Set hint for adding property name textbox
         View pname = findViewById(R.id.property_name);
         pnameEditText = (EditText) pname.findViewById(R.id.box);
@@ -106,6 +122,8 @@ public class AddPropertyActivity extends AppCompatActivity implements RecyclerVi
         View pBathRoomEditTextView = findViewById(R.id.bathroomQuantity);
          pBathRoomEditText= (EditText) pBathRoomEditTextView.findViewById(R.id.box);
 
+        pAreaEditText = findViewById(R.id.propertyArea).findViewById(R.id.box);
+
         //Set hint for adding property price textbox
         View price = findViewById(R.id.property_price);
         priceEditText = (EditText) price.findViewById(R.id.box);
@@ -118,11 +136,17 @@ public class AddPropertyActivity extends AppCompatActivity implements RecyclerVi
        pdescEditText.setHint("Describe the Property in Detail");
 
        // set the submit button
-        View submitButtonHolder = findViewById(R.id.continue_button);
+        View submitButtonHolder = findViewById(R.id.progress_button);
         submitButton = submitButtonHolder.findViewById(R.id.button);
 
+        //progress bar
+        progressBar = findViewById(R.id.progress_button).findViewById(R.id.progress_bar);
 
-
+        // set checkbox config
+        checkBoxElectric = findViewById(R.id.electric_option_checkbox);
+        checkBoxWater = findViewById(R.id.water_option_checkbox);
+        checkBoxInternet = findViewById(R.id.internet_option_checkbox);
+        checkBoxGas = findViewById(R.id.gas_option_checkbox);
 
 
         //config the return button
@@ -130,7 +154,7 @@ public class AddPropertyActivity extends AppCompatActivity implements RecyclerVi
         setReturnButtonAction();
         setAddAddressAction();
         initializeSpinner();
-//        setSpinSelectAction();
+        setSpinSelectAction();
         settleRecyclerView();
         setSubmitButton();
 
@@ -155,10 +179,7 @@ public class AddPropertyActivity extends AppCompatActivity implements RecyclerVi
         try {
             propertyImageList = new ArrayList<>();
             Bitmap addIconBitmap = convertVectorDrawableToBitmap (R.drawable.ic_baseline_add_35);
-            if(addIconBitmap == null)
-            {
-                showTextLong("NULLL bitmap");
-            }
+
             propertyImageList.add(addIconBitmap) ;
             piiAdapter = new PropertyImageInsertAdapter(this, propertyImageList, this);
             LinearLayoutManager lm = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
@@ -174,17 +195,17 @@ public class AddPropertyActivity extends AppCompatActivity implements RecyclerVi
 
         private void setSpinSelectAction()
     {
-//        ptypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//               selectPropertyType = (String) parent.getItemAtPosition(position);
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parent) {
-//                selectPropertyType = null;
-//            }
-//        });
+        ptypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+               selectPropertyType = (PropertyType) parent.getItemAtPosition(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                selectPropertyType = null;
+            }
+        });
     }
 
     private void setReturnButtonAction()
@@ -221,7 +242,7 @@ public class AddPropertyActivity extends AppCompatActivity implements RecyclerVi
         else if(requestCode == 200 && resultCode == RESULT_OK)
         {
             final Uri imageUri = data.getData();
-            test = imageUri;
+
             Bitmap bitmap = convertUriToBitmap(imageUri);
            if(!piiAdapter.addNewItem(bitmap))
            {
@@ -288,7 +309,6 @@ public class AddPropertyActivity extends AppCompatActivity implements RecyclerVi
                 storageRef.putBytes(data).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        showTextLong("Success");
                         imageURL.add(taskSnapshot.getStorage().getDownloadUrl().toString());
                         if(imageURL.size() >= 3)
                         {
@@ -303,7 +323,8 @@ public class AddPropertyActivity extends AppCompatActivity implements RecyclerVi
                 }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
-                        showTextLong("Wait");
+                        progressBar.setVisibility(View.VISIBLE);
+                        submitButton.setText("Uploading Data...");
                     }
                 });
             }
@@ -329,24 +350,28 @@ public class AddPropertyActivity extends AppCompatActivity implements RecyclerVi
                     public void onCallback(List<String> imageURLs) {
                         if(imageURLs.size() > 0)
                         {
-                            Property newProperty = createNewProperty((ArrayList<String>) imageURLs);
+                            Property newProperty = createNewProperty((ArrayList<String>) imageURLs, getSelectUtilities());
                             newProperty.setStatus(PropertyStatus.AVAILABLE);
                             if(newProperty != null)
                             {
                                 FirebaseFirestore firestore = FirebaseFirestore.getInstance();
                                 try {
-                                    HashMap<String,String> hash = new HashMap<>();
-                                    hash.put("aaa", "bbbjhjA");
+
                                     firestore.collection(UnchangedValues.PROPERTY_TABLE).add(newProperty)
                                             .addOnSuccessListener(
                                                     documentReference -> {
                                                         // display successful message
-                                                        showTextLong("New Property is Added");
+                                                        progressBar.setVisibility(View.GONE);
+                                                        submitButton.setText("SUBMIT");
+                                                        clearInput();
+                                                        showTextLong("New Property is Added Successfully");
                                                     }
                                             )
                                             .addOnFailureListener(new OnFailureListener() {
                                                 @Override
                                                 public void onFailure(@NonNull Exception e) {
+                                                    progressBar.setVisibility(View.GONE);
+                                                    submitButton.setText("SUBMIT");
                                                     showTextLong(e.getMessage());
                                                 }
                                             });
@@ -370,8 +395,47 @@ public class AddPropertyActivity extends AppCompatActivity implements RecyclerVi
         });
     }
 
+    private void clearInput()
+    {
+       pnameEditText.setText("");
+       pAddressEditText.setText("");
+       pBathRoomEditText.setText("");
+       pBedRoomEditText.setText("");
+       pdescEditText.setText("");
+       priceEditText.setText("");
+       pAreaEditText.setText("");
+       checkBoxInternet.setChecked(false);
+       checkBoxGas.setChecked(false);
+       checkBoxWater.setChecked(false);
+       checkBoxElectric.setChecked(false);
+       piiAdapter.clearALLItem();
 
-    private Property createNewProperty(ArrayList<String> imageURLList)
+    }
+
+    private List<Utilities> getSelectUtilities()
+    {
+
+        List<Utilities> utilities = new ArrayList<>();
+        if(checkBoxElectric.isChecked())
+        {
+           utilities.add(Utilities.ELECTRIC) ;
+        }
+        if(checkBoxWater.isChecked())
+        {
+           utilities.add(Utilities.WATER);
+        }
+        if(checkBoxInternet.isChecked())
+        {
+           utilities.add(Utilities.INTERNET);
+        }
+        if(checkBoxGas.isChecked())
+        {
+           utilities.add(Utilities.GAS);
+        }
+        return utilities;
+    }
+
+    private Property createNewProperty(ArrayList<String> imageURLList, List<Utilities> utilityList)
     {
        Geocoder geocoder = new Geocoder(this) ;
         try {
@@ -383,12 +447,12 @@ public class AddPropertyActivity extends AppCompatActivity implements RecyclerVi
             padress.setStreet(alist.get(0).getAddressLine(0));
             padress.setCoordinates(new Coordinates(0, alist.get(0).getLongitude(), alist.get(0).getLatitude()));
 
-            Property property = new Property(null, pnameEditText.getText().toString(), "minhlandlord@gmail.com"
+            Property property = new Property(null, pnameEditText.getText().toString(),loginLandlord.getEmail()
                     ,padress, selectPropertyType,  Integer.parseInt(pBedRoomEditText.getText().toString()),
                     Integer.parseInt(pBathRoomEditText.getText().toString()), listU,
-                    Float.parseFloat(priceEditText.getText().toString()), 30 );
+                    Float.parseFloat(priceEditText.getText().toString()), Float.parseFloat(pAreaEditText.getText().toString()));
             property.setPropertyDescription(pdescEditText.getText().toString());
-//            property.setImageURLList(imageURLList) ;
+            property.setImageURLList(imageURLList) ;
             return property;
         } catch (IOException e) {
             Log.e("ERRRROORRR", "createNewProperty: " + e.getMessage() );
@@ -413,6 +477,11 @@ public class AddPropertyActivity extends AppCompatActivity implements RecyclerVi
         {
             showTextLong("Please Select property address");
         }
+        else if(getSelectUtilities().isEmpty())
+        {
+            showTextLong("Please select property's utilities");
+            return false;
+        }
         else if(pBedRoomEditText.getText().toString().isEmpty())
         {
             showTextLong("Please enter valid bedroom number");
@@ -423,12 +492,15 @@ public class AddPropertyActivity extends AppCompatActivity implements RecyclerVi
             showTextLong("Please enter valid bathroom number");
             return false;
         }
+        else if(pAreaEditText.getText().toString().isEmpty())
+        {
+            showTextLong("Please enter valid property area");
+        }
         else if(priceEditText.getText().toString().isEmpty())
         {
             showTextLong("Please enter valid property price");
             return false;
         }
-
         else if(propertyImageList.size() < 3)
         {
             showTextLong("Please upload 3 images");
@@ -439,14 +511,13 @@ public class AddPropertyActivity extends AppCompatActivity implements RecyclerVi
             showTextLong("Please enter property description");
             return false;
         }
+
         else
         {
             return true;
         }
        return false;
     }
-
-
 
     @Override
     public void onItemClick(int position) {

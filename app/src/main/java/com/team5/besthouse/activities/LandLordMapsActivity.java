@@ -103,26 +103,25 @@ public class LandLordMapsActivity extends FragmentActivity implements OnMapReady
      */
     private void setSearchBarAction()
     {
-//        searchEditText.setOnClickListener(v->{
-//           // move to the search location with suggestion activity
-//            Intent i = new Intent(getApplicationContext(), SearchLocationWithSuggestionActivity.class);
-//            startActivityForResult(i,100);
-//            finish();
-//
-//        });
+        searchEditText.setOnClickListener(v->{
+           // move to the search location with suggestion activity
+            Intent i = new Intent(getApplicationContext(), SearchLocationWithSuggestionActivity.class);
+            startActivityForResult(i,101);
 
-        searchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if(actionId == EditorInfo.IME_ACTION_DONE)
-                {
-                    String query = searchEditText.getText().toString();
-                    moveZoomMarker(getLatLngFromTextAddress(query));
-                    return true;
-                }
-                return false;
-            }
         });
+
+//        searchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+//            @Override
+//            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+//                if(actionId == EditorInfo.IME_ACTION_DONE)
+//                {
+//                    String query = searchEditText.getText().toString();
+//                    moveZoomMarker(getLatLngFromTextAddress(query));
+//                    return true;
+//                }
+//                return false;
+//            }
+//        });
     }
 
     /**
@@ -213,7 +212,7 @@ public class LandLordMapsActivity extends FragmentActivity implements OnMapReady
 
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == 100 && resultCode == RESULT_OK)
+        if(requestCode == 101 && resultCode == RESULT_OK)
         {
             if(data.getExtras().get(UnchangedValues.LOCATION_ADDRESS) != null)
             {

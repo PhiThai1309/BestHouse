@@ -40,6 +40,12 @@ public class PropertyImageInsertAdapter extends RecyclerView.Adapter<PropertyIma
         return true;
     }
 
+    public void clearALLItem()
+    {
+        imageList.clear();
+        notifyItemRangeRemoved(1, 2);
+    }
+
     public boolean replaceItem(Bitmap newItem, int pos)
     {
        if(pos > imageList.size() - 1 || pos < 0)
