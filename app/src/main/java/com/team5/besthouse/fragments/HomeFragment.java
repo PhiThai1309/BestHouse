@@ -176,6 +176,7 @@ public class HomeFragment extends Fragment {
                     @SuppressLint("NotifyDataSetChanged")
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        progressIndicator.setVisibility(View.VISIBLE);
                         if(error != null)
                         {
                             Log.w("ERROR ERROR ", error);
@@ -218,7 +219,6 @@ public class HomeFragment extends Fragment {
                                                         Log.i("ADDED" , p.toString());
                                                         adapter1.notifyDataSetChanged();
                                                         adapter2.notifyDataSetChanged();
-                                                        progressIndicator.setVisibility(View.GONE);
                                                     }
                                                 }
                                             });
@@ -233,9 +233,9 @@ public class HomeFragment extends Fragment {
                                 }
                                 adapter1.notifyDataSetChanged();
                                 adapter2.notifyDataSetChanged();
-                                progressIndicator.setVisibility(View.GONE);
                             }
                         }
+                        progressIndicator.setVisibility(View.GONE);
                     }
                 });
     }

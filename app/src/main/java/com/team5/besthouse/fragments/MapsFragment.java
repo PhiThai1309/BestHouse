@@ -9,10 +9,12 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
@@ -40,10 +42,29 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
+import java.util.ArrayList;
 import java.util.concurrent.Executor;
+
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.gson.Gson;
 import com.team5.besthouse.R;
+import com.team5.besthouse.constants.UnchangedValues;
+import com.team5.besthouse.models.Contract;
+import com.team5.besthouse.models.ContractStatus;
 import com.team5.besthouse.models.Coordinates;
+import com.team5.besthouse.models.Property;
 import com.team5.besthouse.models.PropertyAddress;
+import com.team5.besthouse.models.Tenant;
+import com.team5.besthouse.models.User;
+import com.team5.besthouse.services.StoreService;
 
 public class MapsFragment extends Fragment {
     public static final int PERMISSIONS_FINE_LOCATION = 99;
@@ -53,8 +74,11 @@ public class MapsFragment extends Fragment {
     protected LocationCallback locationCallback;
     public GoogleMap map;
     public Location lastKnownLocation;
+    private StoreService storeService;
 
-    public LatLng defaultLocation = new LatLng(-34, 151);;
+    ArrayList<Property> list = new ArrayList<>();
+
+    public LatLng defaultLocation = new LatLng(-34, 151);
 
     public boolean locationPermissionGranted;
 
@@ -73,8 +97,7 @@ public class MapsFragment extends Fragment {
         public void onMapReady(GoogleMap googleMap) {
             map = googleMap;
             LatLng sydney = new LatLng(Coordinates.STATICCOORD().getLatitude(), Coordinates.STATICCOORD().getLongitude());
-            googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in HCMC"));
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 17));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 10));
 
             // Turn on the My Location layer and the related control on the map.
             updateLocationUI();
@@ -124,7 +147,13 @@ public class MapsFragment extends Fragment {
                             if (lastKnownLocation != null) {
                                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(
                                         new LatLng(lastKnownLocation.getLatitude(),
-                                                lastKnownLocation.getLongitude()), 17));
+                                                lastKnownLocation.getLongitude()), 5));
+                                map.moveCamera(CameraUpdateFactory
+                                        .newLatLngZoom(
+                                                new LatLng(
+                                                        Coordinates.STATICCOORD().getLatitude(),
+                                                        Coordinates.STATICCOORD().getLongitude()),
+                                                13));
                             }
                         } else {
                             Log.d(TAG, "Current location is null. Using defaults.");
@@ -182,6 +211,9 @@ public class MapsFragment extends Fragment {
             mapFragment.getMapAsync(callback);
         }
 
+        // set up store service
+        storeService = new StoreService(getContext());
+
         locationRequest = new LocationRequest();
 
         locationRequest.setInterval(30000);
@@ -231,6 +263,52 @@ public class MapsFragment extends Fragment {
 //            }
 //        }
 //    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        //filter for all rents such that its end date is after today on the db side
+        FirebaseFirestore database = FirebaseFirestore.getInstance();
+
+        database.collection(UnchangedValues.PROPERTIES_TABLE)
+                .orderBy("propertyName")
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    @SuppressLint("NotifyDataSetChanged")
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()){
+                                for(DocumentSnapshot newDoc : task.getResult().getDocuments()){
+                                    Property p = newDoc.toObject(Property.class);
+
+                                    Log.i("Property", p == null || p.getId() == null ? "null address!" : p.getId());
+                                    //get all contracts that have its end date after today and is from this property
+                                    Gson gson = new Gson();
+                                    User user = gson.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), Tenant.class);
+                                    database.collection(UnchangedValues.CONTRACTS_TABLE)
+                                            .whereEqualTo("propertyId", p.getId())
+                                            .whereGreaterThanOrEqualTo("endDate", Timestamp.now())
+                                            .get()
+                                            .addOnCompleteListener(v -> {
+                                                if (v.isSuccessful()){
+                                                    boolean ok = true;
+                                                    for (QueryDocumentSnapshot document : v.getResult()) {
+                                                        Contract contract = document.toObject(Contract.class);
+                                                        if(contract.getStartDate().compareTo(Timestamp.now()) <= 0 && (contract.getContractStatus().equals(ContractStatus.ACTIVE) || (user.getEmail().equals(contract.getTenantEmail()) && contract.getContractStatus().equals(ContractStatus.PENDING)))){
+                                                            ok = false;
+                                                            break;
+                                                        }
+                                                    }
+                                                    if (ok) {
+                                                        map.addMarker(new MarkerOptions().position(p.getcoordinates()).title(p.getPropertyName()));
+                                                        Log.i("MARKER" , p.toString());
+                                                    }
+                                                }
+                                            });
+                                }
+                        }
+                    }
+                });
+    }
 
     private void updateUIValue(Location location) {
     }

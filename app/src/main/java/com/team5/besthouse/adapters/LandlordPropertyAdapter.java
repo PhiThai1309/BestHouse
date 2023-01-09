@@ -45,7 +45,7 @@ public class LandlordPropertyAdapter extends RecyclerView.Adapter<LandlordProper
             // Set the name of the view holder
             holder.name.setText(current.getId());
             // Set the address of the view holder
-            holder.address.setText(current.getAddress().toString());
+            holder.address.setText(current.getAddress(this.mInflater.getContext()).toString());
             //Set the prize of the view holder
             holder.price.setText("12");
         } else {
