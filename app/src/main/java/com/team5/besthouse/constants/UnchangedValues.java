@@ -8,6 +8,7 @@ public class UnchangedValues {
 
     public static final String USERS_TABLE = "users";
     public static final String PROPERTIES_TABLE = "properties";
+    public static final String CONTRACTS_TABLE = "contracts";
 
     public static final String NAME_REGEX = "^[a-zA-Z\\s]+";
     public static final String EMAIL_REGEX = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
@@ -26,5 +27,14 @@ public class UnchangedValues {
 
     public static final String LOGIN_USER = "loginUser";
 
+
+    //Landlord add property activity
+    public static final String LOCATION_ADDRESS = "la";
+    public static final String ACTIVITY_REQUEST_CODE = "requestCode";
+    public static final String SELECT_LOCATION = "Select Location";
+    public static final String PROPERTY_TABLE= "properties";
+
+
+    public static final String PLACES_API_KEY = "AIzaSyBv1GNlSbCCAeBxZZIEBA1K9HH5UWgAdFw";
 
 }

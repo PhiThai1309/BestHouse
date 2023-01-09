@@ -68,6 +68,12 @@
                     android:src="@drawable/ic_outline_account_circle_24" />
             </LinearLayout>
 
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/home_progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"/>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -75,6 +81,13 @@
                 android:layout_marginHorizontal="20dp"
                 style="@style/Bold_Heading"
                 android:text="@string/top_near_by"/>
+
+<!--            <include-->
+<!--                layout="@layout/feature_layout"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_marginHorizontal="20dp"/>-->
+
 
             <!--            <include-->
             <!--                layout="@layout/feature_layout"-->
@@ -90,9 +103,6 @@
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                android:paddingEnd="20dp"
-                android:paddingStart="0dp"
-                android:paddingBottom="20dp"
                 android:clipToPadding="false"
                 tools:listitem="@layout/feature_layout" />
 

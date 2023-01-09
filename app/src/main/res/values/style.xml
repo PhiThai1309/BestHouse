@@ -36,7 +36,7 @@
         <item name="android:layout_margin">16dp</item>
         <item name="cardCornerRadius">20dp</item>
         <item name="strokeWidth">0dp</item>
-        <item name="cardElevation">8dp</item>
+        <item name="cardElevation">6dp</item>
     </style>
 
     <style name="AppTheme.GrayStatusBar" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -49,10 +49,21 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="Heading_Details" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">@color/md_theme_onPrimaryContainer</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_marginTop">20dp</item>
+    </style>
+
     <style name="Bold_Heading" parent="@android:style/Widget.TextView">
         <item name="android:textSize">30sp</item>
         <item name="android:textColor">@color/md_theme_onPrimaryContainer</item>
         <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Bold_SubHeading" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">20sp</item>
     </style>
 
     <style name="Bold_Large_Heading" parent="@android:style/Widget.TextView">
@@ -97,6 +108,14 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+<!--   Floating Button  -->
+    <style name="floating_Button" parent="Widget.Design.FloatingActionButton">
+        <item name="cornerFamily">rounded</item>
+    </style>
 
-
+<!--   Continue Button  -->
+    <style name="continue_button">
+        <item name="android:backgroundTint">@color/almost_dark</item>
+        <item name="cornerRadius">10dp</item>
+    </style>
 </resources>

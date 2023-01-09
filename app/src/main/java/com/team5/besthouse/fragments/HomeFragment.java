@@ -1,5 +1,6 @@
 package com.team5.besthouse.fragments;
 
+import android.location.Address;
 import static android.content.ContentValues.TAG;
 
 import android.annotation.SuppressLint;
@@ -17,28 +18,38 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.gson.Gson;
 import com.team5.besthouse.PropertyAdapter;
 import com.team5.besthouse.PropertyAdapter2;
 import com.team5.besthouse.R;
 import com.team5.besthouse.activities.MainActivity;
 import com.team5.besthouse.constants.UnchangedValues;
+import com.team5.besthouse.models.Contract;
+import com.team5.besthouse.models.ContractStatus;
 import com.team5.besthouse.models.Coordinates;
 import com.team5.besthouse.models.Property;
-import com.team5.besthouse.models.PropertyAddress;
 import com.team5.besthouse.models.PropertyType;
+import com.team5.besthouse.models.Tenant;
+import com.team5.besthouse.models.User;
 import com.team5.besthouse.models.Utilities;
+import com.team5.besthouse.services.StoreService;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -51,6 +62,8 @@ public class HomeFragment extends Fragment {
     private List<Property> list;
     private PropertyAdapter adapter1;
     private PropertyAdapter2 adapter2;
+    private StoreService storeService;
+    private View progressIndicator;
 
     FirebaseFirestore db;
 
@@ -100,9 +113,15 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
+        progressIndicator = view.findViewById(R.id.home_progressBar);
+        progressIndicator.setVisibility(View.VISIBLE);
+
         //get db instance
 
         db = FirebaseFirestore.getInstance();
+
+        // set up store service
+        storeService = new StoreService(getContext());
 
         //Get the recycler view and
         featureView = (RecyclerView) view.findViewById(R.id.feature_property);
@@ -125,29 +144,7 @@ public class HomeFragment extends Fragment {
 
         //add properties from db to list
         //this does not update the recycler view
-        db.collection(UnchangedValues.PROPERTIES_TABLE)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @SuppressLint("NotifyDataSetChanged")
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                try {
-                                    list.add(document.toObject(Property.class));
-                                } catch (Exception e) {
-                                    Log.d(TAG, "Error adding object : " + document.toString() + ", Exception " + e.getMessage());
-                                }
-
-                                Log.d(TAG, "Found property " + document.getId() + " => " + document.getData());
-                            }
-                            adapter1.notifyDataSetChanged();
-                            adapter2.notifyDataSetChanged();
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
-                        }
-                    }
-                });
+        Address address = new Address(Locale.US);
 
         propertyView = (RecyclerView) view.findViewById(R.id.main_property);
         LinearLayoutManager linearLayoutManager2 = new LinearLayoutManager(getContext());
@@ -164,8 +161,82 @@ public class HomeFragment extends Fragment {
         featureView.setHasFixedSize(true);
         propertyView.setHasFixedSize(true);
 
-
         // Inflate the layout for this fragment
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        //filter for all rents such that its end date is after today on the db side
+        FirebaseFirestore database = FirebaseFirestore.getInstance();
+        database.collection(UnchangedValues.PROPERTIES_TABLE)
+                .orderBy("propertyName")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @SuppressLint("NotifyDataSetChanged")
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        if(error != null)
+                        {
+                            Log.w("ERROR ERROR ", error);
+                            return;
+                        }
+//                        Log.w("ERROR ERROR ", value.getDocumentChanges().get(0).getDocument().getData().toString());
+
+                        //filter for rents that begins before today on the client side
+                        assert value != null;
+                        for(DocumentChange newDoc : value.getDocumentChanges()){
+                            Property p = newDoc.getDocument().toObject(Property.class);
+                            Log.i("Property", p.getId() == null ? "null address!" : p.getId());
+                            Log.i("Property", newDoc.getType().toString());
+                            if(newDoc.getType() == DocumentChange.Type.ADDED){
+                                list.remove(p);
+                                try {
+                                    //get all contracts that have its end date after today and is from this property
+
+                                    Gson gson = new Gson();
+                                    User user = gson.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), Tenant.class);
+
+                                    Log.i(TAG, "onEvent: " + p);
+                                    database.collection(UnchangedValues.CONTRACTS_TABLE)
+                                            .whereEqualTo("propertyId", p.getId())
+                                            .whereGreaterThanOrEqualTo("endDate", Timestamp.now())
+                                            .get()
+                                            .addOnCompleteListener(v -> {
+                                                if (v.isSuccessful()){
+                                                    boolean ok = true;
+                                                    Log.i("TAG", "onEvent: " + v.getResult().getDocuments().size());
+                                                    for (QueryDocumentSnapshot document : v.getResult()) {
+                                                        Contract contract = document.toObject(Contract.class);
+                                                        if(contract.getStartDate().compareTo(Timestamp.now()) <= 0 && (contract.getContractStatus().equals(ContractStatus.ACTIVE) || (user.getEmail().equals(contract.getTenantEmail()) && contract.getContractStatus().equals(ContractStatus.PENDING)))){
+                                                            ok = false;
+                                                            break;
+                                                        }
+                                                    }
+                                                    if (ok) {
+                                                        list.add(p);
+                                                        Log.i("ADDED" , p.toString());
+                                                        adapter1.notifyDataSetChanged();
+                                                        adapter2.notifyDataSetChanged();
+                                                        progressIndicator.setVisibility(View.GONE);
+                                                    }
+                                                }
+                                            });
+                                } catch (Exception e) {
+                                    Log.d("ERROR 2", "Error adding object : " + newDoc.toString() + ", Exception " + e.getMessage());
+                                }
+                            }
+                            else {
+                                list.remove(p);
+                                if (newDoc.getType().equals(DocumentChange.Type.MODIFIED)) {
+                                    list.add(p);
+                                }
+                                adapter1.notifyDataSetChanged();
+                                adapter2.notifyDataSetChanged();
+                                progressIndicator.setVisibility(View.GONE);
+                            }
+                        }
+                    }
+                });
     }
 }

@@ -99,8 +99,6 @@ public class MainActivity extends AppCompatActivity {
                     FragmentTransaction fragmentTransaction3 = getSupportFragmentManager().beginTransaction();
                     fragmentTransaction3.replace(R.id.content, fragment3, "");
                     fragmentTransaction3.commit();
-
-
                     return true;
             }
             return false;
