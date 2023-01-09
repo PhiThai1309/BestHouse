@@ -1,5 +1,3 @@
-
-
 package com.team5.besthouse.models;
 
 import java.io.Serializable;
@@ -37,8 +35,5 @@ public class PropertyAddress implements Serializable {
     public void setCoordinates(Coordinates coordinates) {
         this.coordinates = coordinates;
     }
-
-
-
 
 }

@@ -22,6 +22,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:weightSum="1">
@@ -67,8 +68,11 @@
                     android:src="@drawable/ic_outline_account_circle_24" />
             </LinearLayout>
 
-            <include
-                layout="@layout/search_layout"/>
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/home_progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -85,6 +89,13 @@
 <!--                android:layout_marginHorizontal="20dp"/>-->
 
 
+            <!--            <include-->
+            <!--                layout="@layout/feature_layout"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_marginHorizontal="20dp"/>-->
+
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/feature_property"
                 android:layout_width="match_parent"
@@ -92,6 +103,7 @@
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                android:clipToPadding="false"
                 tools:listitem="@layout/feature_layout" />
 
             <TextView
@@ -109,8 +121,9 @@
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                tools:listitem="@layout/main_layout"/>
-
+                tools:listitem="@layout/main_layout"
+                android:paddingBottom="20dp"
+                android:clipToPadding="false"/>
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>

@@ -1,5 +1,6 @@
 package com.team5.besthouse;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,27 +46,30 @@ public class PropertyAdapter extends RecyclerView.Adapter<PropertyAdapter.TaskVi
             // Get the task at the position
             Property current = propertyList.get(position);
             // Set the name of the view holder
-            holder.name.setText(current.getId());
+            holder.name.setText(current.getPropertyName());
             // Set the address of the view holder
             holder.address.setText(current.getAddress().toString());
             //Set the prize of the view holder
-            holder.price.setText("12");
+            holder.price.setText(String.valueOf(current.getMonthlyPrice()));
+
+            // Set the click listener
+            holder.cardView.setOnClickListener(new View.OnClickListener() {
+                @SuppressLint("NotifyDataSetChanged")
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(mInflater.getContext(), DetailActivity.class);
+                    intent.putExtra("property", current);
+
+                    mInflater.getContext().startActivity(intent);
+                    notifyDataSetChanged();
+                }
+            });
         } else {
             // Covers the case of data not being ready yet.
             holder.name.setText("Error");
             holder.address.setText("Error");
             holder.price.setText(0);
         }
-        // Set the click listener
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(mInflater.getContext(), DetailActivity.class);
-//                intent.putExtra("key", key);
-                mInflater.getContext().startActivity(intent);
-                notifyDataSetChanged();
-            }
-        });
     }
 
     // Return the size of the data set
