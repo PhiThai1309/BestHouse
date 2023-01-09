@@ -13,7 +13,6 @@ public class PropertyAddress implements Serializable {
         // Do not delete
     }
 
-
     public PropertyAddress(String street, Coordinates coordinates) {
         this.street = street;
         this.coordinates = coordinates;

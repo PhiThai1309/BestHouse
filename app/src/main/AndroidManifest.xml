@@ -22,7 +22,7 @@
 
         </activity>
         <activity
-            android:name=".ContractActivity"
+            android:name=".activities.ContractActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

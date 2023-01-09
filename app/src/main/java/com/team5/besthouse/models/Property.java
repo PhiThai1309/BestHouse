@@ -24,7 +24,7 @@ public class Property implements Serializable {
     private float monthlyPrice;
     private float area;
 
-    public Property(){
+    public Property() {
         // Default constructor required for calls to DataSnapshot.getValue(Property.class)
         // Do not delete
     }
@@ -41,6 +41,7 @@ public class Property implements Serializable {
         this.monthlyPrice = monthlyPrice;
         this.area = area;
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -48,52 +49,46 @@ public class Property implements Serializable {
         Property property = (Property) o;
         return id.equals(property.id);
     }
+
     @Override
     public int hashCode() {
         return Objects.hash(id);
-
-    public boolean setImageURLList(ArrayList<String> imageURLList){
-       if(imageURLList.size() == 0)
-       {
-            return false;
-       }
-       else
-       {
-           this.imageURLList = imageURLList;
-           return true;
-       }
     }
+
+    public boolean setImageURLList(ArrayList<String> imageURLList) {
+        if (imageURLList.size() == 0) {
+            return false;
+        } else {
+            this.imageURLList = imageURLList;
+            return true;
+        }
+    }
+
+    @Exclude
+    public static Property STATICPROPERTY = new Property(
+            "213",
+            "123",
+            "213",
+            PropertyAddress.STATICADDRESS,
+            PropertyType.APARTMENT,
+            12,
+            12,
+            Collections.singletonList(Utilities.ELECTRIC),
+            12.0f,
+            12.0f
+    );
+
 
     public String getId() {
         return id;
     }
 
-    public void setId(String id){
+    public void setId(String id) {
         this.id = id;
     }
-    
+
     public String getLandlordEmail() {
         return landlordEmail;
-    }
-
-    public void setLandlordEmail(String landlordEmail) {
-        this.landlordEmail = landlordEmail;
-    }
-
-    public String getPropertyName() {
-        return propertyName;
-    }
-
-    public void setPropertyName(String propertyName) {
-        this.propertyName = propertyName;
-    }
-
-    public String getPropertyDescription() {
-        return propertyDescription;
-    }
-
-    public void setPropertyDescription(String propertyDescription) {
-        this.propertyDescription = propertyDescription;
     }
 
     public void setLandlordEmail(String landlordEmail) {
@@ -124,28 +119,6 @@ public class Property implements Serializable {
         this.address = address;
     }
 
-    public ArrayList<String> getImageURLList() {
-        return imageURLList;
-    }
-
-    public PropertyStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(PropertyStatus status) {
-        this.status = status;
-    }
-
-    public PropertyType getPropertyType() {
-        return propertyType;
-    }
-
-    public void setPropertyType(PropertyType propertyType) {
-        this.propertyType = propertyType;
-    public void setAddress(PropertyAddress address) {
-        this.address = address;
-    }
-
     public List<String> getImageURLList() {
         return imageURLList;
     }
@@ -162,12 +135,12 @@ public class Property implements Serializable {
         this.status = status;
     }
 
-    public PropertyType getType() {
-        return type;
+    public PropertyType getPropertyType() {
+        return propertyType;
     }
 
-    public void setType(PropertyType type) {
-        this.type = type;
+    public void setPropertyType(PropertyType propertyType) {
+        this.propertyType = propertyType;
     }
 
     public int getBedrooms() {
@@ -209,18 +182,4 @@ public class Property implements Serializable {
     public void setArea(float area) {
         this.area = area;
     }
-
-    @Exclude
-    public static Property STATICPROPERTY = new Property(
-            "213",
-            "123",
-            "213",
-            PropertyAddress.STATICADDRESS,
-            PropertyType.APARTMENT,
-            12,
-            12,
-            Collections.singletonList(Utilities.ELECTRIC),
-            12.0f,
-            12.0f
-    );
 }
