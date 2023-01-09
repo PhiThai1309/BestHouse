@@ -95,6 +95,7 @@ public class DetailActivity extends AppCompatActivity {
                 finish();
             }
         });
+
         featureOther.setImageResource(R.drawable.ic_outline_square_foot_24);
         TextView otherText = other.findViewById(R.id.feature_text);
         otherText.setText((int) property.getArea() + "m^2 Square foot");
@@ -112,7 +113,7 @@ public class DetailActivity extends AppCompatActivity {
         nameText.setText(property.getPropertyName());
 
         PropertyAddress address = property.getAddress();
-        String location = address.getStreet() + ", " + address.getCity() + ", " + address.getWard();
+        String location = address.getStreet();
         locationText.setText(location);
 
         //button to ask landlord for a contract
@@ -250,13 +251,5 @@ public class DetailActivity extends AppCompatActivity {
 
         TextView price = findViewById(R.id.details_price);
         price.setText((int) property.getMonthlyPrice() + ".000 VND / Month");
-
-        ImageView backBtn = findViewById(R.id.details_backBtn);
-        backBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
     }
 }

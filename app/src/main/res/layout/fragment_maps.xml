@@ -13,8 +13,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:context=".fragments.MapsFragment"
-        tools:layout="@layout/fragment_account"/>
+        tools:context=".fragments.MapsFragment"/>
 
 <!--    <SearchView-->
 <!--        android:id="@+id/searchView"-->

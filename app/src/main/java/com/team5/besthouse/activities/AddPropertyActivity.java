@@ -38,6 +38,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
@@ -337,19 +338,21 @@ public class AddPropertyActivity extends AppCompatActivity implements RecyclerVi
                                 try {
                                     HashMap<String,String> hash = new HashMap<>();
                                     hash.put("aaa", "bbbjhjA");
-                                    firestore.collection(UnchangedValues.PROPERTY_TABLE).add(newProperty)
-                                            .addOnSuccessListener(
-                                                    documentReference -> {
-                                                        // display successful message
-                                                        showTextLong("New Property is Added");
-                                                    }
-                                            )
-                                            .addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-                                                    showTextLong(e.getMessage());
+                                    DocumentReference dc = firestore.collection(UnchangedValues.PROPERTY_TABLE).document();
+                                    newProperty.setId(dc.getId());
+                                    dc.set(newProperty)
+                                        .addOnSuccessListener(
+                                                documentReference -> {
+                                                    // display successful message
+                                                    showTextLong("New Property is Added");
                                                 }
-                                            });
+                                        )
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                showTextLong(e.getMessage());
+                                            }
+                                        });
                                 }
                                 catch (Exception e)
                                 {
@@ -381,7 +384,7 @@ public class AddPropertyActivity extends AppCompatActivity implements RecyclerVi
             listU.add(Utilities.INTERNET);
             PropertyAddress padress = new PropertyAddress();
             padress.setStreet(alist.get(0).getAddressLine(0));
-            padress.setCoordinates(new Coordinates(0, alist.get(0).getLongitude(), alist.get(0).getLatitude()));
+            padress.setCoordinates(new Coordinates(alist.get(0).getLatitude(), alist.get(0).getLongitude(), 17));
 
             Property property = new Property(null, pnameEditText.getText().toString(), "minhlandlord@gmail.com"
                     ,padress, selectPropertyType,  Integer.parseInt(pBedRoomEditText.getText().toString()),

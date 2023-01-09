@@ -187,7 +187,7 @@ public class HomeFragment extends Fragment {
                         assert value != null;
                         for(DocumentChange newDoc : value.getDocumentChanges()){
                             Property p = newDoc.getDocument().toObject(Property.class);
-                            Log.i("Property", p.getId());
+                            Log.i("Property", p.getId() == null ? "null address!" : p.getId());
                             Log.i("Property", newDoc.getType().toString());
                             if(newDoc.getType() == DocumentChange.Type.ADDED){
                                 list.remove(p);

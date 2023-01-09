@@ -55,10 +55,6 @@ public class Property implements Serializable {
         return Objects.hash(id);
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public boolean setImageURLList(ArrayList<String> imageURLList)
     {
        if(imageURLList.size() == 0)
@@ -72,17 +68,12 @@ public class Property implements Serializable {
        }
     }
 
-    public void setStatus(PropertyStatus pstatus)
-    {
-        this.status = pstatus;
-    }
-
-    public ArrayList<String> getImageURLList()
-    {
-        return this.imageURLList;
-    }
     public String getId() {
         return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getLandlordEmail() {
@@ -93,21 +84,20 @@ public class Property implements Serializable {
         this.landlordEmail = landlordEmail;
     }
 
-    public void setPropertyDescription(String pd)
-    {
-        this.propertyDescription = pd;
-    }
-    public String getPropertyDescription()
-    {
-        return this.getPropertyDescription();
-    }
-
     public String getPropertyName() {
         return propertyName;
     }
 
     public void setPropertyName(String propertyName) {
         this.propertyName = propertyName;
+    }
+
+    public String getPropertyDescription() {
+        return propertyDescription;
+    }
+
+    public void setPropertyDescription(String propertyDescription) {
+        this.propertyDescription = propertyDescription;
     }
 
     public PropertyAddress getAddress() {
@@ -118,8 +108,16 @@ public class Property implements Serializable {
         this.address = address;
     }
 
+    public ArrayList<String> getImageURLList() {
+        return imageURLList;
+    }
+
     public PropertyStatus getStatus() {
         return status;
+    }
+
+    public void setStatus(PropertyStatus status) {
+        this.status = status;
     }
 
     public PropertyType getPropertyType() {
@@ -168,6 +166,14 @@ public class Property implements Serializable {
 
     public void setArea(float area) {
         this.area = area;
+    }
+
+    public static Property getSTATICPROPERTY() {
+        return STATICPROPERTY;
+    }
+
+    public static void setSTATICPROPERTY(Property STATICPROPERTY) {
+        Property.STATICPROPERTY = STATICPROPERTY;
     }
 
     @Exclude
