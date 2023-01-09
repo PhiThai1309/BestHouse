@@ -12,7 +12,7 @@ public class Coordinates implements Serializable {
         // Do not delete
     }
 
-    public Coordinates(double elevation, double longitude, double latitude) {
+    public Coordinates(double latitude, double longitude, double elevation) {
         this.elevation = elevation;
         this.longitude = longitude;
         this.latitude = latitude;
@@ -43,6 +43,6 @@ public class Coordinates implements Serializable {
     }
 
     public static Coordinates STATICCOORD() {
-        return new Coordinates(12, 12, 12);
+        return new Coordinates(10.7640637,106.6820005, 12);
     }
 }

@@ -1,5 +1,6 @@
 package com.team5.besthouse.fragments;
 
+import android.location.Address;
 import static android.content.ContentValues.TAG;
 
 import android.annotation.SuppressLint;
@@ -38,7 +39,6 @@ import com.team5.besthouse.models.Contract;
 import com.team5.besthouse.models.ContractStatus;
 import com.team5.besthouse.models.Coordinates;
 import com.team5.besthouse.models.Property;
-import com.team5.besthouse.models.PropertyAddress;
 import com.team5.besthouse.models.PropertyType;
 import com.team5.besthouse.models.Tenant;
 import com.team5.besthouse.models.User;
@@ -49,6 +49,7 @@ import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -143,6 +144,7 @@ public class HomeFragment extends Fragment {
 
         //add properties from db to list
         //this does not update the recycler view
+        Address address = new Address(Locale.US);
 
         propertyView = (RecyclerView) view.findViewById(R.id.main_property);
         LinearLayoutManager linearLayoutManager2 = new LinearLayoutManager(getContext());
@@ -185,7 +187,7 @@ public class HomeFragment extends Fragment {
                         assert value != null;
                         for(DocumentChange newDoc : value.getDocumentChanges()){
                             Property p = newDoc.getDocument().toObject(Property.class);
-                            Log.i("Property", p.getId());
+                            Log.i("Property", p.getId() == null ? "null address!" : p.getId());
                             Log.i("Property", newDoc.getType().toString());
                             if(newDoc.getType() == DocumentChange.Type.ADDED){
                                 list.remove(p);

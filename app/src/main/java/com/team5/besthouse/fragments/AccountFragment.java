@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.team5.besthouse.R;
 import com.team5.besthouse.activities.LoginActivity;
 import com.team5.besthouse.constants.UnchangedValues;
@@ -29,6 +30,7 @@ public class AccountFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private FragmentAccountBinding binding;
+    private FirebaseAuth firebaseAuth;
     private StoreService storeService;
 
     // TODO: Rename and change types of parameters
@@ -83,6 +85,8 @@ public class AccountFragment extends Fragment {
                 // make sure to clear the store service
                 if (storeService.clearTheStore()) {
                     try {
+                        firebaseAuth = FirebaseAuth.getInstance();
+                        firebaseAuth.signOut(); // sign out from firebase
                         Intent intent = new Intent(getActivity(), LoginActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         intent.putExtra(UnchangedValues.LOGOUT_PERFORMED, "logout");

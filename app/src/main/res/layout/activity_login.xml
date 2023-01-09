@@ -86,6 +86,45 @@
                 android:paddingVertical="18dp"
                 android:text="@string/login_here"
                 style="@style/SubHeading"/>
+<!--            the "or" line is learned from https://stackoverflow.com/questions/35669174/horizontal-line-in-login-page-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal">
+                <View
+                    android:layout_height="@dimen/_2sdp"
+                    android:layout_width="@dimen/_120sdp"
+                    android:background="@color/md_theme_onPrimaryContainer"
+                    android:layout_gravity="center"/>
+
+                <TextView
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/_20ssp"
+                    android:textStyle="bold"
+                    android:text="@string/or_text_separated_line"
+                    android:layout_gravity="center"/>
+
+                <View
+                    android:layout_height="@dimen/_2sdp"
+                    android:layout_width="@dimen/_120sdp"
+                    android:background="@color/md_theme_onPrimaryContainer"
+                    android:layout_gravity="center"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/signIn_Google_Button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/WHITE"
+                    />
+            </LinearLayout>
+
         </LinearLayout>
     </LinearLayout>
 
@@ -111,6 +150,7 @@
             android:paddingHorizontal="20dp"
             android:paddingVertical="14dp">
             <TextView
+                android:id="@+id/signInButton_TextView"
                 style="@style/Heading"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -118,10 +158,20 @@
                 android:text="@string/login_title"
                 android:layout_weight="2.5"/>
             <ImageView
+                android:id="@+id/signInButton_ImageView"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_round_arrow_forward_24"
                 android:layout_weight="0.5"/>
+            <ProgressBar
+                android:id="@+id/signInButton_progressBar"
+                android:indeterminate="true"
+                android:indeterminateTint="@color/BLACK"
+                android:indeterminateTintMode="src_atop"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 

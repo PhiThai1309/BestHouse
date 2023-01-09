@@ -82,6 +82,13 @@
                 style="@style/Bold_Heading"
                 android:text="@string/top_near_by"/>
 
+<!--            <include-->
+<!--                layout="@layout/feature_layout"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_marginHorizontal="20dp"/>-->
+
+
             <!--            <include-->
             <!--                layout="@layout/feature_layout"-->
             <!--                android:layout_height="wrap_content"-->
@@ -96,7 +103,6 @@
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
-
                 android:clipToPadding="false"
                 tools:listitem="@layout/feature_layout" />
 

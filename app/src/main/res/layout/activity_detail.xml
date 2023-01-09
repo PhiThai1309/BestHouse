@@ -57,6 +57,12 @@
                 <!--                    android:layout_height="50dp"-->
                 <!--                    android:layout_marginBottom="25dp" />-->
 
+<!--                <include-->
+<!--                    layout="@layout/returnbar"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="50dp"-->
+<!--                    android:layout_marginBottom="25dp" />-->
+
 
                 <TextView
                     android:id="@+id/details_name"

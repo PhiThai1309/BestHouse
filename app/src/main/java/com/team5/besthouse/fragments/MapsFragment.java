@@ -42,6 +42,8 @@ import com.google.android.gms.tasks.Task;
 
 import java.util.concurrent.Executor;
 import com.team5.besthouse.R;
+import com.team5.besthouse.models.Coordinates;
+import com.team5.besthouse.models.PropertyAddress;
 
 public class MapsFragment extends Fragment {
     public static final int PERMISSIONS_FINE_LOCATION = 99;
@@ -70,8 +72,8 @@ public class MapsFragment extends Fragment {
         @Override
         public void onMapReady(GoogleMap googleMap) {
             map = googleMap;
-            LatLng sydney = new LatLng(-34, 151);
-            googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+            LatLng sydney = new LatLng(Coordinates.STATICCOORD().getLatitude(), Coordinates.STATICCOORD().getLongitude());
+            googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in HCMC"));
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
 
             // Turn on the My Location layer and the related control on the map.
@@ -107,32 +109,38 @@ public class MapsFragment extends Fragment {
          * cases when a location is not available.
          */
         try {
+            Log.i(TAG, "getting device location");
             if (locationPermissionGranted) {
                 Task<Location> locationResult = fusedLocationProviderClient.getLastLocation();
-                locationResult.addOnCompleteListener((Executor) this, new OnCompleteListener<Location>() {
+                locationResult.addOnCompleteListener(new OnCompleteListener<Location>() {
                     @Override
                     public void onComplete(@NonNull Task<Location> task) {
                         if (task.isSuccessful()) {
+                            Log.i(TAG, "has lastKnownLocation");
                             // Set the map's camera position to the current location of the device.
                             lastKnownLocation = task.getResult();
                             if (lastKnownLocation != null) {
                                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(
                                         new LatLng(lastKnownLocation.getLatitude(),
-                                                lastKnownLocation.getLongitude()), 122));
+                                                lastKnownLocation.getLongitude()), 15));
                             }
                         } else {
                             Log.d(TAG, "Current location is null. Using defaults.");
                             Log.e(TAG, "Exception: %s", task.getException());
 
                             map.moveCamera(CameraUpdateFactory
-                                    .newLatLngZoom(defaultLocation, 122));
+                                    .newLatLngZoom(
+                                            new LatLng(
+                                                    Coordinates.STATICCOORD().getLatitude(),
+                                                    Coordinates.STATICCOORD().getLongitude()),
+                                            15));
                             map.getUiSettings().setMyLocationButtonEnabled(false);
                         }
                     }
                 });
             }
         } catch (SecurityException e)  {
-            Log.e("Exception: %s", e.getMessage(), e);
+            Log.e("Exception: %s", e.getMessage());
         }
     }
 
@@ -177,6 +185,15 @@ public class MapsFragment extends Fragment {
         locationRequest.setInterval(30000);
         locationRequest.setFastestInterval(5000);
         locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(view.getContext());
+
+        if (ActivityCompat.checkSelfPermission(view.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(view.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+                    1000);
+        } else {
+            // already permission granted
+        }
 
 //        // Construct a PlacesClient
 //

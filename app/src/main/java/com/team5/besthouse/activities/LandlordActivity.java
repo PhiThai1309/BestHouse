@@ -5,54 +5,48 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
-
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.material.elevation.SurfaceColors;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
+import com.google.android.material.snackbar.Snackbar;
+import com.team5.besthouse.R;
 import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.fragments.AccountFragment;
 import com.team5.besthouse.fragments.HomeFragment;
-import com.team5.besthouse.fragments.MapsFragment;
-import com.team5.besthouse.R;
+import com.team5.besthouse.fragments.LandlordHomeFragment;
+import com.team5.besthouse.models.Landlord;
 import com.team5.besthouse.services.StoreService;
-import com.team5.besthouse.constants.UnchangedValues;
 
-public class MainActivity extends AppCompatActivity {
+
+public class LandlordActivity extends AppCompatActivity {
     ActionBar actionBar;
     private StoreService storeService;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_landlord);
 
-        //Set color to the navigation bar to match with the bottom navigation view
+        //set color for navigation bar
         getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(this));
 
         actionBar = getSupportActionBar();
         NavigationBarView navigationView;
         storeService = new StoreService(getApplicationContext());
-//        LinearLayout navbar = findViewById(R.id.main_navbar);
-//
-//        ImageView home = navbar.findViewById(R.id.home);
-//        ImageView search = navbar.findViewById(R.id.search);
-//        ImageView profile = navbar.findViewById(R.id.profile);
-//
-//        home.setImageResource(R.drawable.ic_round_home_24);
-//        home.setColorFilter(getResources().getColor(R.color.md_theme_onPrimaryContainer));
 
-        navigationView = findViewById(R.id.bottom_navigation);
+        navigationView = findViewById(R.id.landlord_bottom_navigation);
         navigationView.setOnItemSelectedListener(selectedListener);
-
 
         // When we open the application first
         // time the fragment should be shown to the user
         // in this case it is home fragment
-        HomeFragment fragment = new HomeFragment();
+        LandlordHomeFragment fragment = new LandlordHomeFragment();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.content, fragment, "");
         fragmentTransaction.commit();
@@ -61,17 +55,23 @@ public class MainActivity extends AppCompatActivity {
         window.setStatusBarColor(Color.TRANSPARENT);
 
         String a = storeService.getStringValue(UnchangedValues.LOGIN_USER);
+        storeService.storeBooleanValue(UnchangedValues.IS_LOGIN_LANDLORD, true);
 
-        //mark user is login
-        storeService.storeBooleanValue(UnchangedValues.IS_LOGIN_TENANT, true);
+        showTextLong(a);
 
-       showTextLong(a);
-
-
+        FloatingActionButton fab = findViewById(R.id.float_button);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               Intent intent = new Intent(LandlordActivity.this, AddPropertyActivity.class);
+               intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+               startActivity(intent);
+               finish();
+            }
+        });
     }
 
-    private void showTextLong(String text)
-    {
+    private void showTextLong(String text) {
         Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
     }
 
@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
             switch (menuItem.getItemId()) {
 
                 case R.id.main:
-                    HomeFragment fragment = new HomeFragment();
+                    LandlordHomeFragment fragment = new LandlordHomeFragment();
                     FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                     fragmentTransaction.replace(R.id.content, fragment, "");
                     fragmentTransaction.commit();
@@ -92,13 +92,6 @@ public class MainActivity extends AppCompatActivity {
                     FragmentTransaction fragmentTransaction2 = getSupportFragmentManager().beginTransaction();
                     fragmentTransaction2.replace(R.id.content, fragment2, "");
                     fragmentTransaction2.commit();
-                    return true;
-
-                case R.id.search:
-                    MapsFragment fragment3 = new MapsFragment();
-                    FragmentTransaction fragmentTransaction3 = getSupportFragmentManager().beginTransaction();
-                    fragmentTransaction3.replace(R.id.content, fragment3, "");
-                    fragmentTransaction3.commit();
                     return true;
             }
             return false;
