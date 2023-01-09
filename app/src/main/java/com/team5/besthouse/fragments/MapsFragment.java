@@ -74,13 +74,15 @@ public class MapsFragment extends Fragment {
             map = googleMap;
             LatLng sydney = new LatLng(Coordinates.STATICCOORD().getLatitude(), Coordinates.STATICCOORD().getLongitude());
             googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in HCMC"));
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 17));
 
             // Turn on the My Location layer and the related control on the map.
             updateLocationUI();
 
             // Get the current location of the device and set the position of the map.
             getDeviceLocation();
+
+
         }
 
         private void updateLocationUI() {
@@ -122,7 +124,7 @@ public class MapsFragment extends Fragment {
                             if (lastKnownLocation != null) {
                                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(
                                         new LatLng(lastKnownLocation.getLatitude(),
-                                                lastKnownLocation.getLongitude()), 15));
+                                                lastKnownLocation.getLongitude()), 17));
                             }
                         } else {
                             Log.d(TAG, "Current location is null. Using defaults.");
@@ -133,7 +135,7 @@ public class MapsFragment extends Fragment {
                                             new LatLng(
                                                     Coordinates.STATICCOORD().getLatitude(),
                                                     Coordinates.STATICCOORD().getLongitude()),
-                                            15));
+                                            17));
                             map.getUiSettings().setMyLocationButtonEnabled(false);
                         }
                     }
@@ -175,7 +177,7 @@ public class MapsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         SupportMapFragment mapFragment =
-                (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+                (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.Googlemap);
         if (mapFragment != null) {
             mapFragment.getMapAsync(callback);
         }

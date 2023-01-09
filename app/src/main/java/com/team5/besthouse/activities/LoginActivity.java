@@ -158,10 +158,9 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void performGetDataFromFS(String userId, final DirectUICallback direct)
-    {
+    private void performGetDataFromFS(String userId, final DirectUICallback direct) {
         FirebaseFirestore database = FirebaseFirestore.getInstance();
-        try{
+        try {
             database.collection(UnchangedValues.USERS_TABLE)
                     .document(userId).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                         @Override
@@ -172,26 +171,22 @@ public class LoginActivity extends AppCompatActivity {
                             String userId = documentSnapshot.getId();
                             User loginUser = null;
                             UserRole userRole = null;
-                            if(documentSnapshot.getString(UnchangedValues.USER_ROLE).compareTo("TENANT") == 0)
-                            {
+                            if (documentSnapshot.getString(UnchangedValues.USER_ROLE).compareTo("TENANT") == 0) {
                                 loginUser = new Tenant(userEmail, userName, userPhone, new ArrayList<>());
                                 userRole = UserRole.TENANT;
                             }
-                            if(documentSnapshot.getString(UnchangedValues.USER_ROLE).compareTo("LANDLORD") == 0)
-                            {
-                                loginUser = new Landlord(userEmail, userName, userPhone, new ArrayList<>(), new ArrayList<>()) ;
+                            if (documentSnapshot.getString(UnchangedValues.USER_ROLE).compareTo("LANDLORD") == 0) {
+                                loginUser = new Landlord(userEmail, userName, userPhone, new ArrayList<>(), new ArrayList<>());
                                 userRole = UserRole.LANDLORD;
                             }
                             //save data to share preference
-                            if(loginUser != null)
-                            {
-                                try{
+                            if (loginUser != null) {
+                                try {
                                     Gson gson = new Gson();
                                     storeService.storeStringValue(UnchangedValues.LOGIN_USER, gson.toJson(loginUser).toString());
-                                    storeService.storeStringValue(UnchangedValues.USER_ID_COL, userId) ;
+                                    storeService.storeStringValue(UnchangedValues.USER_ID_COL, userId);
                                     direct.direct(true, userRole);
-                                } catch (Exception e)
-                                {
+                                } catch (Exception e) {
                                     showTextLong(e.getMessage());
                                 }
                             }
@@ -204,11 +199,10 @@ public class LoginActivity extends AppCompatActivity {
                             showTextLong(e.getMessage());
                         }
                     });
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             showTextLong(e.getMessage());
         }
+    }
 
     private void performEmailPassAuth(){
         loginBinding.signInButtonTextView.setText("Validating Credential...");
@@ -281,5 +275,4 @@ public class LoginActivity extends AppCompatActivity {
     {
         Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
     }
-
 }
