@@ -1,5 +1,7 @@
 package com.team5.besthouse.models;
 
+import androidx.annotation.NonNull;
+
 import com.google.firebase.firestore.Exclude;
 
 import java.io.Serializable;
@@ -33,6 +35,16 @@ public class PropertyAddress implements Serializable {
 
     public void setCoordinates(Coordinates coordinates) {
         this.coordinates = coordinates;
+    }
+
+    @NonNull
+    @Override
+    @Exclude
+    public String toString() {
+        return "PropertyAddress{" +
+                "street='" + street + '\'' +
+                ", coordinates=" + coordinates +
+                '}';
     }
 
     @Exclude

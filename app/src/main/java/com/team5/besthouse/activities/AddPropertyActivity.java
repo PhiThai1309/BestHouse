@@ -447,12 +447,10 @@ public class AddPropertyActivity extends AppCompatActivity implements RecyclerVi
             List<Utilities> listU = new ArrayList<>();
             listU.add(Utilities.ELECTRIC);
             listU.add(Utilities.INTERNET);
-            PropertyAddress padress = new PropertyAddress();
-            padress.setStreet(alist.get(0).getAddressLine(0));
-            padress.setCoordinates(new Coordinates(alist.get(0).getLatitude(), alist.get(0).getLongitude(), 17));
+            LatLng coord = new LatLng(alist.get(0).getLatitude(), alist.get(0).getLongitude());
 
             Property property = new Property(null, pnameEditText.getText().toString(),loginLandlord.getEmail()
-                    ,padress, selectPropertyType,  Integer.parseInt(pBedRoomEditText.getText().toString()),
+                    , coord, selectPropertyType,  Integer.parseInt(pBedRoomEditText.getText().toString()),
                     Integer.parseInt(pBathRoomEditText.getText().toString()), listU,
                     Float.parseFloat(priceEditText.getText().toString()), Float.parseFloat(pAreaEditText.getText().toString()));
             property.setPropertyDescription(pdescEditText.getText().toString());

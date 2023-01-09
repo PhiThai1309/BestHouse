@@ -112,8 +112,7 @@ public class DetailActivity extends AppCompatActivity {
 
         nameText.setText(property.getPropertyName());
 
-        PropertyAddress address = property.getAddress();
-        String location = address.getStreet();
+        String location = property.getAddress(getApplicationContext());
         locationText.setText(location);
 
         //button to ask landlord for a contract

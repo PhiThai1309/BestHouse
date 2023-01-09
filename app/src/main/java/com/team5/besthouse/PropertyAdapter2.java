@@ -48,7 +48,7 @@ public class PropertyAdapter2 extends RecyclerView.Adapter<PropertyAdapter2.Task
             // Set the name of the view holder
             holder.name.setText(current.getPropertyName());
             // Set the address of the view holder
-            holder.address.setText(current.getAddress().toString());
+            holder.address.setText(current.getAddress(this.mInflater.getContext()).toString());
             //Set the prize of the view holder
             holder.price.setText(String.valueOf(current.getMonthlyPrice()));
 
