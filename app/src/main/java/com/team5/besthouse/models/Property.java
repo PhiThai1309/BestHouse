@@ -15,7 +15,7 @@ public class Property implements Serializable {
     private String propertyName;
     private String propertyDescription;
     private PropertyAddress address;
-    private ArrayList<String> imageURLList;
+    private List<String> imageURLList;
     private PropertyStatus status;
     private PropertyType propertyType;
     private int bedrooms;
@@ -41,7 +41,6 @@ public class Property implements Serializable {
         this.monthlyPrice = monthlyPrice;
         this.area = area;
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -49,14 +48,11 @@ public class Property implements Serializable {
         Property property = (Property) o;
         return id.equals(property.id);
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(id);
-    }
 
-    public boolean setImageURLList(ArrayList<String> imageURLList)
-    {
+    public boolean setImageURLList(ArrayList<String> imageURLList){
        if(imageURLList.size() == 0)
        {
             return false;
@@ -72,12 +68,32 @@ public class Property implements Serializable {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(String id){
         this.id = id;
     }
-
+    
     public String getLandlordEmail() {
         return landlordEmail;
+    }
+
+    public void setLandlordEmail(String landlordEmail) {
+        this.landlordEmail = landlordEmail;
+    }
+
+    public String getPropertyName() {
+        return propertyName;
+    }
+
+    public void setPropertyName(String propertyName) {
+        this.propertyName = propertyName;
+    }
+
+    public String getPropertyDescription() {
+        return propertyDescription;
+    }
+
+    public void setPropertyDescription(String propertyDescription) {
+        this.propertyDescription = propertyDescription;
     }
 
     public void setLandlordEmail(String landlordEmail) {
@@ -126,6 +142,32 @@ public class Property implements Serializable {
 
     public void setPropertyType(PropertyType propertyType) {
         this.propertyType = propertyType;
+    public void setAddress(PropertyAddress address) {
+        this.address = address;
+    }
+
+    public List<String> getImageURLList() {
+        return imageURLList;
+    }
+
+    public void setImageURLList(List<String> imageURLList) {
+        this.imageURLList = imageURLList;
+    }
+
+    public PropertyStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(PropertyStatus status) {
+        this.status = status;
+    }
+
+    public PropertyType getType() {
+        return type;
+    }
+
+    public void setType(PropertyType type) {
+        this.type = type;
     }
 
     public int getBedrooms() {
@@ -166,14 +208,6 @@ public class Property implements Serializable {
 
     public void setArea(float area) {
         this.area = area;
-    }
-
-    public static Property getSTATICPROPERTY() {
-        return STATICPROPERTY;
-    }
-
-    public static void setSTATICPROPERTY(Property STATICPROPERTY) {
-        Property.STATICPROPERTY = STATICPROPERTY;
     }
 
     @Exclude

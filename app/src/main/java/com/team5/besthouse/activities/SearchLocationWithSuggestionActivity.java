@@ -42,6 +42,8 @@ public class SearchLocationWithSuggestionActivity extends AppCompatActivity impl
     private EditText searchEditText;
     private AutocompleteSessionToken token;
     private RectangularBounds bounds;
+    private ImageButton returnImageBtn;
+
     private final LatLng HCM_NE_LATLNG = new LatLng(10.704313625774835, 106.60751276957609);
     private final LatLng HCM_SW_LATLNG = new LatLng(10.878598802235736, 106.647395525166);
     private final LatLng HCM_CEN_LATLNG = new LatLng(10.762622, 106.660172);
@@ -54,10 +56,21 @@ public class SearchLocationWithSuggestionActivity extends AppCompatActivity impl
         returnImageButton = findViewById(R.id.searchBar).findViewById(R.id.returnButton);
         searchEditText = findViewById(R.id.searchBar).findViewById(R.id.box);
         searchEditText.setImeOptions(EditorInfo.IME_ACTION_DONE);
-        locationTextList.add("aaa");
+
+        returnImageBtn = findViewById(R.id.searchBar).findViewById(R.id.returnButton);
+        setReturnButtonAction();
         settleRecyclerView();
         initializePlaceAPI();
         setSearchAction();
+    }
+    /**
+     *
+     */
+    private void setReturnButtonAction()
+    {
+        returnImageBtn.setOnClickListener( v -> {
+            finish();
+        });
     }
 
     /**
@@ -147,7 +160,7 @@ public class SearchLocationWithSuggestionActivity extends AppCompatActivity impl
      */
     @Override
     public void onItemClick(int position) {
-        Intent i = new Intent(getApplicationContext(), AddPropertyActivity.class);
+        Intent i = new Intent(getApplicationContext(), LandLordMapsActivity.class);
         i.putExtra(UnchangedValues.LOCATION_ADDRESS, locationTextList.get(position));
         setResult(RESULT_OK, i);
         finish();

@@ -43,6 +43,8 @@ dependencies {
 
     implementation 'com.google.android.gms:play-services-maps:18.1.0'
     implementation 'com.google.android.gms:play-services-location:21.0.1'
+    implementation 'com.google.android.gms:play-services-auth:20.4.0'
+
     implementation 'com.google.android.libraries.places:places:3.0.0'
     implementation 'dev.chrisbanes.insetter:insetter:0.6.1'
 
@@ -55,10 +57,11 @@ dependencies {
     implementation 'com.intuit.ssp:ssp-android:1.1.0'
 
     // Firestore
-
-    implementation 'com.google.firebase:firebase-storage:20.1.0'
-    implementation 'com.google.firebase:firebase-messaging:23.1.0'
-    implementation 'com.google.firebase:firebase-firestore:24.4.0'
+    implementation platform('com.google.firebase:firebase-bom:31.1.1') // help to update firebase version automatically
+    implementation 'com.google.firebase:firebase-storage'
+    implementation 'com.google.firebase:firebase-messaging'
+    implementation 'com.google.firebase:firebase-firestore'
+    implementation 'com.google.firebase:firebase-auth'
 
 
 

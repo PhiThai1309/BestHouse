@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="70dp"
+        android:indeterminate="true"
+        android:indeterminateTint="@color/WHITE"
+        android:indeterminateTintMode="src_atop"
+        android:elevation="@dimen/_5sdp"
+        tools:targetApi="lollipop"
+        android:visibility="gone"
+        android:layout_marginEnd="@dimen/_50sdp"
+        android:layout_alignParentEnd="true"/>
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:textStyle="bold"
+        android:text="@string/submit_text"
+        android:textSize="18dp"
+        style="@style/continue_button"/>
+
+</RelativeLayout>
