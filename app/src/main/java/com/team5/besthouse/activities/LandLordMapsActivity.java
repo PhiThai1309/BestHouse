@@ -45,7 +45,6 @@ public class LandLordMapsActivity extends FragmentActivity implements OnMapReady
         binding = ActivityLandLordMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-
         returnImageBtn = binding.searchBar.returnButton;
         searchEditText = binding.searchBar.box;
 
@@ -92,7 +91,7 @@ public class LandLordMapsActivity extends FragmentActivity implements OnMapReady
     {
         binding.selectAddressBtn.setOnClickListener(v->{
             Intent i = new Intent(getApplicationContext(), AddPropertyActivity.class);
-            i.putExtra(UnchangedValues.LOCATION_ADDRESS, searchEditText.getText().toString() );
+            i.putExtra(UnchangedValues.LOCATION_ADDRESS, searchEditText.getText().toString());
             setResult(RESULT_OK, i);
             finish();
         });

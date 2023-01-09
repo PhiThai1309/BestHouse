@@ -14,6 +14,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Build;
@@ -24,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import androidx.appcompat.widget.SearchView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -43,6 +45,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executor;
 
 import com.google.firebase.Timestamp;
@@ -56,7 +59,9 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 import com.team5.besthouse.R;
+import com.team5.besthouse.activities.MainActivity;
 import com.team5.besthouse.constants.UnchangedValues;
+import com.team5.besthouse.databinding.FragmentAccountBinding;
 import com.team5.besthouse.models.Contract;
 import com.team5.besthouse.models.ContractStatus;
 import com.team5.besthouse.models.Coordinates;
@@ -72,16 +77,17 @@ public class MapsFragment extends Fragment {
     protected LocationRequest locationRequest;
     protected FusedLocationProviderClient fusedLocationProviderClient;
     protected LocationCallback locationCallback;
+    private FragmentAccountBinding binding;
     public GoogleMap map;
     public Location lastKnownLocation;
     private StoreService storeService;
+    private SearchView searchView;
 
     ArrayList<Property> list = new ArrayList<>();
 
     public LatLng defaultLocation = new LatLng(-34, 151);
 
     public boolean locationPermissionGranted;
-
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
         /**
@@ -133,6 +139,10 @@ public class MapsFragment extends Fragment {
          * Get the best and most recent location of the device, which may be null in rare
          * cases when a location is not available.
          */
+        if (fusedLocationProviderClient == null) {
+            fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
+        }
+
         try {
             Log.i(TAG, "getting device location");
             if (locationPermissionGranted) {
@@ -240,6 +250,52 @@ public class MapsFragment extends Fragment {
 //            }
 //        };
 //        updateGPS();
+        // initializing our search view.
+        searchView = (SearchView) view.findViewById(R.id.search_view);
+//          adding on query listener for our search view.
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // on below line we are getting the
+                // location name from search view.
+                String location = searchView.getQuery().toString();
+
+                // below line is to create a list of address
+                // where we will store the list of all address.
+
+                // checking if the entered location is null or not.
+                if (location != null || location.equals("")) {
+                    // on below line we are creating and initializing a geo coder.
+                    Geocoder geocoder = new Geocoder(view.getContext());
+                    List<Address> addressList = new ArrayList<>();
+                    try {
+                        // on below line we are getting location from the
+                        // location name and adding that location to address list.
+                        addressList = geocoder.getFromLocationName(location, 1);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    if (addressList.size() < 1) {
+                        return false;
+                    }
+                    // on below line we are getting the location
+                    // from our list a first position.
+                    LatLng address = new LatLng(addressList.get(0).getLatitude(), addressList.get(0).getLongitude());
+
+                    // on below line we are adding marker to that position.
+                    map.addMarker(new MarkerOptions().position(address).title(location));
+
+                    // below line is to animate camera to that position.
+                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(address, 13));
+                }
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
     }
 
 //    private void updateGPS() {
