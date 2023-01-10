@@ -41,6 +41,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class DetailActivity extends AppCompatActivity {
@@ -49,12 +50,19 @@ public class DetailActivity extends AppCompatActivity {
     private StoreService storeService;
     private Landlord landlord;
 
+    FirebaseFirestore database;
+    View progressIndicator;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
+        database = FirebaseFirestore.getInstance();
         db = FirebaseFirestore.getInstance();
+
+        progressIndicator = findViewById(R.id.progressBar);
+        progressIndicator.setVisibility(View.VISIBLE);
 
         // set up store service
         storeService = new StoreService(getApplicationContext());
@@ -122,47 +130,7 @@ public class DetailActivity extends AppCompatActivity {
 //            db.collection(UnchangedValues.PROPERTIES_TABLE).add(property);
 //
 //            Toast.makeText(this, "New property added!", Toast.LENGTH_SHORT).show();
-            Gson gson = new Gson();
-            User user = gson.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), Tenant.class);
-
-            //get final day to check for last day that the user can hire
-            AtomicReference<Timestamp> finalDayToHire = new AtomicReference<>(new Timestamp(Date.from(Instant.now().plusSeconds(68400L * 30 * 12 * 100))));
-
-            db.collection(UnchangedValues.CONTRACTS_TABLE)
-                    .whereEqualTo("contractStatus", ContractStatus.ACTIVE)
-                    .whereGreaterThan("startDate", new Time(Date.from(Instant.now()).getTime()))
-                    .orderBy("startDate")
-                    .limit(1)
-                    .get().addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            if (task.getResult().size() > 0) {
-                                Contract contract = task.getResult().getDocuments().get(0).toObject(Contract.class);
-                                assert contract != null;
-                                finalDayToHire.set(contract.getStartDate());
-                            }
-                        }
-                    });
-
-            //crate timestamp that is 12 months from now
-            Timestamp endDate = new Timestamp(Date.from(Instant.now().plusSeconds(86400 * 30 * 12)));
-
-            //12 month contract
-            Contract contract = new Contract(ContractStatus.PENDING, property.getLandlordEmail(), user.getEmail(), property.getId(), Timestamp.now(), endDate);
-
-            DocumentReference dc = db.collection(UnchangedValues.CONTRACTS_TABLE).document();
-
-            contract.setId(dc.getId());
-
-
-            dc.set(contract)
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(this, "Contract created!", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(this, "Contract creation failed!", Toast.LENGTH_SHORT).show();
-                        }
-                        finish();
-                    });
+            makeContract();
         });
 
         //code for landlords to get list of contracts
@@ -185,7 +153,6 @@ public class DetailActivity extends AppCompatActivity {
 //    }
 
 //        Log.d(TAG, property.getLandlordEmail());
-        FirebaseFirestore database = FirebaseFirestore.getInstance();
 //        database1.collection(UnchangedValues.USERS_TABLE)
 //                .whereEqualTo("email",true)
 //                .get()
@@ -209,9 +176,63 @@ public class DetailActivity extends AppCompatActivity {
 //                    }
 //                });
 
-        View progressIndicator = findViewById(R.id.progressBar);
-        progressIndicator.setVisibility(View.VISIBLE);
+        TextView type = findViewById(R.id.property_type);
+        type.setText(property.getPropertyType().toString().toLowerCase(Locale.ROOT));
 
+        TextView utilities = findViewById(R.id.Utilities);
+        utilities.setText(property.getUtilities().toString().substring(1));
+
+        fetchUser();
+
+        TextView price = findViewById(R.id.details_price);
+        price.setText((int) property.getMonthlyPrice() + ".000 VND / Month");
+    }
+
+    public void makeContract() {
+        Gson gson = new Gson();
+        User user = gson.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), Tenant.class);
+
+        //get final day to check for last day that the user can hire
+        AtomicReference<Timestamp> finalDayToHire = new AtomicReference<>(new Timestamp(Date.from(Instant.now().plusSeconds(68400L * 30 * 12 * 100))));
+
+        db.collection(UnchangedValues.CONTRACTS_TABLE)
+                .whereEqualTo("contractStatus", ContractStatus.ACTIVE)
+                .whereGreaterThan("startDate", new Time(Date.from(Instant.now()).getTime()))
+                .orderBy("startDate")
+                .limit(1)
+                .get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        if (task.getResult().size() > 0) {
+                            Contract contract = task.getResult().getDocuments().get(0).toObject(Contract.class);
+                            assert contract != null;
+                            finalDayToHire.set(contract.getStartDate());
+                        }
+                    }
+                });
+
+        //crate timestamp that is 12 months from now
+        Timestamp endDate = new Timestamp(Date.from(Instant.now().plusSeconds(86400 * 30 * 12)));
+
+        //12 month contract
+        Contract contract = new Contract(ContractStatus.PENDING, property.getLandlordEmail(), user.getEmail(), property.getId(), Timestamp.now(), endDate);
+
+        DocumentReference dc = db.collection(UnchangedValues.CONTRACTS_TABLE).document();
+
+        contract.setId(dc.getId());
+
+
+        dc.set(contract)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(this, "Contract created!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this, "Contract creation failed!", Toast.LENGTH_SHORT).show();
+                    }
+                    finish();
+                });
+    }
+
+    public void fetchUser() {
         database.collection(UnchangedValues.USERS_TABLE).whereEqualTo("email", property.getLandlordEmail()).get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
@@ -222,17 +243,17 @@ public class DetailActivity extends AppCompatActivity {
                         for(DocumentSnapshot ds : docList)
                         {
                             if(ds.exists())
-                           {
-                               progressIndicator.setVisibility(View.GONE);
-                               TextView landlordName = findViewById(R.id.details_landlordName);
-                               landlordName.setText(ds.getString("fullName"));
+                            {
+                                progressIndicator.setVisibility(View.GONE);
+                                TextView landlordName = findViewById(R.id.details_landlordName);
+                                landlordName.setText(ds.getString("fullName"));
 //                                   Log.d("TESSSSS", ds.getString("email"));
 
-                               TextView landlordEmail = findViewById(R.id.details_landlordEmail);
-                               landlordEmail.setText(ds.getString("email"));
+                                TextView landlordEmail = findViewById(R.id.details_landlordEmail);
+                                landlordEmail.setText(ds.getString("email"));
 
-                               TextView landlordPhone = findViewById(R.id.details_landlordPhone);
-                               landlordPhone.setText(ds.getString("phoneNumber"));
+                                TextView landlordPhone = findViewById(R.id.details_landlordPhone);
+                                landlordPhone.setText(ds.getString("phoneNumber"));
 
                             }
                         }
@@ -246,10 +267,5 @@ public class DetailActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
-
-
-
-        TextView price = findViewById(R.id.details_price);
-        price.setText((int) property.getMonthlyPrice() + ".000 VND / Month");
     }
 }

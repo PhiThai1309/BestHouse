@@ -13,22 +13,20 @@
        android:layout_width="@dimen/_50sdp"
        android:layout_height="@dimen/_50sdp"
 
+       android:padding="5dp"
        android:src="@drawable/ic_outline_location_on_24"
        app:layout_constraintStart_toStartOf="parent"
        app:layout_constraintTop_toTopOf="parent" />
 
    <TextView
        android:id="@+id/lsTextView"
-       android:layout_width="match_parent"
+       android:layout_width="wrap_content"
        android:layout_height="@dimen/_50sdp"
-       android:layout_marginStart="60dp"
        android:maxLines="2"
        android:text="dfdasfafsdfdsafsddfsafdsa"
        android:textColor="@color/BLACK"
        android:textSize="@dimen/_16ssp"
        android:textStyle="bold"
-       app:layout_constraintBottom_toBottomOf="parent"
-       app:layout_constraintEnd_toEndOf="parent"
        app:layout_constraintStart_toEndOf="@+id/imageView"
        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

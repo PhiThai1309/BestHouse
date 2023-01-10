@@ -41,7 +41,7 @@
                     android:layout_width="40dp"
                     android:layout_height="match_parent"
                     android:background="@color/md_theme_surface"
-                    android:src="@drawable/ic_round_more_horiz_24"/>
+                    android:src="@drawable/ic_round_edit_24"/>
 
             </LinearLayout>
 
@@ -50,19 +50,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:paddingHorizontal="20dp">
-
-                <!--                <include-->
-                <!--                    layout="@layout/returnbar"-->
-                <!--                    android:layout_width="match_parent"-->
-                <!--                    android:layout_height="50dp"-->
-                <!--                    android:layout_marginBottom="25dp" />-->
-
-<!--                <include-->
-<!--                    layout="@layout/returnbar"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="50dp"-->
-<!--                    android:layout_marginBottom="25dp" />-->
-
 
                 <TextView
                     android:id="@+id/details_name"
@@ -139,6 +126,63 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/lorem_ipsum" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:text="Property details"
+                    style="@style/Heading_Details" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_round_home_work_24"/>
+                    <TextView
+                        android:id="@+id/property_type"
+                        style="@style/NormalText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/place_holder" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_round_map_24"/>
+                    <TextView
+                        android:id="@+id/Utilities"
+                        style="@style/NormalText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/place_holder" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_round_map_24"/>
+                    <TextView
+                        style="@style/NormalText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Image here" />
+                </LinearLayout>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -228,46 +272,6 @@
                         </LinearLayout>
                     </LinearLayout>
                 </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:text="Property details"
-                    style="@style/Heading_Details" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:orientation="horizontal">
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_round_home_work_24"/>
-                    <TextView
-                        style="@style/NormalText"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/place_holder" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:orientation="horizontal">
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_round_map_24"/>
-                    <TextView
-                        style="@style/NormalText"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/place_holder" />
-                </LinearLayout>
-
 
             </LinearLayout>
             <View
