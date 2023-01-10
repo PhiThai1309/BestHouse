@@ -41,7 +41,8 @@
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="14dp"
                 layout="@layout/returnbar"
-                android:layout_height="50dp"
+                android:layout_height="60dp"
+                android:layout_marginBottom="20dp"
                 android:layout_width="match_parent"/>
 
             <LinearLayout
@@ -115,7 +116,6 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
                     android:text="@string/description"
                     style="@style/Heading_Details" />
 
@@ -129,7 +129,6 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
                     android:text="Property details"
                     style="@style/Heading_Details" />
 
@@ -237,7 +236,6 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
                     android:text="Landlord information"
                     style="@style/Heading_Details" />
 
@@ -268,7 +266,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="start"
-                            android:layout_marginBottom="4dp"
+                            android:layout_marginBottom="8dp"
                             android:orientation="horizontal">
 
                             <ImageView
@@ -277,80 +275,99 @@
                                 android:layout_marginEnd="4dp"
                                 android:src="@drawable/ic_round_person_24" />
 
-                            <TextView
-                                style="@style/Bold_SubHeading2"
+                            <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Full Name"
-                                android:layout_gravity="bottom"/>
+                                android:layout_marginStart="4dp"
+                                android:orientation="vertical">
+                                <TextView
+                                    style="@style/Bold_SubHeading2"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="Full Name"
+                                    android:layout_gravity="bottom"/>
+
+                                <TextView
+                                    android:id="@+id/details_landlordName"
+                                    style="@style/NormalText"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/place_holder"/>
+                            </LinearLayout>
                         </LinearLayout>
-                        <TextView
-                            android:id="@+id/details_landlordName"
-                            style="@style/NormalText"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/place_holder"
-                            android:layout_marginStart="27dp"/>
+
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="start"
-                            android:layout_marginBottom="4dp"
+                            android:layout_marginVertical="4dp"
                             android:orientation="horizontal">
 
                             <ImageView
                                 android:layout_width="20dp"
                                 android:layout_height="20dp"
-                                android:layout_gravity="bottom"
                                 android:src="@drawable/ic_round_email_24"
                                 android:layout_marginEnd="4dp"/>
 
-                            <TextView
-                                style="@style/Bold_SubHeading2"
+                            <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Email"
-                                android:layout_gravity="bottom"/>
+                                android:layout_marginStart="4dp"
+                                android:orientation="vertical">
+                                <TextView
+                                    style="@style/Bold_SubHeading2"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="Email"
+                                    android:layout_gravity="bottom"/>
+
+                                <TextView
+                                    android:id="@+id/details_landlordEmail"
+                                    style="@style/NormalText"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/place_holder"/>
+                            </LinearLayout>
+
                         </LinearLayout>
 
-                        <TextView
-                            android:id="@+id/details_landlordEmail"
-                            style="@style/NormalText"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/place_holder"
-                            android:layout_marginStart="27dp"/>
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="start"
-                            android:layout_marginBottom="4dp"
+                            android:layout_marginVertical="8dp"
                             android:orientation="horizontal">
 
                             <ImageView
                                 android:layout_width="20dp"
                                 android:layout_height="20dp"
-                                android:layout_gravity="bottom"
                                 android:src="@drawable/ic_round_phone_24"
                                 android:layout_marginEnd="4dp"/>
 
-                            <TextView
-                                style="@style/Bold_SubHeading2"
+                            <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Phone"
-                                android:layout_gravity="bottom"/>
+                                android:layout_marginStart="4dp"
+                                android:orientation="vertical">
+                                <TextView
+                                    style="@style/Bold_SubHeading2"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="Phone"
+                                    android:layout_gravity="bottom"/>
+
+
+                                <TextView
+                                    android:id="@+id/details_landlordPhone"
+                                    style="@style/NormalText"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/place_holder"/>
+                            </LinearLayout>
                         </LinearLayout>
 
-                        <TextView
-                            android:id="@+id/details_landlordPhone"
-                            style="@style/NormalText"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/place_holder"
-                            android:layout_marginStart="27dp"/>
                     </LinearLayout>
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
