@@ -1,48 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.LandlordActivity">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.fragment.app.FragmentContainerView
+        android:name="com.team5.besthouse.fragments.LandlordHomeFragment"
+        android:id="@+id/content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        tools:layout="@layout/fragment_landlord_home"
+        android:paddingBottom="80dp"/>
 
-        <androidx.fragment.app.FragmentContainerView
-            android:name="com.team5.besthouse.fragments.LandlordHomeFragment"
-            android:id="@+id/content"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:layout="@layout/fragment_landlord_home"
-            android:paddingBottom="80dp"/>
-
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/landlord_bottom_navigation"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:labelVisibilityMode="unlabeled"
-            app:menu="@menu/landlord_bottom_navigation_menu" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/float_button"
-        android:layout_width="wrap_content"
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/landlord_bottom_navigation"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:layout_marginLeft="@dimen/_245sdp"
-        android:layout_marginBottom="@dimen/_90sdp"
-        android:backgroundTint="@color/md_theme_surfaceVariant"
-        android:elevation="@dimen/_2sdp"
-        app:shapeAppearance="@style/floating_Button"
-        app:fabSize="normal"
-        app:srcCompat="@drawable/ic_baseline_add_35"
-        app:layout_anchor="@id/landlord_bottom_navigation"
-        tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:labelVisibilityMode="unlabeled"
+        app:menu="@menu/landlord_bottom_navigation_menu" />
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

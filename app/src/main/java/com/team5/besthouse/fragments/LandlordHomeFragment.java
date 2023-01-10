@@ -2,6 +2,7 @@ package com.team5.besthouse.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
@@ -26,6 +28,7 @@ import com.google.gson.Gson;
 import com.team5.besthouse.PropertyAdapter;
 import com.team5.besthouse.PropertyAdapter2;
 import com.team5.besthouse.R;
+import com.team5.besthouse.activities.AddPropertyActivity;
 import com.team5.besthouse.activities.LandlordActivity;
 import com.team5.besthouse.activities.MainActivity;
 import com.team5.besthouse.adapters.LandlordPropertyAdapter;
@@ -208,6 +211,16 @@ public class LandlordHomeFragment extends Fragment {
         adapter2 = new PropertyAdapter2((LandlordActivity) getContext(), list);
         featureView.setAdapter(adapter2);
         featureView.setHasFixedSize(true);
+
+        FloatingActionButton fab = view.findViewById(R.id.float_button);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), AddPropertyActivity.class);
+//               intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            }
+        });
 
         // Inflate the layout for this fragment
         return view;

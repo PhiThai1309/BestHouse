@@ -55,16 +55,6 @@ public class LandlordActivity extends AppCompatActivity {
         storeService.storeBooleanValue(UnchangedValues.IS_LOGIN_LANDLORD, true);
 
         showTextLong(a);
-
-        FloatingActionButton fab = findViewById(R.id.float_button);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-               Intent intent = new Intent(LandlordActivity.this, AddPropertyActivity.class);
-//               intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-               startActivity(intent);
-            }
-        });
     }
 
     private void showTextLong(String text) {
