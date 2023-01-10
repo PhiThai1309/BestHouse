@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.util.Log;
-import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -26,9 +25,9 @@ import com.google.gson.Gson;
 import com.team5.besthouse.R;
 import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.models.Property;
-import com.team5.besthouse.models.PropertyAddress;
 import com.team5.besthouse.models.Tenant;
 import com.team5.besthouse.models.User;
+import com.team5.besthouse.models.Utilities;
 import com.team5.besthouse.services.StoreService;
 
 import com.google.firebase.firestore.DocumentReference;
@@ -176,11 +175,41 @@ public class DetailActivity extends AppCompatActivity {
 //                    }
 //                });
 
-        TextView type = findViewById(R.id.property_type);
-        type.setText(property.getPropertyType().toString().toLowerCase(Locale.ROOT));
+//        TextView type = findViewById(R.id.property_type);
+//        type.setText(property.getPropertyType().toString().toLowerCase(Locale.ROOT));
+//
+//        TextView utilities = findViewById(R.id.Utilities);
+//        utilities.setText(property.getUtilities().toString().substring(1));
 
-        TextView utilities = findViewById(R.id.Utilities);
-        utilities.setText(property.getUtilities().toString().substring(1));
+//        GridView grid = findViewById(R.id.home_grid_view);
+
+//        List<Utilities> utilitiesList = new ArrayList<>();
+//        for(int i = 0; i < property.getUtilities().size(); i++) {
+//            utilitiesList.add(property.getUtilities().get(i));
+//        }
+
+//        final ArrayAdapter adapter = new ArrayAdapter<>(this,
+//                android.R.layout.simple_list_item_1, property.getUtilities());
+//        GridViewCustomAdapter GridViewCustomAdapter = new GridViewCustomAdapter(this, property.getUtilities());
+//        grid.setAdapter(GridViewCustomAdapter);
+        
+        for(Utilities utility : property.getUtilities()) {
+            String ult = utility.toString().toLowerCase(Locale.ROOT);
+            View ulView = findViewById(this.getResources().
+                    getIdentifier(ult, "id", this.getPackageName()));
+            TextView ulText = ulView.findViewById(R.id.grid_text);
+            ulText.setText(utility.toString());
+        }
+
+        for (Utilities dir : Utilities.values()) {
+            String ult = dir.toString().toLowerCase(Locale.ROOT);
+            View ulView = findViewById(this.getResources().
+                    getIdentifier(ult, "id", this.getPackageName()));
+
+            int drawable = getResources().getIdentifier(ult, "drawable", getPackageName());
+            ImageView imageView = ulView.findViewById(R.id.grid_image);
+            imageView.setImageResource(drawable);
+        }
 
         fetchUser();
 

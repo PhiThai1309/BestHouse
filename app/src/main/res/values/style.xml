@@ -77,6 +77,11 @@
         <item name="android:fontFamily">sans-serif-thin</item>
     </style>
 
+    <style name="Bold_SubHeading2" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="NormalText" parent="@android:style/Widget.TextView">
         <item name="android:textSize">15sp</item>
         <item name="android:lineSpacingExtra">10sp</item>
