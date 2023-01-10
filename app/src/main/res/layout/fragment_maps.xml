@@ -6,16 +6,32 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <fragment
+    <SearchView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/Googlemap"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:context=".fragments.MapsFragment"/>
+        tools:context=".fragments.MapsFragment"
+        tools:layout="@layout/activity_searchable" />
 
-<!--    <SearchView-->
+    <!--search view to search our location-->
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/search_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="#BFBFBF"
+        android:elevation="5dp"
+        app:iconifiedByDefault="false"
+        app:queryHint="Search" />
+
+    <!--    <SearchView-->
 <!--        android:id="@+id/searchView"-->
 <!--        android:layout_width="wrap_content"-->
 <!--        android:layout_height="wrap_content"-->
@@ -24,7 +40,7 @@
 <!--        android:layout_alignParentTop="true"-->
 <!--        />-->
 
-    <include
-        layout="@layout/search_layout"/>
+<!--    <include-->
+<!--        layout="@layout/search_layout"/>-->
 
 </FrameLayout>
