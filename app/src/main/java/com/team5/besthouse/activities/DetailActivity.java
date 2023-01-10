@@ -95,7 +95,8 @@ public class DetailActivity extends AppCompatActivity {
         ImageView featureOther = other.findViewById(R.id.feature_image);
         featureOther.setImageResource(R.drawable.ic_outline_done_outline_24);
 
-        ImageView backBtn = findViewById(R.id.details_backBtn);
+        View returnView = findViewById(R.id.details_returnBar);
+        ImageView backBtn = returnView.findViewById(R.id.returnButton);
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -192,7 +193,7 @@ public class DetailActivity extends AppCompatActivity {
 //                android.R.layout.simple_list_item_1, property.getUtilities());
 //        GridViewCustomAdapter GridViewCustomAdapter = new GridViewCustomAdapter(this, property.getUtilities());
 //        grid.setAdapter(GridViewCustomAdapter);
-        
+
         for(Utilities utility : property.getUtilities()) {
             String ult = utility.toString().toLowerCase(Locale.ROOT);
             View ulView = findViewById(this.getResources().
