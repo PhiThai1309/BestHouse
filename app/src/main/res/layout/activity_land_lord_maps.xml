@@ -22,7 +22,7 @@
 
         <include
             android:id="@+id/searchBar"
-            layout="@layout/searchlocation_layout"/>
+            layout="@layout/layout_searchlocation"/>
     </LinearLayout>
 
     <androidx.appcompat.widget.AppCompatButton

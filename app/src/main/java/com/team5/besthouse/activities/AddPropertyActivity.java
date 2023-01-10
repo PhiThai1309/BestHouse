@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
@@ -24,6 +25,7 @@ import android.text.InputType;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -41,6 +43,9 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.elevation.SurfaceColors;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -77,7 +82,7 @@ public class AddPropertyActivity extends AppCompatActivity implements RecyclerVi
 
     private ImageButton returnButton;
     private EditText pAddressEditText;
-    private EditText pnameEditText, priceEditText, pdescEditText;
+    private TextInputEditText pnameEditText, priceEditText, pdescEditText;
     private EditText pBedRoomEditText, pBathRoomEditText, pAreaEditText;
     private Button submitButton;
     private ProgressBar progressBar;
@@ -91,22 +96,25 @@ public class AddPropertyActivity extends AppCompatActivity implements RecyclerVi
     private StoreService storeService;
     private Landlord loginLandlord;
 
-
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_property);
+
+        //Set color to the navigation bar to match with the bottom navigation view
+        getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(this));
+        Window window = getWindow();
+        window.setStatusBarColor(Color.TRANSPARENT);
+
         // set storage service
         storeService = new StoreService(getApplicationContext());
         Gson json = new Gson();
         loginLandlord= json.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), Landlord.class );
         //Set hint for adding property name textbox
-        View pname = findViewById(R.id.property_name);
-        pnameEditText = (EditText) pname.findViewById(R.id.box);
-        pnameEditText.setHint("Property Name:");
+        View pname = findViewById(R.id.add_property_name);
+        TextInputLayout pnameWrapper= pname.findViewById(R.id.textInput_wrapper);
+        pnameEditText = pname.findViewById(R.id.box);
+        pnameWrapper.setHint("Property Name:");
 
         //Set hint for adding property type textbox
         View ptype = findViewById(R.id.property_type);
@@ -127,14 +135,16 @@ public class AddPropertyActivity extends AppCompatActivity implements RecyclerVi
 
         //Set hint for adding property price textbox
         View price = findViewById(R.id.property_price);
-        priceEditText = (EditText) price.findViewById(R.id.box);
+        TextInputLayout priceWrapper= price.findViewById(R.id.textInput_wrapper);
+        priceEditText = price.findViewById(R.id.box);
         priceEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
-        priceEditText.setHint("Monthly Price:");
+        priceWrapper.setHint("Monthly Price:");
 
         //Set hint for add property description text box
        View description = findViewById(R.id.property_description);
        pdescEditText = description.findViewById(R.id.box);
-       pdescEditText.setHint("Describe the Property in Detail");
+       TextInputLayout desWrapper = findViewById(R.id.descInput_wrapper);
+       desWrapper.setHint("Describe the Property in Detail");
 
        // set the submit button
         View submitButtonHolder = findViewById(R.id.progress_button);
@@ -212,9 +222,9 @@ public class AddPropertyActivity extends AppCompatActivity implements RecyclerVi
     private void setReturnButtonAction()
     {
         returnButton.setOnClickListener(v->{
-            Intent i = new Intent(getApplicationContext(), LandlordActivity.class);
-            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(i);
+//            Intent i = new Intent(getApplicationContext(), LandlordActivity.class);
+//            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//            startActivity(i);
             finish();
         });
     }

@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.HomeFragment">
+    tools:context=".fragments.TenantHomeFragment">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -20,9 +20,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
+                android:layout_margin="20dp"
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:weightSum="1">
@@ -104,7 +102,7 @@
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
                 android:clipToPadding="false"
-                tools:listitem="@layout/feature_layout" />
+                tools:listitem="@layout/layout_feature" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -121,7 +119,7 @@
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                tools:listitem="@layout/main_layout"
+                tools:listitem="@layout/layout_card_main"
                 android:paddingBottom="20dp"
                 android:clipToPadding="false"/>
         </LinearLayout>

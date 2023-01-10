@@ -15,13 +15,10 @@ import android.widget.Toast;
 import com.google.android.material.elevation.SurfaceColors;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
-import com.google.android.material.snackbar.Snackbar;
 import com.team5.besthouse.R;
 import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.fragments.AccountFragment;
-import com.team5.besthouse.fragments.HomeFragment;
 import com.team5.besthouse.fragments.LandlordHomeFragment;
-import com.team5.besthouse.models.Landlord;
 import com.team5.besthouse.services.StoreService;
 
 
@@ -64,9 +61,8 @@ public class LandlordActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                Intent intent = new Intent(LandlordActivity.this, AddPropertyActivity.class);
-               intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//               intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                startActivity(intent);
-               finish();
             }
         });
     }

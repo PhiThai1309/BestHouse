@@ -10,7 +10,6 @@ import static android.content.ContentValues.TAG;
 import android.annotation.SuppressLint;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -33,8 +32,6 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.CancellationToken;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnTokenCanceledListener;
@@ -54,28 +51,22 @@ import com.team5.besthouse.activities.MainActivity;
 import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.models.Contract;
 import com.team5.besthouse.models.ContractStatus;
-import com.team5.besthouse.models.Coordinates;
 import com.team5.besthouse.models.Property;
-import com.team5.besthouse.models.PropertyType;
 import com.team5.besthouse.models.Tenant;
 import com.team5.besthouse.models.User;
-import com.team5.besthouse.models.Utilities;
 import com.team5.besthouse.services.StoreService;
 
 import java.io.IOException;
-import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link HomeFragment#newInstance} factory method to
+ * Use the {@link TenantHomeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HomeFragment extends Fragment {
+public class TenantHomeFragment extends Fragment {
     public static final int PERMISSIONS_FINE_LOCATION = 99;
 
     private Context context;
@@ -105,7 +96,7 @@ public class HomeFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public HomeFragment() {
+    public TenantHomeFragment() {
         // Required empty public constructor
     }
 
@@ -118,8 +109,8 @@ public class HomeFragment extends Fragment {
      * @return A new instance of fragment HomeFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static HomeFragment newInstance(String param1, String param2) {
-        HomeFragment fragment = new HomeFragment();
+    public static TenantHomeFragment newInstance(String param1, String param2) {
+        TenantHomeFragment fragment = new TenantHomeFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -140,7 +131,7 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_tenant_home, container, false);
 
         context = inflater.getContext();
 

@@ -1,7 +1,5 @@
 package com.team5.besthouse.activities;
 
-import static android.content.ContentValues.TAG;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,28 +8,19 @@ import androidx.fragment.app.FragmentTransaction;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.Window;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.elevation.SurfaceColors;
 import com.google.android.material.navigation.NavigationBarView;
 import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.fragments.AccountFragment;
-import com.team5.besthouse.fragments.HomeFragment;
+import com.team5.besthouse.fragments.TenantHomeFragment;
 import com.team5.besthouse.fragments.MapsFragment;
 import com.team5.besthouse.R;
-import com.team5.besthouse.models.Coordinates;
 import com.team5.besthouse.services.StoreService;
-import com.team5.besthouse.constants.UnchangedValues;
 
 public class MainActivity extends AppCompatActivity {
     ActionBar actionBar;
@@ -48,8 +37,10 @@ public class MainActivity extends AppCompatActivity {
 
         //Set color to the navigation bar to match with the bottom navigation view
         getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(this));
+        Window window = getWindow();
+        window.setStatusBarColor(Color.TRANSPARENT);
 
-        actionBar = getSupportActionBar();
+//        actionBar = getSupportActionBar();
         NavigationBarView navigationView;
         storeService = new StoreService(getApplicationContext());
 //        LinearLayout navbar = findViewById(R.id.main_navbar);
@@ -68,13 +59,12 @@ public class MainActivity extends AppCompatActivity {
         // When we open the application first
         // time the fragment should be shown to the user
         // in this case it is home fragment
-        HomeFragment fragment = new HomeFragment();
+        TenantHomeFragment fragment = new TenantHomeFragment();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.content, fragment, "");
         fragmentTransaction.commit();
 
-        Window window = getWindow();
-        window.setStatusBarColor(Color.TRANSPARENT);
+
 
         String a = storeService.getStringValue(UnchangedValues.LOGIN_USER);
 
@@ -97,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
             switch (menuItem.getItemId()) {
 
                 case R.id.main:
-                    HomeFragment fragment = new HomeFragment();
+                    TenantHomeFragment fragment = new TenantHomeFragment();
                     FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                     fragmentTransaction.replace(R.id.content, fragment, "");
                     fragmentTransaction.commit();

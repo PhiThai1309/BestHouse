@@ -1,6 +1,7 @@
 package com.team5.besthouse;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +25,7 @@ public class PropertyAdapter2 extends RecyclerView.Adapter<PropertyAdapter2.Task
     private String key = "";
 
     // Constructor
-    public PropertyAdapter2(MainActivity context, List<Property> tasks) {
+    public PropertyAdapter2(Context context, List<Property> tasks) {
         mInflater = LayoutInflater.from(context);
         propertyList = tasks;
     }
@@ -34,7 +35,7 @@ public class PropertyAdapter2 extends RecyclerView.Adapter<PropertyAdapter2.Task
     @Override
     public TaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // Inflate the view
-        View itemView = mInflater.inflate(R.layout.main_layout, parent, false);
+        View itemView = mInflater.inflate(R.layout.layout_card_main, parent, false);
         return new TaskViewHolder(itemView);
     }
 

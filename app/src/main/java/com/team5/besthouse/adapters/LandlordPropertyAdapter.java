@@ -1,6 +1,5 @@
 package com.team5.besthouse.adapters;
 
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +30,7 @@ public class LandlordPropertyAdapter extends RecyclerView.Adapter<LandlordProper
     @Override
     public LandlordPropertyAdapter.TaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // Inflate the view
-        View itemView = mInflater.inflate(R.layout.feature_layout, parent, false);
+        View itemView = mInflater.inflate(R.layout.layout_feature, parent, false);
         return new LandlordPropertyAdapter.TaskViewHolder(itemView);
     }
 
