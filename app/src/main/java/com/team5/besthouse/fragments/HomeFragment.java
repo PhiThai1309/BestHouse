@@ -1,13 +1,22 @@
 package com.team5.besthouse.fragments;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.location.Address;
 import static android.content.ContentValues.TAG;
 
 import android.annotation.SuppressLint;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSnapHelper;
@@ -20,7 +29,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.Priority;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.CancellationToken;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnTokenCanceledListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentChange;
@@ -45,11 +62,13 @@ import com.team5.besthouse.models.User;
 import com.team5.besthouse.models.Utilities;
 import com.team5.besthouse.services.StoreService;
 
+import java.io.IOException;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -57,6 +76,9 @@ import java.util.Locale;
  * create an instance of this fragment.
  */
 public class HomeFragment extends Fragment {
+    public static final int PERMISSIONS_FINE_LOCATION = 99;
+
+    private Context context;
     private RecyclerView featureView;
     private RecyclerView propertyView;
     private List<Property> list;
@@ -66,6 +88,13 @@ public class HomeFragment extends Fragment {
     private View progressIndicator;
 
     FirebaseFirestore db;
+
+    private TextView tv;
+
+    public boolean locationPermissionGranted;
+    public Location lastKnownLocation;
+    protected FusedLocationProviderClient fusedLocationProviderClient;
+    protected LocationRequest locationRequest;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -113,6 +142,8 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
+        context = inflater.getContext();
+
         progressIndicator = view.findViewById(R.id.home_progressBar);
         progressIndicator.setVisibility(View.VISIBLE);
 
@@ -120,8 +151,10 @@ public class HomeFragment extends Fragment {
 
         db = FirebaseFirestore.getInstance();
 
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(view.getContext());
+
         // set up store service
-        storeService = new StoreService(getContext());
+        storeService = new StoreService(context);
 
         //Get the recycler view and
         featureView = (RecyclerView) view.findViewById(R.id.feature_property);
@@ -161,8 +194,32 @@ public class HomeFragment extends Fragment {
         featureView.setHasFixedSize(true);
         propertyView.setHasFixedSize(true);
 
+        tv = view.findViewById(R.id.home_location);
+        getLocationPermission();
+        getDeviceLocation(tv);
+
         // Inflate the layout for this fragment
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        locationRequest = new LocationRequest();
+
+        locationRequest.setInterval(30000);
+        locationRequest.setFastestInterval(5000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(view.getContext());
+
+        if (ActivityCompat.checkSelfPermission(view.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(view.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+                    1000);
+        } else {
+            // already permission granted
+        }
     }
 
     @Override
@@ -188,8 +245,8 @@ public class HomeFragment extends Fragment {
                         assert value != null;
                         for(DocumentChange newDoc : value.getDocumentChanges()){
                             Property p = newDoc.getDocument().toObject(Property.class);
-                            Log.i("Property", p.getId() == null ? "null address!" : p.getId());
-                            Log.i("Property", newDoc.getType().toString());
+//                            Log.i("Property", p.getId() == null ? "null address!" : p.getId());
+//                            Log.i("Property", newDoc.getType().toString());
                             if(newDoc.getType() == DocumentChange.Type.ADDED){
                                 list.remove(p);
                                 try {
@@ -198,7 +255,7 @@ public class HomeFragment extends Fragment {
                                     Gson gson = new Gson();
                                     User user = gson.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), Tenant.class);
 
-                                    Log.i(TAG, "onEvent: " + p);
+//                                    Log.i(TAG, "onEvent: " + p);
                                     database.collection(UnchangedValues.CONTRACTS_TABLE)
                                             .whereEqualTo("propertyId", p.getId())
                                             .whereGreaterThanOrEqualTo("endDate", Timestamp.now())
@@ -206,7 +263,7 @@ public class HomeFragment extends Fragment {
                                             .addOnCompleteListener(v -> {
                                                 if (v.isSuccessful()){
                                                     boolean ok = true;
-                                                    Log.i("TAG", "onEvent: " + v.getResult().getDocuments().size());
+//                                                    Log.i("TAG", "onEvent: " + v.getResult().getDocuments().size());
                                                     for (QueryDocumentSnapshot document : v.getResult()) {
                                                         Contract contract = document.toObject(Contract.class);
                                                         if(contract.getStartDate().compareTo(Timestamp.now()) <= 0 && (contract.getContractStatus().equals(ContractStatus.ACTIVE) || (user.getEmail().equals(contract.getTenantEmail()) && contract.getContractStatus().equals(ContractStatus.PENDING)))){
@@ -216,7 +273,7 @@ public class HomeFragment extends Fragment {
                                                     }
                                                     if (ok) {
                                                         list.add(p);
-                                                        Log.i("ADDED" , p.toString());
+//                                                        Log.i("ADDED" , p.toString());
                                                         adapter1.notifyDataSetChanged();
                                                         adapter2.notifyDataSetChanged();
                                                     }
@@ -238,5 +295,73 @@ public class HomeFragment extends Fragment {
                         progressIndicator.setVisibility(View.GONE);
                     }
                 });
+    }
+
+    private void getDeviceLocation(TextView text) {
+        /*
+         * Get the best and most recent location of the device, which may be null in rare
+         * cases when a location is not available.
+         */
+        try {
+            Log.i(TAG, "getting device location");
+            if (locationPermissionGranted) {
+                Task<Location> locationResult = fusedLocationProviderClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, new CancellationToken() {
+                    @NonNull
+                    @Override
+                    public CancellationToken onCanceledRequested(@NonNull OnTokenCanceledListener onTokenCanceledListener) {
+                        return null;
+                    }
+
+                    @Override
+                    public boolean isCancellationRequested() {
+                        return false;
+                    }
+                });
+                locationResult.addOnCompleteListener(new OnCompleteListener<Location>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Location> task) {
+                        if (task.isSuccessful()) {
+                            Log.i(TAG, "has lastKnownLocation");
+                            // Set the map's camera position to the current location of the device.
+                            lastKnownLocation = task.getResult();
+                            Geocoder geocoder = new Geocoder(context);
+                            String cityName = "Ho Chi Minh";
+                            try {
+                                cityName = geocoder.getFromLocation(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude(), 1).get(0).getAdminArea();
+                            } catch (IOException ignored) {
+                            }
+                            if (lastKnownLocation != null) {
+                                text.setText(cityName);
+                            }
+                        } else {
+                            Log.d(TAG, "Current location is null. Using defaults.");
+                            Log.e(TAG, "Exception: %s", task.getException());
+
+                            text.setText("NONE");
+                        }
+                    }
+                });
+            }
+        } catch (SecurityException e)  {
+            Log.e("Exception: %s", e.getMessage());
+        }
+
+    }
+
+    private void getLocationPermission() {
+        /*
+         * Request location permission, so that we can get the location of the
+         * device. The result of the permission request is handled by a callback,
+         * onRequestPermissionsResult.
+         */
+        if (ContextCompat.checkSelfPermission((Context) getActivity(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            locationPermissionGranted = true;
+        } else {
+            ActivityCompat.requestPermissions((Activity) getActivity(),
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    PERMISSIONS_FINE_LOCATION);
+        }
     }
 }

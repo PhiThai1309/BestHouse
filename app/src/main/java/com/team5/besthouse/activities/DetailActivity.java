@@ -101,6 +101,7 @@ public class DetailActivity extends AppCompatActivity {
         otherText.setText((int) property.getArea() + "m^2 Square foot");
 
         TextView desc = findViewById(R.id.details_desc);
+        desc.setText(property.getPropertyDescription());
 
         Button makeContractButton = findViewById(R.id.createPropertyBtn);
 

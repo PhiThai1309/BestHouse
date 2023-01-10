@@ -1,17 +1,27 @@
 package com.team5.besthouse.activities;
 
+import static android.content.ContentValues.TAG;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.graphics.Color;
+import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.Window;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.elevation.SurfaceColors;
 import com.google.android.material.navigation.NavigationBarView;
 import com.team5.besthouse.constants.UnchangedValues;
@@ -19,12 +29,18 @@ import com.team5.besthouse.fragments.AccountFragment;
 import com.team5.besthouse.fragments.HomeFragment;
 import com.team5.besthouse.fragments.MapsFragment;
 import com.team5.besthouse.R;
+import com.team5.besthouse.models.Coordinates;
 import com.team5.besthouse.services.StoreService;
 import com.team5.besthouse.constants.UnchangedValues;
 
 public class MainActivity extends AppCompatActivity {
     ActionBar actionBar;
     private StoreService storeService;
+
+    public boolean locationPermissionGranted;
+    public Location lastKnownLocation;
+    protected FusedLocationProviderClient fusedLocationProviderClient;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,4 +120,6 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
     };
+
+
 }

@@ -32,14 +32,17 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.Priority;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.CancellationToken;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.OnTokenCanceledListener;
 import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
@@ -136,7 +139,18 @@ public class MapsFragment extends Fragment {
         try {
             Log.i(TAG, "getting device location");
             if (locationPermissionGranted) {
-                Task<Location> locationResult = fusedLocationProviderClient.getLastLocation();
+                Task<Location> locationResult = fusedLocationProviderClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, new CancellationToken() {
+                    @NonNull
+                    @Override
+                    public CancellationToken onCanceledRequested(@NonNull OnTokenCanceledListener onTokenCanceledListener) {
+                        return null;
+                    }
+
+                    @Override
+                    public boolean isCancellationRequested() {
+                        return false;
+                    }
+                });
                 locationResult.addOnCompleteListener(new OnCompleteListener<Location>() {
                     @Override
                     public void onComplete(@NonNull Task<Location> task) {
@@ -147,13 +161,7 @@ public class MapsFragment extends Fragment {
                             if (lastKnownLocation != null) {
                                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(
                                         new LatLng(lastKnownLocation.getLatitude(),
-                                                lastKnownLocation.getLongitude()), 5));
-                                map.moveCamera(CameraUpdateFactory
-                                        .newLatLngZoom(
-                                                new LatLng(
-                                                        Coordinates.STATICCOORD().getLatitude(),
-                                                        Coordinates.STATICCOORD().getLongitude()),
-                                                13));
+                                                lastKnownLocation.getLongitude()), 17));
                             }
                         } else {
                             Log.d(TAG, "Current location is null. Using defaults.");

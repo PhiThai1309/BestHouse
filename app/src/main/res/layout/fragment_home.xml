@@ -53,6 +53,7 @@
                             android:src="@drawable/ic_outline_location_on_24" />
 
                         <TextView
+                            android:id="@+id/home_location"
                             style="@style/Heading"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
