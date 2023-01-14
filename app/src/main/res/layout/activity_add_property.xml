@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
     tools:context=".activities.AddPropertyActivity">
 
     <LinearLayout
@@ -13,142 +16,204 @@
         android:orientation="vertical">
 
         <include
-            layout="@layout/returnbar"
+            android:id="@+id/returnBar"
+            layout="@layout/layout_returnbar"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginBottom="15dp" />
+            android:layout_height="60dp"
+            android:layout_marginBottom="20dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginBottom="20dp"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:weightSum="1">
-
-        <TextView
-            style="@style/Bold_Heading"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="ADD PROPERTY" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:paddingHorizontal="20dp"
+            android:orientation="vertical">
+            <TextView
+                style="@style/Bold_Heading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="32dp"
+                android:text="ADD PROPERTY" />
 
             <include
-                android:id="@+id/property_name"
-                layout="@layout/addproperty_bigbox_layout"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+                android:id="@+id/add_property_name"
+                layout="@layout/layout_input"/>
 
             <include
                 android:id="@+id/property_type"
-                layout="@layout/addproperty_bigbox_layout"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+                layout="@layout/layout_spinner_property_select"/>
 
             <include
                 android:id="@+id/property_address"
-                layout="@layout/addproperty_bigbox_layout"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp">
+                layout="@layout/layout_input"/>
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="2">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingEnd="10dp"
+                    android:layout_weight="1">
+                    <CheckBox
+                        android:id="@+id/electric_option_checkbox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="18dp"
+                        android:text="@string/electric_property_checkbox"
+                        android:layout_marginBottom="20dp"
+                        android:background="@drawable/bg_utilities_checkbox_btn"
+                        android:layoutDirection="rtl"/>
+
+                    <CheckBox
+                        android:id="@+id/water_option_checkbox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/water_property_checkbox"
+                        android:padding="18dp"
+                        android:background="@drawable/bg_utilities_checkbox_btn"
+                        android:layoutDirection="rtl"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingStart="10dp"
+                    android:layout_weight="1">
+                    <CheckBox
+                        android:id="@+id/internet_option_checkbox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp"
+                        android:padding="18dp"
+                        android:text="@string/internet_property_checkbox"
+                        android:background="@drawable/bg_utilities_checkbox_btn"
+                        android:layoutDirection="rtl"/>
+
+                    <CheckBox
+                        android:id="@+id/gas_option_checkbox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="18dp"
+                        android:text="@string/gas_property_checkbox"
+                        android:background="@drawable/bg_utilities_checkbox_btn"
+                        android:layoutDirection="rtl"/>
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginVertical="20dp"
+                android:paddingStart="14dp"
+                android:weightSum="2">
 
                 <TextView
                     android:id="@+id/bedroomText"
-                    android:layout_width="150dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="45dp"
-                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
                     android:text="@string/bedroom_hint"
-                    android:paddingTop="20dp"
-                    style="@style/SubHeading"/>
+                    android:layout_weight="1.5"
+                    style="@style/Bold_SubHeading"/>
+
+                <include
+                    android:id="@+id/bedroomQuantity"
+                    android:layout_weight="0.5"
+                    layout="@layout/addproperty_smallbox_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="55dp"/>
 
             </LinearLayout>
 
-            <include
-                android:id="@+id/bedroomQuantity"
-                layout="@layout/addproperty_smallbox_layout"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp">
-
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="20dp"
+                android:paddingStart="14dp"
+                android:weightSum="2">
 
                 <TextView
                     android:id="@+id/bathroomText"
-                    android:layout_width="150dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="45dp"
-                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:layout_weight="1.5"
                     android:text="@string/bathroom_hint"
-                    android:paddingTop="20dp"
-                    style="@style/SubHeading"/>
+                    style="@style/Bold_SubHeading"/>
+
+                <include
+                    android:layout_weight="0.5"
+                    android:layout_width="0dp"
+                    android:layout_height="55dp"
+                    android:id="@+id/bathroomQuantity"
+                    layout="@layout/addproperty_smallbox_layout"/>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="20dp"
+                android:paddingStart="14dp"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/areaText"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.5"
+                    android:text="@string/property_area_hint"
+                    android:gravity="center_vertical"
+                    style="@style/Bold_SubHeading"/>
+
+                <include
+                    android:layout_weight="0.5"
+                    android:layout_width="0dp"
+                    android:layout_height="55dp"
+                    android:id="@+id/propertyArea"
+                    layout="@layout/addproperty_smallbox_layout"/>
 
             </LinearLayout>
 
-            <include
-                android:id="@+id/bathroomQuantity"
-                layout="@layout/addproperty_smallbox_layout"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
+                <include
+                    android:id="@+id/property_price"
+                    layout="@layout/layout_input"/>
+
+            </LinearLayout>
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/property_image_select_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_property_image_add"
+                android:layout_marginBottom="20dp"/>
+
+            <include
+                android:id="@+id/property_description"
+                layout="@layout/addproperty_propertydetail_textbox"/>
+
+            <include
+                android:id="@+id/progress_button"
+                layout="@layout/layout_progressbar_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"/>
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <include
-                android:id="@+id/property_price"
-                layout="@layout/addproperty_bigbox_layout"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <include
-                android:id="@+id/continue_button"
-                layout="@layout/continue_button"/>
-
-        </LinearLayout>
     </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

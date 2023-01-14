@@ -12,6 +12,7 @@
     <string name="location">Location</string>
     <string name="top_near_by">Top near by</string>
     <string name="search_location">Search location</string>
+    <string name="select_property">Select property type</string>
     <string name="login_title">Login</string>
     <string name="signup_title">Sign Up</string>
     <string name="signup_here">Have an account? Login Here</string>
@@ -31,4 +32,12 @@
     <string name="bedroom_hint">Bedroom Quantity:</string>
     <string name="bathroom_hint">Bathroom Quantity:</string>
     <string name="price_hint">Monthly Price:</string>
+    <string name="title_activity_land_lord_maps">LandLordMapsActivity</string>
+    <string name="water_property_checkbox">WATER</string>
+    <string name="electric_property_checkbox">ELECTRIC</string>
+    <string name="internet_property_checkbox">INTERNET</string>
+    <string name="gas_property_checkbox">GAS</string>
+    <string name="submit_text">SUBMIT</string>
+    <string name="property_area_hint">Property Area</string>
+    <string name="or_text_separated_line">OR</string>
 </resources>

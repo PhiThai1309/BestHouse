@@ -13,9 +13,14 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.elevation.SurfaceColors;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -35,13 +40,14 @@ import java.util.regex.Pattern;
 public class SignupActivity extends BaseActivity {
 
     private ActivitySignupBinding signupBinding;
+    private FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         signupBinding = ActivitySignupBinding.inflate(getLayoutInflater());
         setContentView(signupBinding.getRoot());
-
+        firebaseAuth = FirebaseAuth.getInstance();
         //Set color to the navigation bar to match with the bottom navigation view
         getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(this));
 
@@ -56,6 +62,7 @@ public class SignupActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 validateInput();
+
             }
         });
     }
@@ -74,7 +81,7 @@ public class SignupActivity extends BaseActivity {
     }
 
 
-    private void registerNewAccount()
+    private void registerNewAccount(String userId)
     {
         User user;
         FirebaseFirestore database;
@@ -95,18 +102,23 @@ public class SignupActivity extends BaseActivity {
         database = FirebaseFirestore.getInstance();
 
         try {
-           database.collection(UnchangedValues.USERS_TABLE).add(user)
+           database.collection(UnchangedValues.USERS_TABLE).document(userId).set(user)
                    .addOnSuccessListener(
                            documentReference -> {
                                // move back to login with toast successful message
                                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                               intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                intent.putExtra(UnchangedValues.ACCOUNT_CREATED_INTENT, true);
                                startActivity(intent);
+                               finish();
                            }
                    ).addOnFailureListener(new OnFailureListener() {
                        @Override
                        public void onFailure(@NonNull Exception e) {
-                          showTextLong(e.getMessage());
+                           signupBinding.signOutButtonTextView.setText("Sign Up");
+                           signupBinding.signOutButtonImageView.setVisibility(View.VISIBLE);
+                           signupBinding.signOutButtonProgressBar.setVisibility(View.GONE);
+                           showTextLong(e.getMessage());
                        }
                    });
         }catch (Exception e)
@@ -118,6 +130,32 @@ public class SignupActivity extends BaseActivity {
     private void showTextLong(String text)
     {
         Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
+    }
+
+
+    private void performEmailPassAuth()
+    {
+        signupBinding.signOutButtonTextView.setText("Creating Account...");
+        signupBinding.signOutButtonImageView.setVisibility(View.GONE);
+        signupBinding.signOutButtonProgressBar.setVisibility(View.VISIBLE);
+        firebaseAuth.createUserWithEmailAndPassword(signupBinding.email.getText().toString(), signupBinding.password.getText().toString())
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(task.isSuccessful())
+                        {
+                            FirebaseUser user = firebaseAuth.getCurrentUser();
+                            registerNewAccount(user.getUid());
+                        }
+                        else
+                        {
+                            signupBinding.signOutButtonTextView.setText("Sign Up");
+                            signupBinding.signOutButtonImageView.setVisibility(View.VISIBLE);
+                            signupBinding.signOutButtonProgressBar.setVisibility(View.GONE);
+                           showTextLong(task.getException().getMessage());
+                        }
+                    }
+                });
     }
 
     private void validateInput()
@@ -152,48 +190,8 @@ public class SignupActivity extends BaseActivity {
             showTextLong("Please Select Your Role");
             return;
         }
-
-        checkUsedEmail(inputEmail, new SetEmailExistedCallback() {
-
-            @Override
-            public void onCallback(boolean existed) {
-               if(existed)
-               {
-                   showTextLong("Email Is Used");
-               }
-               else
-               {
-                   registerNewAccount();
-               }
-            }
-        });
-
+        performEmailPassAuth();
     }
 
-    private void checkUsedEmail(String inputEmail, final SetEmailExistedCallback callback)
-    {
-        FirebaseFirestore database = FirebaseFirestore.getInstance();
-        CollectionReference docRef = database.collection(UnchangedValues.USERS_TABLE);
 
-        try{
-            docRef.whereEqualTo(UnchangedValues.USER_EMAIL_COL, signupBinding.email.getText().toString()).get()
-                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                        @Override
-                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                            List<DocumentSnapshot> docList = queryDocumentSnapshots.getDocuments();
-                            // if email is created
-                            if (docList.size() > 0 && docList.get(0).exists())
-                            {
-                                callback.onCallback(true);
-                            }
-                            else
-                            {
-                                callback.onCallback(false);
-                            }
-                        }
-                    });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }

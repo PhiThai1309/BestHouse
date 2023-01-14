@@ -9,6 +9,8 @@ public abstract class User {
     private String phoneNumber;
     private UserRole role;
 
+    public User() {}
+
     public User(String email, String password, String fullName, String phoneNumber, UserRole role) {
         this.email = email;
         this.password = password;

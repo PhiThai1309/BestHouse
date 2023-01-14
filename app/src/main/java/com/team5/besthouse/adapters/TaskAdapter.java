@@ -31,7 +31,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     @Override
     public TaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // Inflate the view
-        View itemView = mInflater.inflate(R.layout.feature_layout, parent, false);
+        View itemView = mInflater.inflate(R.layout.layout_feature, parent, false);
         return new TaskViewHolder(itemView);
     }
 
@@ -45,7 +45,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             // Set the name of the view holder
             holder.name.setText(current.getId());
             // Set the address of the view holder
-            holder.address.setText(current.getAddress().toString());
+            holder.address.setText(current.getAddress(this.mInflater.getContext()).toString());
             //Set the prize of the view holder
             holder.price.setText((int) current.getMonthlyPrice());
         } else {

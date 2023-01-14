@@ -15,6 +15,8 @@
     </style>
 
     <style name="Card">
+        <item name="cardUseCompatPadding">true</item>
+        <item name="cardPreventCornerOverlap">true</item>
         <item name="cornerFamily">rounded</item>
         <!-- below items does not work with normal ImageView -->
         <item name="cornerSizeTopRight">20dp</item>
@@ -24,6 +26,8 @@
     </style>
 
     <style name="Card2">
+        <item name="cardUseCompatPadding">true</item>
+        <item name="cardPreventCornerOverlap">true</item>
         <item name="cornerFamily">rounded</item>
         <!-- below items does not work with normal ImageView -->
         <item name="cornerSizeTopRight">16dp</item>
@@ -33,7 +37,8 @@
     </style>
 
     <style name="CardStyle">
-        <item name="android:layout_margin">16dp</item>
+        <item name="cardUseCompatPadding">true</item>
+        <item name="cardPreventCornerOverlap">true</item>
         <item name="cardCornerRadius">20dp</item>
         <item name="strokeWidth">0dp</item>
         <item name="cardElevation">6dp</item>
@@ -54,6 +59,7 @@
         <item name="android:textColor">@color/md_theme_onPrimaryContainer</item>
         <item name="android:textStyle">bold</item>
         <item name="android:layout_marginTop">20dp</item>
+        <item name="android:layout_marginBottom">12dp</item>
     </style>
 
     <style name="Bold_Heading" parent="@android:style/Widget.TextView">
@@ -75,6 +81,11 @@
     <style name="SubHeading" parent="@android:style/Widget.TextView">
         <item name="android:textSize">18sp</item>
         <item name="android:fontFamily">sans-serif-thin</item>
+    </style>
+
+    <style name="Bold_SubHeading2" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="NormalText" parent="@android:style/Widget.TextView">
@@ -114,8 +125,9 @@
     </style>
 
 <!--   Continue Button  -->
-    <style name="continue_button">
-        <item name="android:backgroundTint">@color/almost_dark</item>
+    <style name="button">
+        <item name="android:paddingHorizontal">20dp</item>
+        <item name="android:paddingVertical">14dp</item>
         <item name="cornerRadius">10dp</item>
     </style>
 </resources>

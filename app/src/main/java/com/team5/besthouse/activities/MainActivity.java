@@ -6,25 +6,30 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.graphics.Color;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.Window;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.material.elevation.SurfaceColors;
 import com.google.android.material.navigation.NavigationBarView;
 import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.fragments.AccountFragment;
-import com.team5.besthouse.fragments.HomeFragment;
+import com.team5.besthouse.fragments.TenantHomeFragment;
 import com.team5.besthouse.fragments.MapsFragment;
 import com.team5.besthouse.R;
 import com.team5.besthouse.services.StoreService;
-import com.team5.besthouse.constants.UnchangedValues;
 
 public class MainActivity extends BaseActivity {
     ActionBar actionBar;
     private StoreService storeService;
+
+    public boolean locationPermissionGranted;
+    public Location lastKnownLocation;
+    protected FusedLocationProviderClient fusedLocationProviderClient;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,8 +37,10 @@ public class MainActivity extends BaseActivity {
 
         //Set color to the navigation bar to match with the bottom navigation view
         getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(this));
+        Window window = getWindow();
+        window.setStatusBarColor(Color.TRANSPARENT);
 
-        actionBar = getSupportActionBar();
+//        actionBar = getSupportActionBar();
         NavigationBarView navigationView;
         storeService = new StoreService(getApplicationContext());
 //        LinearLayout navbar = findViewById(R.id.main_navbar);
@@ -52,13 +59,12 @@ public class MainActivity extends BaseActivity {
         // When we open the application first
         // time the fragment should be shown to the user
         // in this case it is home fragment
-        HomeFragment fragment = new HomeFragment();
+        TenantHomeFragment fragment = new TenantHomeFragment();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.content, fragment, "");
         fragmentTransaction.commit();
 
-        Window window = getWindow();
-        window.setStatusBarColor(Color.TRANSPARENT);
+
 
         String a = storeService.getStringValue(UnchangedValues.LOGIN_USER);
 
@@ -79,7 +85,7 @@ public class MainActivity extends BaseActivity {
             switch (menuItem.getItemId()) {
 
                 case R.id.main:
-                    HomeFragment fragment = new HomeFragment();
+                    TenantHomeFragment fragment = new TenantHomeFragment();
                     FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                     fragmentTransaction.replace(R.id.content, fragment, "");
                     fragmentTransaction.commit();
@@ -102,4 +108,6 @@ public class MainActivity extends BaseActivity {
             return false;
         }
     };
+
+
 }

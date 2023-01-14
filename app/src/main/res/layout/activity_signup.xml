@@ -154,6 +154,7 @@
             android:paddingHorizontal="20dp"
             android:paddingVertical="14dp">
             <TextView
+                android:id="@+id/signOutButton_textView"
                 style="@style/Heading"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -161,10 +162,20 @@
                 android:text="@string/signup_title"
                 android:layout_weight="2.5"/>
             <ImageView
+                android:id="@+id/signOutButton_imageView"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_round_arrow_forward_24"
                 android:layout_weight="0.5"/>
+            <ProgressBar
+                android:id="@+id/signOutButton_progressBar"
+                android:indeterminate="true"
+                android:indeterminateTint="@color/BLACK"
+                android:indeterminateTintMode="src_atop"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 

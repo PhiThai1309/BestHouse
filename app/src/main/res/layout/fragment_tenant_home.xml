@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.HomeFragment">
+    tools:context=".fragments.TenantHomeFragment">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -20,9 +20,12 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+:app/src/main/res/layout/fragment_home.xml
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="20dp"
+                android:layout_margin="20dp"
+:app/src/main/res/layout/fragment_tenant_home.xml
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:weightSum="1">
@@ -53,11 +56,11 @@
                             android:src="@drawable/ic_outline_location_on_24" />
 
                         <TextView
+                            android:id="@+id/home_location"
                             style="@style/Heading"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:text="@string/place_holder" />
+                            android:layout_marginStart="8dp" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -67,6 +70,12 @@
                     android:layout_marginStart="20dp"
                     android:src="@drawable/ic_outline_account_circle_24" />
             </LinearLayout>
+
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/home_progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -81,6 +90,11 @@
 <!--                android:layout_height="wrap_content"-->
 <!--                android:layout_width="match_parent"-->
 <!--                android:layout_marginHorizontal="20dp"/>-->
+:app/src/main/res/layout/fragment_home.xml
+
+
+
+:app/src/main/res/layout/fragment_tenant_home.xml
             <!--            <include-->
             <!--                layout="@layout/feature_layout"-->
             <!--                android:layout_height="wrap_content"-->
@@ -93,11 +107,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:paddingHorizontal="10dp"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
+:app/src/main/res/layout/fragment_home.xml
 
                 android:clipToPadding="false"
                 tools:listitem="@layout/feature_layout" />
+
+                android:clipToPadding="false"
+                tools:listitem="@layout/layout_feature" />
+:app/src/main/res/layout/fragment_tenant_home.xml
 
             <TextView
                 android:layout_width="match_parent"
@@ -114,7 +134,7 @@
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                tools:listitem="@layout/main_layout"
+                tools:listitem="@layout/layout_card_main"
                 android:paddingBottom="20dp"
                 android:clipToPadding="false"/>
         </LinearLayout>
