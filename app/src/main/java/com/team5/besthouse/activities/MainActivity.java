@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentTransaction;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
 import android.widget.Toast;
@@ -30,15 +31,18 @@ public class MainActivity extends AppCompatActivity {
     public Location lastKnownLocation;
     protected FusedLocationProviderClient fusedLocationProviderClient;
 
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.logout_app_bar, menu);
+//        MenuItem item = menu.getItem(0);
+//        item.setVisible(true);
+//        return true;
+//    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        //Set color to the navigation bar to match with the bottom navigation view
-        getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(this));
-        Window window = getWindow();
-        window.setStatusBarColor(Color.TRANSPARENT);
 
 //        actionBar = getSupportActionBar();
         NavigationBarView navigationView;
