@@ -115,7 +115,7 @@ public class SearchLocationWithSuggestionActivity extends AppCompatActivity impl
            @Override
            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 
-              if(actionId == EditorInfo.IME_ACTION_DONE)
+              if(actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_GO || actionId == EditorInfo.IME_ACTION_SEARCH)
               {
 
                   // create the request

@@ -92,6 +92,11 @@ public class Property implements Serializable {
     }
 
     @Exclude
+    public Double getNonSqrtDistance(Double latitude, Double longitude){
+        return Math.pow(this.latitude - latitude, 2) + Math.pow(this.longitude - longitude, 2);
+    }
+
+    @Exclude
     public static Property STATICPROPERTY = new Property(
             "213",
             "123",
