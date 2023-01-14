@@ -26,7 +26,13 @@
         </activity>
         <activity
             android:name=".activities.AddPropertyActivity"
-            android:name=".SearchableActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".activities.SearchableActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -39,6 +45,7 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+        <activity
             android:name=".activities.SearchLocationWithSuggestionActivity"
             android:exported="false"></activity>
         <activity
@@ -67,20 +74,6 @@
             android:name=".activities.LandLordMapsActivity"
             android:exported="false"
             android:label="@string/title_activity_land_lord_maps" />
-        <activity
-            android:name=".activities.AddPropertyActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".activities.LandlordActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
         <activity
             android:name=".activities.SignupActivity"
             android:exported="false"

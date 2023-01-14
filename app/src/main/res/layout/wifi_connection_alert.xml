@@ -40,5 +40,5 @@
         android:paddingHorizontal="80dp"
         android:text="RETRY"
         android:textColor="@color/WHITE"
-        style="@style/continue_button"/>
+        style="@style/button"/>
 </LinearLayout>

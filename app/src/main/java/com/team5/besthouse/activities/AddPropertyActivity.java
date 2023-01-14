@@ -69,7 +69,9 @@ import com.team5.besthouse.models.PropertyType;
 import com.team5.besthouse.models.User;
 import com.team5.besthouse.models.Utilities;
 import com.team5.besthouse.services.StoreService;
+
 import org.checkerframework.checker.units.qual.A;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
