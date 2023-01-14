@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <SearchView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    <!--    <SearchView-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="match_parent" />-->
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/Googlemap"
@@ -21,26 +20,39 @@
         tools:layout="@layout/activity_searchable" />
 
     <!--search view to search our location-->
+
     <androidx.appcompat.widget.SearchView
         android:id="@+id/search_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_margin="10dp"
         android:background="#BFBFBF"
         android:elevation="5dp"
         app:iconifiedByDefault="false"
-        app:queryHint="Search" />
+        app:queryHint="Search">
+
+    </androidx.appcompat.widget.SearchView>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/listPlaces"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginBottom="10dp"
+        android:elevation="5dp"
+        tools:listitem="@layout/item_location_suggestion" />
 
     <!--    <SearchView-->
-<!--        android:id="@+id/searchView"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:queryHint="Search Here"-->
-<!--        android:iconifiedByDefault="false"-->
-<!--        android:layout_alignParentTop="true"-->
-<!--        />-->
+    <!--        android:id="@+id/searchView"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:queryHint="Search Here"-->
+    <!--        android:iconifiedByDefault="false"-->
+    <!--        android:layout_alignParentTop="true"-->
+    <!--        />-->
 
-<!--    <include-->
-<!--        layout="@layout/search_layout"/>-->
+    <!--    <include-->
+    <!--        layout="@layout/search_layout"/>-->
 
 </FrameLayout>

@@ -19,15 +19,26 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import androidx.appcompat.widget.SearchView;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.view.animation.Animation;
+import android.view.inputmethod.EditorInfo;
+import android.widget.ArrayAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationAvailability;
 import com.google.android.gms.location.LocationCallback;
@@ -47,11 +58,20 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.OnTokenCanceledListener;
 import com.google.android.gms.tasks.Task;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Executor;
 
 import com.google.android.material.elevation.SurfaceColors;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.AutocompletePrediction;
+import com.google.android.libraries.places.api.model.AutocompleteSessionToken;
+import com.google.android.libraries.places.api.model.RectangularBounds;
+import com.google.android.libraries.places.api.net.FetchPlaceRequest;
+import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
+import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -64,8 +84,11 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 import com.team5.besthouse.R;
 import com.team5.besthouse.activities.MainActivity;
+import com.team5.besthouse.adapters.LocationSuggestionAdapter;
+import com.team5.besthouse.adapters.PropertiesSuggestionAdapter;
 import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.databinding.FragmentAccountBinding;
+import com.team5.besthouse.interfaces.RecyclerViewInterface;
 import com.team5.besthouse.models.Contract;
 import com.team5.besthouse.models.ContractStatus;
 import com.team5.besthouse.models.Coordinates;
@@ -75,23 +98,33 @@ import com.team5.besthouse.models.Tenant;
 import com.team5.besthouse.models.User;
 import com.team5.besthouse.services.StoreService;
 
-public class MapsFragment extends Fragment {
+public class MapsFragment extends Fragment implements RecyclerViewInterface {
     public static final int PERMISSIONS_FINE_LOCATION = 99;
 
     protected LocationRequest locationRequest;
     protected FusedLocationProviderClient fusedLocationProviderClient;
     protected LocationCallback locationCallback;
     private FragmentAccountBinding binding;
-    public GoogleMap map;
-    public Location lastKnownLocation;
+    private GoogleMap map;
     private StoreService storeService;
-    private SearchView searchView;
+    private PlacesClient placesClient;
 
-    ArrayList<Property> list = new ArrayList<>();
+    private SearchView searchView;
+    private PropertiesSuggestionAdapter lsAdapter;
+    RecyclerView rv;
+
+    private Location lastKnownLocation;
+    private ArrayList<Property> properties;
+
+    private AutocompleteSessionToken token;
 
     public LatLng defaultLocation = new LatLng(-34, 151);
 
     public boolean locationPermissionGranted;
+
+    private final LatLng HCM_NE_LATLNG = new LatLng(10.704313625774835, 106.60751276957609);
+    private final LatLng HCM_SW_LATLNG = new LatLng(10.878598802235736, 106.647395525166);
+    private final LatLng HCM_CEN_LATLNG = new LatLng(10.762622, 106.660172);
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
         /**
@@ -104,18 +137,14 @@ public class MapsFragment extends Fragment {
          * user has installed Google Play services and returned to the app.
          */
         @Override
-        public void onMapReady(GoogleMap googleMap) {
+        public void onMapReady(@NonNull GoogleMap googleMap) {
             map = googleMap;
-            LatLng sydney = new LatLng(Coordinates.STATICCOORD().getLatitude(), Coordinates.STATICCOORD().getLongitude());
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 10));
 
             // Turn on the My Location layer and the related control on the map.
             updateLocationUI();
 
             // Get the current location of the device and set the position of the map.
             getDeviceLocation();
-
-
         }
 
         private void updateLocationUI() {
@@ -129,7 +158,6 @@ public class MapsFragment extends Fragment {
                 } else {
                     map.setMyLocationEnabled(false);
                     map.getUiSettings().setMyLocationButtonEnabled(false);
-                    lastKnownLocation = null;
                     getLocationPermission();
                 }
             } catch (SecurityException e)  {
@@ -143,9 +171,6 @@ public class MapsFragment extends Fragment {
          * Get the best and most recent location of the device, which may be null in rare
          * cases when a location is not available.
          */
-        if (fusedLocationProviderClient == null) {
-            fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
-        }
 
         try {
             Log.i(TAG, "getting device location");
@@ -154,7 +179,7 @@ public class MapsFragment extends Fragment {
                     @NonNull
                     @Override
                     public CancellationToken onCanceledRequested(@NonNull OnTokenCanceledListener onTokenCanceledListener) {
-                        return null;
+                        return this;
                     }
 
                     @Override
@@ -166,13 +191,19 @@ public class MapsFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<Location> task) {
                         if (task.isSuccessful()) {
-                            Log.i(TAG, "has lastKnownLocation");
                             // Set the map's camera position to the current location of the device.
                             lastKnownLocation = task.getResult();
                             if (lastKnownLocation != null) {
+                                Log.i(TAG, "has lastKnownLocation");
+
                                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(
                                         new LatLng(lastKnownLocation.getLatitude(),
                                                 lastKnownLocation.getLongitude()), 17));
+
+                                lsAdapter.setCurrentLocation(new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude()));
+                            }
+                            else {
+                                Log.i(TAG, "no lastKnownLocation");
                             }
                         } else {
                             Log.d(TAG, "Current location is null. Using defaults.");
@@ -205,7 +236,7 @@ public class MapsFragment extends Fragment {
             } else {
                 map.setMyLocationEnabled(false);
                 map.getUiSettings().setMyLocationButtonEnabled(false);
-                lastKnownLocation = null;
+
                 getLocationPermission();
             }
         } catch (SecurityException e)  {
@@ -229,21 +260,34 @@ public class MapsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.Googlemap);
+
         if (mapFragment != null) {
             mapFragment.getMapAsync(callback);
         }
 
+        properties = new ArrayList<>();
         // set up store service
-        storeService = new StoreService(getContext());
+        storeService = new StoreService(view.getContext());
 
-        locationRequest = new LocationRequest();
-
-        locationRequest.setInterval(30000);
-        locationRequest.setFastestInterval(5000);
-        locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        locationRequest = new LocationRequest.Builder(30000)
+                .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
+                .build();
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(view.getContext());
+
+        if (!Places.isInitialized()){
+            Places.initialize(view.getContext(), UnchangedValues.PLACES_API_KEY);
+        }
+        token = AutocompleteSessionToken.newInstance();
+
+        placesClient = Places.createClient(view.getContext());
+
+        rv = view.findViewById(R.id.listPlaces);
+
+        settleRecyclerView();
+
 
         if (ActivityCompat.checkSelfPermission(view.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(view.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -252,6 +296,50 @@ public class MapsFragment extends Fragment {
         } else {
             // already permission granted
         }
+
+        searchView = view.findViewById(R.id.search_view);
+        rv.setVisibility(View.GONE);
+
+        final Handler handler = new Handler();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Log.i(TAG, "onQueryTextSubmit: " + query);
+                handler.removeCallbacksAndMessages(null);
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        onSearchViewChange(query);
+                    }
+                }, 400);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String query) {
+                Log.i(TAG, "onQueryTextChange: " + query);
+                handler.removeCallbacksAndMessages(null);
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        onSearchViewChange(query);
+                    }
+                }, 400);
+                return false;
+                }
+            });
+
+        searchView.setOnQueryTextFocusChangeListener((v, hasFocus) -> {
+            Log.i(TAG, "onFocusChange: " + hasFocus);
+            if (!hasFocus){
+                rv.clearAnimation();
+                rv.setVisibility(View.GONE);
+            }
+            else {
+                rv.setVisibility(View.VISIBLE);
+            }
+        });
 
 //        // Construct a PlacesClient
 //
@@ -265,51 +353,30 @@ public class MapsFragment extends Fragment {
 //        };
 //        updateGPS();
         // initializing our search view.
-        searchView = (SearchView) view.findViewById(R.id.search_view);
-//          adding on query listener for our search view.
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                // on below line we are getting the
-                // location name from search view.
-                String location = searchView.getQuery().toString();
+    }
 
-                // below line is to create a list of address
-                // where we will store the list of all address.
-
-                // checking if the entered location is null or not.
-                if (location != null || location.equals("")) {
-                    // on below line we are creating and initializing a geo coder.
-                    Geocoder geocoder = new Geocoder(view.getContext());
-                    List<Address> addressList = new ArrayList<>();
-                    try {
-                        // on below line we are getting location from the
-                        // location name and adding that location to address list.
-                        addressList = geocoder.getFromLocationName(location, 1);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    if (addressList.size() < 1) {
-                        return false;
-                    }
-                    // on below line we are getting the location
-                    // from our list a first position.
-                    LatLng address = new LatLng(addressList.get(0).getLatitude(), addressList.get(0).getLongitude());
-
-                    // on below line we are adding marker to that position.
-                    map.addMarker(new MarkerOptions().position(address).title(location));
-
-                    // below line is to animate camera to that position.
-                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(address, 13));
-                }
-                return false;
+    @SuppressLint("NotifyDataSetChanged")
+    private void onSearchViewChange(String query) {
+        Geocoder geocoder = new Geocoder(getContext());
+        try {
+            List<Address> addressesList = geocoder.getFromLocationName(query,1);
+            LatLng coord = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
+            if(addressesList.size() > 0) {
+                Address address = addressesList.get(0);
+                coord = new LatLng(address.getLatitude(), address.getLongitude());
             }
+            LatLng finalCoord = coord;
+            lsAdapter.setCurrentLocation(finalCoord);
+            properties.sort((t1, t2) -> {
+                double distance1 = t1.getNonSqrtDistance(finalCoord.latitude, finalCoord.longitude);
+                double distance2 = t2.getNonSqrtDistance(finalCoord.latitude, finalCoord.longitude);
+                return (int) Double.compare(distance1, distance2);
+            });
+            lsAdapter.notifyDataSetChanged();
 
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
+        } catch (IOException e) {
+            Log.i(this.getClass().toString(), "getLatLngFromTextAddress: ");
+        }
     }
 
 //    private void updateGPS() {
@@ -350,7 +417,11 @@ public class MapsFragment extends Fragment {
                                 for(DocumentSnapshot newDoc : task.getResult().getDocuments()){
                                     Property p = newDoc.toObject(Property.class);
 
-                                    Log.i("Property", p == null || p.getId() == null ? "null address!" : p.getId());
+                                    if (p == null || p.getId() == null) {
+                                        Log.i("Property", "null address found");
+                                        continue;
+                                    }
+                                    Log.i("Property", p.getId());
                                     //get all contracts that have its end date after today and is from this property
                                     Gson gson = new Gson();
                                     User user = gson.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), Tenant.class);
@@ -369,12 +440,17 @@ public class MapsFragment extends Fragment {
                                                         }
                                                     }
                                                     if (ok) {
+                                                        lsAdapter.addNewItem(p);
+
                                                         map.addMarker(new MarkerOptions().position(p.getcoordinates()).title(p.getPropertyName()));
                                                         Log.i("MARKER" , p.toString());
                                                     }
                                                 }
                                             });
                                 }
+                        }
+                        else {
+                            Toast.makeText(getContext(), "Error loading houses. Please contact admin", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -396,6 +472,14 @@ public class MapsFragment extends Fragment {
 //                break;
 //        }
 //    }
+
+    private void settleRecyclerView(){
+        lsAdapter = new PropertiesSuggestionAdapter(getContext(), properties, this, new LatLng(Coordinates.STATICCOORD().getLatitude(), Coordinates.STATICCOORD().getLongitude()));
+        LinearLayoutManager lm = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        rv.setLayoutManager(lm);
+        rv.setAdapter(lsAdapter);
+        rv.setItemAnimator(new DefaultItemAnimator());
+    }
 
     private void getLocationPermission() {
         /*
@@ -428,5 +512,18 @@ public class MapsFragment extends Fragment {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
         updateLocationUI();
+    }
+
+    private void moveZoomMarker(LatLng latLng){
+        // move the camera to position
+
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,map.getCameraPosition().zoom));
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        moveZoomMarker(properties.get(position).getcoordinates());
+        searchView.clearFocus();
+        rv.setVisibility(View.GONE);
     }
 }
