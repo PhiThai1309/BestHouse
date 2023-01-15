@@ -3,6 +3,7 @@ package com.team5.besthouse.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -24,6 +25,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 import com.team5.besthouse.R;
 import com.team5.besthouse.constants.UnchangedValues;
+import com.team5.besthouse.fragments.MapsFragment;
 import com.team5.besthouse.models.Property;
 import com.team5.besthouse.models.Tenant;
 import com.team5.besthouse.models.User;
@@ -253,10 +255,14 @@ public class DetailActivity extends AppCompatActivity {
 
         dc.set(contract)
                 .addOnCompleteListener(task -> {
+                    Intent intent = new Intent(this, MapsFragment.class);
                     if (task.isSuccessful()) {
                         Toast.makeText(this, "Contract created!", Toast.LENGTH_SHORT).show();
+                        intent.putExtra("created", true);
+                        setResult(200, intent);
                     } else {
                         Toast.makeText(this, "Contract creation failed!", Toast.LENGTH_SHORT).show();
+                        intent.putExtra("created", false);
                     }
                     finish();
                 });
