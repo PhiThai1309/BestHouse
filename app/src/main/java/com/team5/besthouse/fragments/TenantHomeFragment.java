@@ -3,6 +3,7 @@ package com.team5.besthouse.fragments;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
@@ -11,6 +12,7 @@ import static android.content.ContentValues.TAG;
 import android.annotation.SuppressLint;
 import android.location.Geocoder;
 import android.location.Location;
+import android.media.Image;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -18,6 +20,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,6 +31,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -47,10 +51,10 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
-import com.team5.besthouse.PropertyAdapter;
-import com.team5.besthouse.PropertyAdapter2;
 import com.team5.besthouse.R;
 import com.team5.besthouse.activities.MainActivity;
+import com.team5.besthouse.adapters.PropertyAdapter;
+import com.team5.besthouse.adapters.PropertyCardAdapter;
 import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.models.Contract;
 import com.team5.besthouse.models.ContractStatus;
@@ -77,7 +81,7 @@ public class TenantHomeFragment extends Fragment {
     private RecyclerView propertyView;
     private List<Property> list;
     private PropertyAdapter adapter1;
-    private PropertyAdapter2 adapter2;
+    private PropertyCardAdapter adapter2;
     private StoreService storeService;
     private View progressIndicator;
 
@@ -146,6 +150,20 @@ public class TenantHomeFragment extends Fragment {
         progressIndicator = view.findViewById(R.id.home_progressBar);
         progressIndicator.setVisibility(View.VISIBLE);
 
+        ImageView homeAccount = view.findViewById(R.id.home_account);
+        homeAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment frag = new AccountFragment();
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.replace(R.id.content, frag);
+                MainActivity.navigationView.setSelectedItemId(R.id.account);
+                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                ft.addToBackStack(null);
+                ft.commit();
+            }
+        });
+
         //get db instance
 
         db = FirebaseFirestore.getInstance();
@@ -187,7 +205,7 @@ public class TenantHomeFragment extends Fragment {
         propertyView.setLayoutManager(linearLayoutManager2);
 
         propertyView.setNestedScrollingEnabled(false);
-        adapter2 = new PropertyAdapter2((MainActivity) getContext(), list);
+        adapter2 = new PropertyCardAdapter((MainActivity) getContext(), list);
         propertyView.setAdapter(adapter2);
 
         featureView.setHasFixedSize(true);
@@ -196,6 +214,16 @@ public class TenantHomeFragment extends Fragment {
         tv = view.findViewById(R.id.home_location);
         getLocationPermission();
         getDeviceLocation(tv);
+
+        View recommendView = view.findViewById(R.id.home_recommend);
+        TextView recommendTitle = recommendView.findViewById(R.id.see_more_title);
+        recommendTitle.setText("Recommendation");
+
+        View topView = view.findViewById(R.id.home_top);
+        TextView topTitle = topView.findViewById(R.id.see_more_title);
+        topTitle.setText("Top near you");
+
+
 
         // Inflate the layout for this fragment
         return view;
@@ -272,7 +300,7 @@ public class TenantHomeFragment extends Fragment {
                                                     }
                                                     if (ok) {
                                                         list.add(p);
-//                                                        Log.i("ADDED" , p.toString());
+//                                                          Log.i("ADDED" , p.toString());
                                                         adapter1.notifyDataSetChanged();
                                                         adapter2.notifyDataSetChanged();
                                                     }

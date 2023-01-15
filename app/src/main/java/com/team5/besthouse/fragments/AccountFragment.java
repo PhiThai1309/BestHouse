@@ -2,12 +2,9 @@ package com.team5.besthouse.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -15,12 +12,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.appbar.MaterialToolbar;
@@ -35,11 +31,10 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
-import com.team5.besthouse.PropertyAdapter;
-import com.team5.besthouse.PropertyAdapter2;
 import com.team5.besthouse.R;
 import com.team5.besthouse.activities.LoginActivity;
 import com.team5.besthouse.activities.MainActivity;
+import com.team5.besthouse.adapters.ContractAdapter;
 import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.databinding.FragmentAccountBinding;
 import com.team5.besthouse.models.Contract;
@@ -51,7 +46,6 @@ import com.team5.besthouse.services.StoreService;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -71,7 +65,7 @@ public class AccountFragment extends Fragment {
 
     private RecyclerView historyView;
     private List<Property> list;
-    private PropertyAdapter2 adapter1;
+    private ContractAdapter adapter1;
     private LinearProgressIndicator progressIndicator;
 
     // TODO: Rename and change types of parameters
@@ -239,9 +233,15 @@ public class AccountFragment extends Fragment {
         historyView.setHasFixedSize(true);
         historyView.setLayoutManager(linearLayoutManager);
 
-        adapter1 = new PropertyAdapter2((MainActivity) getContext(), list);
+        adapter1 = new ContractAdapter((MainActivity) getContext(), list);
         historyView.setAdapter(adapter1);
         historyView.setHasFixedSize(true);
+
+        View historyTitle = binding.getRoot().findViewById(R.id.contract_history_title);
+        TextView seeMoreTitle = historyTitle.findViewById(R.id.see_more_title);
+        seeMoreTitle.setText("Contract History");
+
+
 
         // Inflate the layout for this fragment
         return binding.getRoot();

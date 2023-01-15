@@ -42,6 +42,8 @@
         android:layout_marginHorizontal="10dp"
         android:layout_marginBottom="10dp"
         android:elevation="5dp"
+        android:scrollbars="vertical"
+        android:background="@drawable/suggestion_background"
         tools:listitem="@layout/item_location_suggestion" />
 
     <!--    <SearchView-->

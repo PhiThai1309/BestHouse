@@ -38,7 +38,7 @@
                 style="@style/Bold_Heading"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="30dp"
+                android:paddingBottom="24dp"
                 android:text="@string/login_title" />
 
             <com.google.android.material.card.MaterialCardView

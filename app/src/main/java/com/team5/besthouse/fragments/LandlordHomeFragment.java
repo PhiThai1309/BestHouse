@@ -28,13 +28,12 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
-import com.team5.besthouse.PropertyAdapter;
-import com.team5.besthouse.PropertyAdapter2;
 import com.team5.besthouse.R;
 import com.team5.besthouse.activities.AddPropertyActivity;
 import com.team5.besthouse.activities.LandlordActivity;
-import com.team5.besthouse.activities.MainActivity;
 import com.team5.besthouse.adapters.LandlordPropertyAdapter;
+import com.team5.besthouse.adapters.PropertyAdapter;
+import com.team5.besthouse.adapters.PropertyCardAdapter;
 import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.models.Contract;
 import com.team5.besthouse.models.ContractStatus;
@@ -60,7 +59,7 @@ public class LandlordHomeFragment extends Fragment {
     private RecyclerView featureView;
     private RecyclerView propertyView;
     private PropertyAdapter adapter1;
-    private PropertyAdapter2 adapter2;
+    private PropertyCardAdapter adapter2;
     private StoreService storeService;
     private View progressIndicator;
 
@@ -216,7 +215,7 @@ public class LandlordHomeFragment extends Fragment {
         helper.attachToRecyclerView(featureView);
 
         list = new ArrayList<>();
-        adapter2 = new PropertyAdapter2((LandlordActivity) getContext(), list);
+        adapter2 = new PropertyCardAdapter((LandlordActivity) getContext(), list);
         featureView.setAdapter(adapter2);
         featureView.setHasFixedSize(true);
 

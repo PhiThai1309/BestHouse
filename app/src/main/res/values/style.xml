@@ -41,7 +41,7 @@
         <item name="cardPreventCornerOverlap">true</item>
         <item name="cardCornerRadius">20dp</item>
         <item name="strokeWidth">0dp</item>
-        <item name="cardElevation">6dp</item>
+        <item name="cardElevation">4dp</item>
     </style>
 
     <style name="AppTheme.GrayStatusBar" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -66,6 +66,7 @@
         <item name="android:textSize">30sp</item>
         <item name="android:textColor">@color/md_theme_onPrimaryContainer</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:paddingTop">12dp</item>
     </style>
 
     <style name="Bold_SubHeading" parent="@android:style/Widget.TextView">
@@ -80,6 +81,11 @@
 
     <style name="SubHeading" parent="@android:style/Widget.TextView">
         <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">sans-serif-thin</item>
+    </style>
+
+    <style name="SeeMore" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">14sp</item>
         <item name="android:fontFamily">sans-serif-thin</item>
     </style>
 
@@ -130,4 +136,23 @@
         <item name="android:paddingVertical">14dp</item>
         <item name="cornerRadius">10dp</item>
     </style>
+
+<!--    Search Suggestion View-->
+    <style name="Suggestion_Heading" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">@color/md_theme_onPrimaryContainer</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Suggestion_SubHeading" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">sans-serif-thin</item>
+    </style>
+
+    <style name="Suggestion_Location" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/md_theme_primary</item>
+<!--        <item name="android:fontFamily">sans-serif-thin</item>-->
+    </style>
+
 </resources>

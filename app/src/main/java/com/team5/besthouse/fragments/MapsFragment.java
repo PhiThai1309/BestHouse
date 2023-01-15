@@ -14,6 +14,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -29,6 +32,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -479,6 +483,11 @@ public class MapsFragment extends Fragment implements RecyclerViewInterface {
         rv.setLayoutManager(lm);
         rv.setAdapter(lsAdapter);
         rv.setItemAnimator(new DefaultItemAnimator());
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rv.getContext(), lm.getOrientation());
+        GradientDrawable drawable = new GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, new int[]{0xfff7f7f7, 0xfff7f7f7});
+        drawable.setSize(1,3);
+        dividerItemDecoration.setDrawable(drawable);
+        rv.addItemDecoration(dividerItemDecoration);
     }
 
     private void getLocationPermission() {
