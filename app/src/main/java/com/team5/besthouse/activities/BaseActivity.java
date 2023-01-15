@@ -3,7 +3,7 @@ package com.team5.besthouse.activities;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import com.team5.besthouse.broadcastreceiver.ConnectionReceiver;
+import com.team5.besthouse.broadcastreceiverandservice.ConnectionReceiver;
 
 public abstract class BaseActivity extends AppCompatActivity implements ConnectionReceiver.OnConnectivityChangedListener {
     private ConnectionReceiver connectionReceiver;

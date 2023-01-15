@@ -17,6 +17,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:targetApi="31">
+        <service
+            android:name=".LogoutService"
+            android:enabled="true"
+            android:exported="true"></service>
+
         <activity
             android:name=".activities.BaseActivity"
             android:exported="false">

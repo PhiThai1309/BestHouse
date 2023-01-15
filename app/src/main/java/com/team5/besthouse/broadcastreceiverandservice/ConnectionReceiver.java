@@ -1,4 +1,4 @@
-package com.team5.besthouse.broadcastreceiver;
+package com.team5.besthouse.broadcastreceiverandservice;
 
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
