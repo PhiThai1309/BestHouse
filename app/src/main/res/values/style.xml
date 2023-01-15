@@ -113,9 +113,21 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="Rec_Heading" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">@color/md_theme_onPrimary</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="Card_SubHeading" parent="@android:style/Widget.TextView">
         <item name="android:textSize">13sp</item>
         <item name="android:fontFamily">sans-serif-thin</item>
+        <item name="android:layout_marginStart">10dp</item>
+    </style>
+
+    <style name="Rec_SubHeading" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/md_theme_surfaceVariant</item>
         <item name="android:layout_marginStart">10dp</item>
     </style>
 

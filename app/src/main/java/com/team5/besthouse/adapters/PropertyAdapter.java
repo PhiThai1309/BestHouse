@@ -51,7 +51,7 @@ public class PropertyAdapter extends RecyclerView.Adapter<PropertyAdapter.TaskVi
             // Set the address of the view holder
             holder.address.setText(current.getAddress(this.mInflater.getContext()).toString());
             //Set the prize of the view holder
-            holder.price.setText(String.valueOf(current.getMonthlyPrice()));
+//            holder.price.setText(String.valueOf(current.getMonthlyPrice()));
 
             // Set the click listener
             holder.cardView.setOnClickListener(new View.OnClickListener() {
@@ -69,7 +69,7 @@ public class PropertyAdapter extends RecyclerView.Adapter<PropertyAdapter.TaskVi
             // Covers the case of data not being ready yet.
             holder.name.setText("Error");
             holder.address.setText("Error");
-            holder.price.setText(0);
+//            holder.price.setText(0);
         }
     }
 
@@ -82,14 +82,14 @@ public class PropertyAdapter extends RecyclerView.Adapter<PropertyAdapter.TaskVi
     //TaskViewHolder class to hold the views
     public static class TaskViewHolder extends RecyclerView.ViewHolder {
         TextView name;
-        TextView price;
+//        TextView price;
         TextView address;
         CardView cardView;
 
         public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.property_name);
-            price = itemView.findViewById(R.id.property_price);
+//            price = itemView.findViewById(R.id.property_price);
             address = itemView.findViewById(R.id.property_address);
             cardView = itemView.findViewById(R.id.cardView);
         }

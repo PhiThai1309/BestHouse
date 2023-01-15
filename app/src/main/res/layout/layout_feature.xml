@@ -1,70 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cardView"
-    android:layout_width="320dp"
-    android:layout_height="wrap_content"
+    android:layout_width="220dp"
+    android:layout_height="280dp"
     style="@style/CardStyle"
     app:cardBackgroundColor="@color/md_theme_surface">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:weightSum="2">
+        android:layout_height="257dp"
+        android:orientation="vertical">
+
         <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/shapeableImageView"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:maxHeight="150dp"
+            android:layout_height="match_parent"
             android:layout_weight="2"
-            android:scaleType="centerCrop"
-            app:shapeAppearanceOverlay="@style/Card"
             android:adjustViewBounds="true"
-            android:src="@drawable/house1"/>
+            android:scaleType="centerCrop"
+            android:src="@drawable/house1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/Card" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:layout_weight="0"
-            android:paddingBottom="10dp"
-            android:orientation="vertical">
+            android:padding="16dp"
+            android:orientation="vertical"
+            android:background="@drawable/black_gradient_background"
+            app:layout_constraintBottom_toBottomOf="@+id/shapeableImageView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
             <TextView
                 android:id="@+id/property_name"
+                style="@style/Rec_Heading"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/place_holder"
-                style="@style/Card_Heading"/>
+                android:maxLines="1"
+                android:text="@string/place_holder" />
 
-            <TextView
-                android:id="@+id/property_price"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/place_holder"
-                android:textColor="@color/md_theme_primary"
-                android:layout_marginVertical="10dp"
-                android:maxLines="1"/>
+<!--            <TextView-->
+<!--                android:id="@+id/property_price"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:maxLines="1"-->
+<!--                android:gravity="right"-->
+<!--                android:paddingVertical="4dp"-->
+<!--                android:text="@string/place_holder"-->
+<!--                android:textSize="12dp"-->
+<!--                android:textColor="@color/md_theme_outlineVariant" />-->
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:layout_marginTop="10dp"
                 android:orientation="horizontal">
+
                 <ImageView
                     android:layout_width="15dp"
                     android:layout_height="15dp"
-                    android:src="@drawable/ic_outline_location_on_grey_24"/>
+                    android:src="@drawable/ic_round_location_on_24" />
+
                 <TextView
                     android:id="@+id/property_address"
+                    style="@style/Rec_SubHeading"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/Card_SubHeading"
-                    android:text="@string/place_holder"
-                    android:maxLines="1"/>
+                    android:maxLines="1"
+                    android:text="@string/place_holder" />
             </LinearLayout>
         </LinearLayout>
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </com.google.android.material.card.MaterialCardView>
