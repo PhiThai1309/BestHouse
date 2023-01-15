@@ -21,6 +21,18 @@
 
     <!--search view to search our location-->
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/listPlaces"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="55dp"
+        android:layout_marginBottom="10dp"
+        android:elevation="5dp"
+        android:scrollbars="vertical"
+        android:background="@drawable/suggestion_background"
+        tools:listitem="@layout/item_location_suggestion" />
+
     <androidx.appcompat.widget.SearchView
         android:id="@+id/search_view"
         android:layout_width="match_parent"
@@ -33,18 +45,6 @@
         app:queryHint="Search">
 
     </androidx.appcompat.widget.SearchView>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/listPlaces"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="10dp"
-        android:layout_marginTop="65dp"
-        android:layout_marginBottom="10dp"
-        android:elevation="5dp"
-        android:scrollbars="vertical"
-        android:background="@drawable/suggestion_background"
-        tools:listitem="@layout/item_location_suggestion" />
 
     <!--    <SearchView-->
     <!--        android:id="@+id/searchView"-->
