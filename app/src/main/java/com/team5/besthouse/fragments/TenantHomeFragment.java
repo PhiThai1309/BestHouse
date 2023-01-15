@@ -3,7 +3,6 @@ package com.team5.besthouse.fragments;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
@@ -12,11 +11,11 @@ import static android.content.ContentValues.TAG;
 import android.annotation.SuppressLint;
 import android.location.Geocoder;
 import android.location.Location;
-import android.media.Image;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -32,6 +31,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -42,6 +42,9 @@ import com.google.android.gms.tasks.CancellationToken;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnTokenCanceledListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.elevation.SurfaceColors;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentChange;
@@ -53,8 +56,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 import com.team5.besthouse.R;
 import com.team5.besthouse.activities.MainActivity;
+import com.team5.besthouse.activities.MoreActivity;
 import com.team5.besthouse.adapters.PropertyAdapter;
-import com.team5.besthouse.adapters.PropertyCardAdapter;
+import com.team5.besthouse.adapters.PropertyPartialCardAdapter;
 import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.models.Contract;
 import com.team5.besthouse.models.ContractStatus;
@@ -81,7 +85,7 @@ public class TenantHomeFragment extends Fragment {
     private RecyclerView propertyView;
     private List<Property> list;
     private PropertyAdapter adapter1;
-    private PropertyCardAdapter adapter2;
+    private PropertyPartialCardAdapter adapter2;
     private StoreService storeService;
     private View progressIndicator;
 
@@ -165,7 +169,6 @@ public class TenantHomeFragment extends Fragment {
         });
 
         //get db instance
-
         db = FirebaseFirestore.getInstance();
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(view.getContext());
@@ -205,7 +208,7 @@ public class TenantHomeFragment extends Fragment {
         propertyView.setLayoutManager(linearLayoutManager2);
 
         propertyView.setNestedScrollingEnabled(false);
-        adapter2 = new PropertyCardAdapter((MainActivity) getContext(), list);
+        adapter2 = new PropertyPartialCardAdapter((MainActivity) getContext(), list);
         propertyView.setAdapter(adapter2);
 
         featureView.setHasFixedSize(true);
@@ -215,14 +218,39 @@ public class TenantHomeFragment extends Fragment {
         getLocationPermission();
         getDeviceLocation(tv);
 
-        View recommendView = view.findViewById(R.id.home_recommend);
-        TextView recommendTitle = recommendView.findViewById(R.id.see_more_title);
-        recommendTitle.setText("Recommendation");
-
         View topView = view.findViewById(R.id.home_top);
         TextView topTitle = topView.findViewById(R.id.see_more_title);
         topTitle.setText("Top near you");
 
+        TextView seeMore = topView.findViewById(R.id.see_more);
+        seeMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                Intent intent = new Intent(getContext(), MoreActivity.class);
+//                startActivity(intent);
+//                getActivity().overridePendingTransition(0, R.anim.slide_in_bottom);
+
+//                CoordinatorLayout linearLayout = view.findViewById(R.id.bottom_sheet);
+//                BottomSheetDialog bottomSheet = new BottomSheetDialog(getContext());
+//                View bottomSheetView = LayoutInflater.from(getContext())
+//                        .inflate(R.layout.activity_more, (LinearLayout) getActivity().findViewById(R.id.bottom_sheet));
+//
+//                bottomSheet.setContentView(bottomSheetView);
+//
+//                bottomSheet.findViewById(R.id.more_property);
+//                bottomSheet.show();
+
+                MoreActivity addPhotoBottomDialogFragment = new MoreActivity();
+                addPhotoBottomDialogFragment.show(((MainActivity) getContext()).getSupportFragmentManager(), "ActionBottomDialogFragment.TAG");
+//                addPhotoBottomDialogFragment.setCancelable(false);
+            }
+        });
+
+//        CoordinatorLayout linearLayout = view.findViewById(R.id.bottom_sheet);
+//        BottomSheetDialog bottomSheet = new BottomSheetDialog(getContext());
+//        bottomSheet.setContentView(R.layout.activity_more);
+//
+//        bottomSheet.show();
 
 
         // Inflate the layout for this fragment

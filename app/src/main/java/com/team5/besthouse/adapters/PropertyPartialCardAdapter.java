@@ -18,14 +18,14 @@ import com.team5.besthouse.models.Property;
 
 import java.util.List;
 
-public class PropertyCardAdapter extends RecyclerView.Adapter<PropertyCardAdapter.TaskViewHolder> {
+public class PropertyPartialCardAdapter extends RecyclerView.Adapter<PropertyPartialCardAdapter.TaskViewHolder> {
     private final LayoutInflater mInflater;
     private List<Property> propertyList;
 
     private String key = "";
 
     // Constructor
-    public PropertyCardAdapter(Context context, List<Property> tasks) {
+    public PropertyPartialCardAdapter(Context context, List<Property> tasks) {
         mInflater = LayoutInflater.from(context);
         propertyList = tasks;
     }
@@ -86,9 +86,7 @@ public class PropertyCardAdapter extends RecyclerView.Adapter<PropertyCardAdapte
     // Return the size of the data set
     @Override
     public int getItemCount() {
-        if (propertyList == null)
-                return 0;
-        return propertyList.size();
+        return Math.min(propertyList.size(), 5);
     }
 
     //TaskViewHolder class to hold the views
