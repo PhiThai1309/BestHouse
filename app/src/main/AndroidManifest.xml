@@ -47,7 +47,7 @@
         </activity>
         <activity
             android:name=".activities.SearchLocationWithSuggestionActivity"
-            android:exported="false"></activity>
+            android:exported="false" />
         <activity
             android:name=".activities.ContractActivity"
             android:exported="false">
@@ -105,6 +105,7 @@
         </activity>
         <activity
             android:name=".activities.MainActivity"
+            android:excludeFromRecents="true"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />

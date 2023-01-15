@@ -6,10 +6,8 @@ import android.os.Bundle;
 import com.team5.besthouse.broadcastreceiver.ConnectionReceiver;
 
 public abstract class BaseActivity extends AppCompatActivity implements ConnectionReceiver.OnConnectivityChangedListener {
-
     private ConnectionReceiver connectionReceiver;
 
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         connectionReceiver = new ConnectionReceiver(this);
@@ -19,7 +17,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
     }
 
     @Override
-    public void onConnectivityChanged(boolean isConnected) {}
+    public void onConnectivityChanged(boolean isConnected) {
+    }
 
     @Override
     protected void onDestroy() {

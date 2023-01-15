@@ -1,6 +1,7 @@
 package com.team5.besthouse;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -59,9 +60,13 @@ public class PropertyAdapter2 extends RecyclerView.Adapter<PropertyAdapter2.Task
                 public void onClick(View v) {
                     Intent intent = new Intent(mInflater.getContext(), DetailActivity.class);
                     intent.putExtra("property", current);
-
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                     mInflater.getContext().startActivity(intent);
                     notifyDataSetChanged();
+
+
+
+
                 }
             });
         } else {
