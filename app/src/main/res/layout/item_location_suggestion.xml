@@ -41,4 +41,13 @@
        app:layout_constraintBottom_toBottomOf="@+id/lsTextView"
        app:layout_constraintEnd_toStartOf="@+id/lsTextView"
        app:layout_constraintStart_toStartOf="@+id/imageView" />
+
+   <View
+       android:id="@+id/divider"
+       android:layout_width="match_parent"
+       android:layout_height="1dp"
+       android:layout_marginTop="5dp"
+       android:background="?android:attr/listDivider"
+       app:layout_constraintStart_toStartOf="parent"
+       app:layout_constraintTop_toBottomOf="@+id/lsTextView" />
 </androidx.constraintlayout.widget.ConstraintLayout>
