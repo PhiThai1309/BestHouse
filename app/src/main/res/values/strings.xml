@@ -40,4 +40,5 @@
     <string name="submit_text">SUBMIT</string>
     <string name="property_area_hint">Property Area</string>
     <string name="or_text_separated_line">OR</string>
+    <string name="message">Message</string>
 </resources>

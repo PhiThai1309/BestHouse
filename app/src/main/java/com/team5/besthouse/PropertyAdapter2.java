@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.team5.besthouse.activities.DetailActivity;
@@ -58,6 +60,9 @@ public class PropertyAdapter2 extends RecyclerView.Adapter<PropertyAdapter2.Task
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(mInflater.getContext(), DetailActivity.class);
+
+//                    ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+//                            MainActivity.this, imageView, ViewCompat.getTransitionName(imageView));
                     intent.putExtra("property", current);
 
                     mInflater.getContext().startActivity(intent);
