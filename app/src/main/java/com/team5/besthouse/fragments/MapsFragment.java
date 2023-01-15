@@ -1,10 +1,17 @@
 package com.team5.besthouse.fragments;
 
+import static android.app.Activity.RESULT_OK;
 import static android.content.ContentValues.TAG;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultCaller;
+import androidx.activity.result.ActivityResultRegistry;
+import androidx.activity.result.contract.ActivityResultContract;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
@@ -12,6 +19,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
@@ -51,6 +59,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.CancellationToken;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -61,6 +70,7 @@ import com.google.android.gms.tasks.Task;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Executor;
 
@@ -83,6 +93,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 import com.team5.besthouse.R;
+import com.team5.besthouse.activities.DetailActivity;
 import com.team5.besthouse.activities.MainActivity;
 import com.team5.besthouse.adapters.LocationSuggestionAdapter;
 import com.team5.besthouse.adapters.PropertiesSuggestionAdapter;
@@ -98,16 +109,19 @@ import com.team5.besthouse.models.Tenant;
 import com.team5.besthouse.models.User;
 import com.team5.besthouse.services.StoreService;
 
-public class MapsFragment extends Fragment implements RecyclerViewInterface {
+public class MapsFragment extends Fragment implements RecyclerViewInterface, GoogleMap.OnMarkerClickListener {
     public static final int PERMISSIONS_FINE_LOCATION = 99;
 
     protected LocationRequest locationRequest;
     protected FusedLocationProviderClient fusedLocationProviderClient;
     protected LocationCallback locationCallback;
     private FragmentAccountBinding binding;
+    Context context;
     private GoogleMap map;
     private StoreService storeService;
     private PlacesClient placesClient;
+    private HashMap<String, Marker> markers;
+    private String chosenId;
 
     private SearchView searchView;
     private PropertiesSuggestionAdapter lsAdapter;
@@ -145,6 +159,8 @@ public class MapsFragment extends Fragment implements RecyclerViewInterface {
 
             // Get the current location of the device and set the position of the map.
             getDeviceLocation();
+
+            map.setOnMarkerClickListener(MapsFragment.this);
         }
 
         private void updateLocationUI() {
@@ -255,6 +271,8 @@ public class MapsFragment extends Fragment implements RecyclerViewInterface {
         Window window = getActivity().getWindow();
         window.setStatusBarColor(Color.TRANSPARENT);
 
+        context = inflater.getContext();
+
         return inflater.inflate(R.layout.fragment_maps, container, false);
     }
 
@@ -270,6 +288,7 @@ public class MapsFragment extends Fragment implements RecyclerViewInterface {
         }
 
         properties = new ArrayList<>();
+        markers = new HashMap<>();
         // set up store service
         storeService = new StoreService(view.getContext());
 
@@ -443,7 +462,11 @@ public class MapsFragment extends Fragment implements RecyclerViewInterface {
                                                     if (ok) {
                                                         lsAdapter.addNewItem(p);
 
-                                                        map.addMarker(new MarkerOptions().position(p.getcoordinates()).title(p.getPropertyName()));
+                                                        Marker marker = map.addMarker(new MarkerOptions().position(p.getcoordinates()).title(p.getPropertyName()));
+                                                        assert marker != null;
+                                                        marker.setTag(p);
+                                                        markers.put(marker.getId(), marker);
+
                                                         Log.i("MARKER" , p.toString());
                                                     }
                                                 }
@@ -526,5 +549,29 @@ public class MapsFragment extends Fragment implements RecyclerViewInterface {
         moveZoomMarker(properties.get(position).getcoordinates());
         searchView.clearFocus();
         rv.setVisibility(View.GONE);
+    }
+
+    @Override
+    public boolean onMarkerClick(@NonNull Marker marker) {
+        Intent intent = new Intent(getContext(), DetailActivity.class);
+        Property p = (Property) marker.getTag();
+        intent.putExtra("property", p);
+        chosenId = marker.getId();
+
+
+        startActivityForResult(intent, 200);
+        return false;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == 200){
+            if(data.getExtras().get("created").equals(true)){
+                Marker marker = markers.get(chosenId);
+                if (marker != null) marker.remove();
+                markers.remove(chosenId);
+            }
+        }
     }
 }
