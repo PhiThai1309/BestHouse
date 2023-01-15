@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
 import com.google.android.material.elevation.SurfaceColors;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentChange;
@@ -60,7 +61,7 @@ public class LandlordHomeFragment extends Fragment {
     private LandlordPropertyAdapter landlordAdapter;
 
     private Context context;
-    private RecyclerView featureView;
+    private RecyclerView listingView;
     private RecyclerView propertyView;
     private PropertyAdapter adapter1;
     private PropertyCardAdapter adapter2;
@@ -154,24 +155,35 @@ public class LandlordHomeFragment extends Fragment {
 
 
         //Get the recycler view and
-        featureView = (RecyclerView) view.findViewById(R.id.posted_property);
+        listingView = (RecyclerView) view.findViewById(R.id.posted_property);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false);
         //Set the layout manager
         linearLayoutManager.setStackFromEnd(false);
         linearLayoutManager.setReverseLayout(false);
-        featureView.setHasFixedSize(true);
-        featureView.setLayoutManager(linearLayoutManager);
+        listingView.setHasFixedSize(true);
+        listingView.setLayoutManager(linearLayoutManager);
 
         SnapHelper helper = new LinearSnapHelper();
-        helper.attachToRecyclerView(featureView);
+        helper.attachToRecyclerView(listingView);
 
         list = new ArrayList<>();
         adapter2 = new PropertyCardAdapter((LandlordActivity) getContext(), list);
-        featureView.setAdapter(adapter2);
-        featureView.setHasFixedSize(true);
+        listingView.setAdapter(adapter2);
+        listingView.setHasFixedSize(true);
 
-        FloatingActionButton fab = view.findViewById(R.id.float_button);
-        fab.setOnClickListener(new View.OnClickListener() {
+        //Floating action button configure
+        ExtendedFloatingActionButton floatBtn = view.findViewById(R.id.float_button);
+        listingView.addOnScrollListener(new RecyclerView.OnScrollListener(){
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy){
+                if (dy > 10)
+                    floatBtn.shrink();
+                else if (dy < 0)
+                    floatBtn.extend();
+            }
+        });
+
+        floatBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getContext(), AddPropertyActivity.class);

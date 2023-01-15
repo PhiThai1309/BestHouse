@@ -108,7 +108,7 @@ public class DetailActivity extends AppCompatActivity {
 
         featureOther.setImageResource(R.drawable.ic_outline_square_foot_24);
         TextView otherText = other.findViewById(R.id.feature_text);
-        otherText.setText((int) property.getArea() + "m^2 Square foot");
+        otherText.setText((int) property.getArea() + " Square foot");
 
         TextView desc = findViewById(R.id.details_desc);
         desc.setText(property.getPropertyDescription());

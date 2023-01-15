@@ -30,7 +30,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="50dp"
+            android:paddingBottom="16dp"
             android:orientation="vertical"
             android:background="@drawable/black_gradient_background"
             app:layout_constraintBottom_toBottomOf="@+id/shapeableImageView"

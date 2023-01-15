@@ -3,7 +3,7 @@
 
     <stroke
         android:width="0.5dp"
-        android:color="#000000" />
+        android:color="@color/md_theme_onPrimaryContainer" />
 
     <solid android:color="@color/md_theme_surface" />
 

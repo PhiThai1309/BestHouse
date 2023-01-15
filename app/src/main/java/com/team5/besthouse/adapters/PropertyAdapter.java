@@ -35,7 +35,7 @@ public class PropertyAdapter extends RecyclerView.Adapter<PropertyAdapter.TaskVi
     @Override
     public TaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // Inflate the view
-        View itemView = mInflater.inflate(R.layout.layout_feature, parent, false);
+        View itemView = mInflater.inflate(R.layout.layout_card_feature, parent, false);
         return new TaskViewHolder(itemView);
     }
 
