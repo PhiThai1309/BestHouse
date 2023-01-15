@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -67,6 +68,7 @@ public class LandlordHomeFragment extends Fragment {
     private View progressIndicator;
 
     FirebaseFirestore db;
+    User user;
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -110,12 +112,84 @@ public class LandlordHomeFragment extends Fragment {
     }
 
     @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_landlord_home, container, false);
+
+        //Set color to the navigation bar to match with the bottom navigation view
+        getActivity().getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(getActivity()));
+        Window window = getActivity().getWindow();
+        window.setStatusBarColor(Color.TRANSPARENT);
+
+        context = inflater.getContext();
+
+        progressIndicator = view.findViewById(R.id.home_progressBar);
+        progressIndicator.setVisibility(View.VISIBLE);
+
+        ImageView homeAccount = view.findViewById(R.id.landlord_account);
+        homeAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment frag = new AccountFragment();
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.replace(R.id.content, frag);
+                LandlordActivity.navigationView.setSelectedItemId(R.id.account);
+                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                ft.addToBackStack(null);
+                ft.commit();
+            }
+        });
+
+        //get db instance
+        db = FirebaseFirestore.getInstance();
+
+        // set up store service
+        storeService = new StoreService(context);
+
+        Gson gson = new Gson();
+        user = gson.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), Tenant.class);
+
+        TextView name = view.findViewById(R.id.landlord_name);
+        name.setText(user.getFullName());
+
+
+        //Get the recycler view and
+        featureView = (RecyclerView) view.findViewById(R.id.posted_property);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false);
+        //Set the layout manager
+        linearLayoutManager.setStackFromEnd(false);
+        linearLayoutManager.setReverseLayout(false);
+        featureView.setHasFixedSize(true);
+        featureView.setLayoutManager(linearLayoutManager);
+
+        SnapHelper helper = new LinearSnapHelper();
+        helper.attachToRecyclerView(featureView);
+
+        list = new ArrayList<>();
+        adapter2 = new PropertyCardAdapter((LandlordActivity) getContext(), list);
+        featureView.setAdapter(adapter2);
+        featureView.setHasFixedSize(true);
+
+        FloatingActionButton fab = view.findViewById(R.id.float_button);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), AddPropertyActivity.class);
+//               intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            }
+        });
+
+        // Inflate the layout for this fragment
+        return view;
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
         //filter for all rents such that its end date is after today on the db side
         FirebaseFirestore database = FirebaseFirestore.getInstance();
         database.collection(UnchangedValues.PROPERTIES_TABLE)
-                .orderBy("propertyName")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @SuppressLint("NotifyDataSetChanged")
                     @Override
@@ -139,12 +213,9 @@ public class LandlordHomeFragment extends Fragment {
                                 try {
                                     //get all contracts that have its end date after today and is from this property
 
-                                    Gson gson = new Gson();
-                                    User user = gson.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), Tenant.class);
-
 //                                    Log.i(TAG, "onEvent: " + p);
                                     database.collection(UnchangedValues.CONTRACTS_TABLE)
-                                            .whereEqualTo("propertyId", p.getId())
+                                            .whereEqualTo("landlordEmail", p.getLandlordEmail())
                                             .get()
                                             .addOnCompleteListener(v -> {
                                                 if (v.isSuccessful()){
@@ -181,72 +252,5 @@ public class LandlordHomeFragment extends Fragment {
                         progressIndicator.setVisibility(View.GONE);
                     }
                 });
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_landlord_home, container, false);
-
-        //Set color to the navigation bar to match with the bottom navigation view
-        getActivity().getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(getActivity()));
-        Window window = getActivity().getWindow();
-        window.setStatusBarColor(Color.TRANSPARENT);
-
-        context = inflater.getContext();
-
-        progressIndicator = view.findViewById(R.id.home_progressBar);
-        progressIndicator.setVisibility(View.VISIBLE);
-
-        ImageView homeAccount = view.findViewById(R.id.landlord_account);
-        homeAccount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Fragment frag = new AccountFragment();
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.replace(R.id.content, frag);
-                LandlordActivity.navigationView.setSelectedItemId(R.id.account);
-                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                ft.addToBackStack(null);
-                ft.commit();
-            }
-        });
-
-        //get db instance
-
-        db = FirebaseFirestore.getInstance();
-
-        // set up store service
-        storeService = new StoreService(context);
-
-        //Get the recycler view and
-        featureView = (RecyclerView) view.findViewById(R.id.posted_property);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false);
-        //Set the layout manager
-        linearLayoutManager.setStackFromEnd(false);
-        linearLayoutManager.setReverseLayout(false);
-        featureView.setHasFixedSize(true);
-        featureView.setLayoutManager(linearLayoutManager);
-
-        SnapHelper helper = new LinearSnapHelper();
-        helper.attachToRecyclerView(featureView);
-
-        list = new ArrayList<>();
-        adapter2 = new PropertyCardAdapter((LandlordActivity) getContext(), list);
-        featureView.setAdapter(adapter2);
-        featureView.setHasFixedSize(true);
-
-        FloatingActionButton fab = view.findViewById(R.id.float_button);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getContext(), AddPropertyActivity.class);
-//               intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-            }
-        });
-
-        // Inflate the layout for this fragment
-        return view;
     }
 }

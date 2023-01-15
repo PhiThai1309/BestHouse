@@ -40,14 +40,15 @@
                     android:orientation="vertical">
 
                     <TextView
-                        style="@style/Bold_Heading"
+                        style="@style/SubHeading"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
                         android:text="WELCOME!" />
 
                     <TextView
-                        style="@style/Bold_SubHeading"
+                        android:id="@+id/landlord_name"
+                        style="@style/Heading"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="landlord's name" />
