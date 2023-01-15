@@ -10,9 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,6 +33,7 @@ import com.google.gson.Gson;
 import com.team5.besthouse.R;
 import com.team5.besthouse.activities.AddPropertyActivity;
 import com.team5.besthouse.activities.LandlordActivity;
+import com.team5.besthouse.activities.MainActivity;
 import com.team5.besthouse.adapters.LandlordPropertyAdapter;
 import com.team5.besthouse.adapters.PropertyAdapter;
 import com.team5.besthouse.adapters.PropertyCardAdapter;
@@ -194,6 +197,20 @@ public class LandlordHomeFragment extends Fragment {
 
         progressIndicator = view.findViewById(R.id.home_progressBar);
         progressIndicator.setVisibility(View.VISIBLE);
+
+        ImageView homeAccount = view.findViewById(R.id.landlord_account);
+        homeAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment frag = new AccountFragment();
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.replace(R.id.content, frag);
+                LandlordActivity.navigationView.setSelectedItemId(R.id.account);
+                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                ft.addToBackStack(null);
+                ft.commit();
+            }
+        });
 
         //get db instance
 

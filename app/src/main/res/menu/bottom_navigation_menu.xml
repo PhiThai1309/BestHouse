@@ -13,6 +13,12 @@
         android:title="@string/search"/>
 
     <item
+        android:id="@+id/chat"
+        android:enabled="true"
+        android:icon="@drawable/ic_outline_chat_24"
+        android:title="Chat"/>
+
+    <item
         android:id="@+id/account"
         android:enabled="true"
         android:icon="@drawable/ic_outline_account_circle_24"

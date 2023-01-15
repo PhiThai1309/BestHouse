@@ -49,7 +49,7 @@
             android:value="AIzaSyAd3X4HeqziXDjRmLNHkpcP18reu7n8Hn0" />
 
         <activity
-            android:name=".activities.LandLordMapsActivity"
+            android:name=".fragments.LandLordMapsFragment"
             android:exported="false"
             android:label="@string/title_activity_land_lord_maps" />
         <activity

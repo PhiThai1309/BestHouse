@@ -105,6 +105,14 @@ public class MainActivity extends AppCompatActivity {
                     fragmentTransaction2.commit();
                     return true;
 
+                case R.id.chat:
+                    ChatFragment fragment4 = new ChatFragment();
+                    FragmentTransaction fragmentTransaction4 = getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction4.replace(R.id.content, fragment4, "");
+                    fragmentTransaction4.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                    fragmentTransaction4.commit();
+                    return true;
+
                 case R.id.search:
                     MapsFragment fragment3 = new MapsFragment();
                     FragmentTransaction fragmentTransaction3 = getSupportFragmentManager().beginTransaction();

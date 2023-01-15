@@ -1,4 +1,4 @@
-package com.team5.besthouse.activities;
+package com.team5.besthouse.fragments;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
@@ -7,13 +7,9 @@ import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
-import android.text.Editable;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -22,14 +18,16 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.team5.besthouse.R;
+import com.team5.besthouse.activities.AddPropertyActivity;
+import com.team5.besthouse.activities.LandlordActivity;
+import com.team5.besthouse.activities.SearchLocationWithSuggestionActivity;
 import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.databinding.ActivityLandLordMapsBinding;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
-public class LandLordMapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class LandLordMapsFragment extends FragmentActivity implements OnMapReadyCallback {
 
     private final LatLng HCM_LATLNG = new LatLng(10.762622,106.698402);
     private GoogleMap mMap;

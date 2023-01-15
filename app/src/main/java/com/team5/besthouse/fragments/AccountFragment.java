@@ -233,7 +233,7 @@ public class AccountFragment extends Fragment {
         historyView.setHasFixedSize(true);
         historyView.setLayoutManager(linearLayoutManager);
 
-        adapter1 = new ContractAdapter((MainActivity) getContext(), list);
+        adapter1 = new ContractAdapter(getContext(), list);
         historyView.setAdapter(adapter1);
         historyView.setHasFixedSize(true);
 

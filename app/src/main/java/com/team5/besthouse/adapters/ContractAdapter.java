@@ -1,6 +1,7 @@
 package com.team5.besthouse.adapters;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +26,7 @@ public class ContractAdapter extends RecyclerView.Adapter<ContractAdapter.TaskVi
     private String key = "";
 
     // Constructor
-    public ContractAdapter(MainActivity context, List<Property> tasks) {
+    public ContractAdapter(Context context, List<Property> tasks) {
         mInflater = LayoutInflater.from(context);
         propertyList = tasks;
     }
