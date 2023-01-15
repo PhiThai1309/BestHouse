@@ -432,7 +432,6 @@ public class MapsFragment extends Fragment implements RecyclerViewInterface, Goo
         FirebaseFirestore database = FirebaseFirestore.getInstance();
 
         database.collection(UnchangedValues.PROPERTIES_TABLE)
-                .orderBy("propertyName")
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     @SuppressLint("NotifyDataSetChanged")

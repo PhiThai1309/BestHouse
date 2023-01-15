@@ -82,6 +82,7 @@ public class PropertiesSuggestionAdapter extends RecyclerView.Adapter<Properties
     @Override
     public void onBindViewHolder(@NonNull PropertiesSuggestionAdapter.PropertiesSuggestionHolder holder, int position) {
         holder.lsTextView.setText(properties.get(position).getAddress(context));
+        holder.lsName.setText(properties.get(position).getPropertyName());
         double disLat = Math.abs(properties.get(position).getLatitude() - currentLocation.latitude);
         double disLng = Math.abs(properties.get(position).getLongitude() - currentLocation.longitude);
         double distance = disLat*110.574;
@@ -101,10 +102,12 @@ public class PropertiesSuggestionAdapter extends RecyclerView.Adapter<Properties
     }
 
     public static class PropertiesSuggestionHolder extends RecyclerView.ViewHolder {
+        TextView lsName;
         TextView lsTextView;
         TextView lsDistanceTextView;
         public PropertiesSuggestionHolder(@NonNull View itemView, RecyclerViewInterface recyclerViewInterface) {
             super(itemView);
+            lsName = itemView.findViewById(R.id.lsNameTextView);
             lsTextView = itemView.findViewById(R.id.lsTextView);
             lsDistanceTextView = itemView.findViewById(R.id.distance_num);
 
