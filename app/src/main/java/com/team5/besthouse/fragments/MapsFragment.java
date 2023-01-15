@@ -201,6 +201,7 @@ public class MapsFragment extends Fragment implements RecyclerViewInterface {
                                                 lastKnownLocation.getLongitude()), 17));
 
                                 lsAdapter.setCurrentLocation(new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude()));
+                                lsAdapter.sortProperties(new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude()));
                             }
                             else {
                                 Log.i(TAG, "no lastKnownLocation");
@@ -360,19 +361,19 @@ public class MapsFragment extends Fragment implements RecyclerViewInterface {
         Geocoder geocoder = new Geocoder(getContext());
         try {
             List<Address> addressesList = geocoder.getFromLocationName(query,1);
-            LatLng coord = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
+            LatLng coord;
             if(addressesList.size() > 0) {
                 Address address = addressesList.get(0);
                 coord = new LatLng(address.getLatitude(), address.getLongitude());
             }
-            LatLng finalCoord = coord;
-            lsAdapter.setCurrentLocation(finalCoord);
-            properties.sort((t1, t2) -> {
-                double distance1 = t1.getNonSqrtDistance(finalCoord.latitude, finalCoord.longitude);
-                double distance2 = t2.getNonSqrtDistance(finalCoord.latitude, finalCoord.longitude);
-                return (int) Double.compare(distance1, distance2);
-            });
-            lsAdapter.notifyDataSetChanged();
+            else {
+                coord = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
+                Log.i(TAG, "onSearchViewChange: no address found. Hiding places");
+                rv.setVisibility(View.GONE);
+                return;
+            }
+            lsAdapter.sortProperties(coord);
+            rv.setVisibility(View.VISIBLE);
 
         } catch (IOException e) {
             Log.i(this.getClass().toString(), "getLatLngFromTextAddress: ");
