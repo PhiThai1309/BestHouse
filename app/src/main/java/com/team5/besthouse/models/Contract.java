@@ -6,7 +6,10 @@ import android.os.Parcelable;
 import com.google.firebase.Timestamp;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Objects;
+import java.util.TimeZone;
 
 public class Contract implements Parcelable {
 
@@ -93,6 +96,13 @@ public class Contract implements Parcelable {
 
     public Timestamp getStartDate() {
         return startDate;
+    }
+
+    public Date convertStartDay(){
+        return new Date(startDate.getNanoseconds());
+    }
+    public Date convertEndDay(){
+        return new Date(endDate.getNanoseconds());
     }
 
     public void setStartDate(Timestamp startDate) {

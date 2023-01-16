@@ -50,7 +50,7 @@ public class ContractPartialAdapter extends RecyclerView.Adapter<ContractPartial
             // Set the name of the view holder
             holder.name.setText(current.getContractStatus().toString());
             // Set the address of the view holder
-            holder.address.setText(current.getEndDate().toString());
+            holder.address.setText(current.convertStartDay().toString());
             //Set the prize of the view holder
             holder.price.setText(current.getId());
 

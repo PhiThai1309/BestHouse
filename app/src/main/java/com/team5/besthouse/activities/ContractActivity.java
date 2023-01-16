@@ -67,10 +67,10 @@ public class ContractActivity extends AppCompatActivity {
         this.setSupportActionBar(toolbar);
 
         TextView startDate = findViewById(R.id.contract_start_date);
-        startDate.setText(contract.getStartDate().toString());
+        startDate.setText(contract.convertStartDay().toString());
 
         TextView endDate = findViewById(R.id.contract_end_date);
-        endDate.setText(contract.getStartDate().toString());
+        endDate.setText(contract.convertEndDay().toString());
 
         TextView propertyName = findViewById(R.id.contract_property_name);
         propertyName.setText(contract.getPropertyId());
