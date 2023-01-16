@@ -72,7 +72,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     style="@style/Bold_SubHeading2"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="12dp"
                     android:text="End date"/>
 
                 <TextView
@@ -117,7 +117,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         style="@style/Bold_SubHeading2"
-                        android:layout_marginTop="20dp"
+                        android:layout_marginTop="12dp"
                         android:text="Property address"/>
 
                     <TextView
@@ -132,7 +132,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         style="@style/Bold_SubHeading2"
-                        android:layout_marginTop="20dp"
+                        android:layout_marginTop="12dp"
                         android:text="Property price"/>
 
                     <TextView

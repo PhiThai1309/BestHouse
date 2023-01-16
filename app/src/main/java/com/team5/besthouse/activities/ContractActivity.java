@@ -133,7 +133,7 @@ public class ContractActivity extends AppCompatActivity {
                                 Property property = ds.toObject(Property.class);
 
                                 propertyAddress.setText(property.getAddress(getApplicationContext()).toString());
-                                propertyPrice.setText(String.valueOf(property.getMonthlyPrice()));
+                                propertyPrice.setText(String.valueOf(property.getMonthlyPrice()) + " /Month");
 
                                 View propertyDetails = findViewById(R.id.property_details);
                                 seeMore = propertyDetails.findViewById(R.id.more);
@@ -142,6 +142,7 @@ public class ContractActivity extends AppCompatActivity {
                                     public void onClick(View view) {
                                         Intent intent = new Intent(ContractActivity.this, DetailActivity.class);
                                         intent.putExtra("property", (Parcelable) property);
+                                        intent.putExtra("history", true);
                                         startActivity(intent);
                                     }
                                 });

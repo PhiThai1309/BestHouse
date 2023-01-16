@@ -66,7 +66,14 @@ public class DetailActivity extends AppCompatActivity {
         // set up store service
         storeService = new StoreService(getApplicationContext());
 
+
+        Button makeContractButton = findViewById(R.id.createPropertyBtn);
+
         property = (Property) getIntent().getParcelableExtra("property");
+        boolean disableReservation = getIntent().getBooleanExtra("history", false);
+        if(disableReservation){
+            makeContractButton.setEnabled(false);
+        }
 
         if (property == null) property = Property.STATICPROPERTY;
 
@@ -110,8 +117,6 @@ public class DetailActivity extends AppCompatActivity {
 
         TextView desc = findViewById(R.id.details_desc);
         desc.setText(property.getPropertyDescription());
-
-        Button makeContractButton = findViewById(R.id.createPropertyBtn);
 
         TextView nameText = findViewById(R.id.details_name);
 
@@ -199,6 +204,8 @@ public class DetailActivity extends AppCompatActivity {
 
         TextView price = findViewById(R.id.details_price);
         price.setText((int) property.getMonthlyPrice() + ".000 VND / Month");
+
+
     }
 
     public void makeContract() {
