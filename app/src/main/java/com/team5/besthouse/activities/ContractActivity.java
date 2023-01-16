@@ -11,6 +11,7 @@ import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,13 +21,17 @@ import com.google.android.material.elevation.SurfaceColors;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.gson.Gson;
 import com.team5.besthouse.R;
 import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.fragments.Inflate.MoreLanlordFragment;
 import com.team5.besthouse.fragments.Inflate.MorePropertyFragment;
 import com.team5.besthouse.models.Contract;
 import com.team5.besthouse.models.Property;
+import com.team5.besthouse.models.Tenant;
 import com.team5.besthouse.models.User;
+import com.team5.besthouse.models.UserRole;
+import com.team5.besthouse.services.StoreService;
 
 import org.w3c.dom.Text;
 
@@ -40,6 +45,7 @@ public class ContractActivity extends AppCompatActivity {
     TextView seeMore;
 
     FirebaseFirestore database;
+    StoreService storeService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +53,8 @@ public class ContractActivity extends AppCompatActivity {
         setContentView(R.layout.activity_contract);
 
         database = FirebaseFirestore.getInstance();
+        // set up store service
+        storeService = new StoreService(this);
 
         //Set color to the navigation bar to match with the bottom navigation view
         getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(this));
@@ -72,6 +80,13 @@ public class ContractActivity extends AppCompatActivity {
 
         fetchUser();
         queryProperty();
+
+        Gson gson = new Gson();
+        User user = gson.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), Tenant.class);
+        if(user.getRole() == UserRole.TENANT) {
+            LinearLayout tenantDetails = findViewById(R.id.contract_tenant);
+            tenantDetails.setVisibility(View.GONE);
+        }
     }
 
     public void fetchUser() {
