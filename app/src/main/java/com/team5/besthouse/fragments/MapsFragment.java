@@ -566,7 +566,6 @@ public class MapsFragment extends Fragment implements RecyclerViewInterface, Goo
         intent.putExtra("property", p);
         chosenId = marker.getId();
 
-
         startActivityForResult(intent, 200);
         return false;
     }
