@@ -4,8 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -34,7 +36,8 @@ import java.util.List;
 public class ContractActivity extends AppCompatActivity {
     private Contract contract;
     private View progressIndicator;
-//    private TextView propertyAddress, propertyPrice;
+    private TextView propertyAddress, propertyPrice;
+    TextView seeMore;
 
     FirebaseFirestore database;
 
@@ -63,6 +66,9 @@ public class ContractActivity extends AppCompatActivity {
 
         TextView propertyName = findViewById(R.id.contract_property_name);
         propertyName.setText(contract.getPropertyId());
+
+        propertyAddress = findViewById(R.id.contract_address_name);
+        propertyPrice = findViewById(R.id.contract_price_detail);
 
         fetchUser();
         queryProperty();
@@ -126,11 +132,19 @@ public class ContractActivity extends AppCompatActivity {
                             {
                                 Property property = ds.toObject(Property.class);
 
-                                TextView propertyAddress = findViewById(R.id.contract_address_name);
-                                TextView propertyPrice = findViewById(R.id.contract_price_detail);
+                                propertyAddress.setText(property.getAddress(getApplicationContext()).toString());
+                                propertyPrice.setText(String.valueOf(property.getMonthlyPrice()));
 
-                                propertyAddress.setText(property.getAddress(getApplicationContext()));
-                                propertyPrice.setText((int) property.getMonthlyPrice());
+                                View propertyDetails = findViewById(R.id.property_details);
+                                seeMore = propertyDetails.findViewById(R.id.more);
+                                seeMore.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        Intent intent = new Intent(ContractActivity.this, DetailActivity.class);
+                                        intent.putExtra("property", (Parcelable) property);
+                                        startActivity(intent);
+                                    }
+                                });
 
                             }
                         }
