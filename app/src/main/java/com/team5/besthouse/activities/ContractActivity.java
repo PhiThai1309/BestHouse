@@ -34,7 +34,7 @@ import java.util.List;
 public class ContractActivity extends AppCompatActivity {
     private Contract contract;
     private View progressIndicator;
-    private TextView propertyAddress, propertyPrice;
+//    private TextView propertyAddress, propertyPrice;
 
     FirebaseFirestore database;
 
@@ -64,10 +64,8 @@ public class ContractActivity extends AppCompatActivity {
         TextView propertyName = findViewById(R.id.contract_property_name);
         propertyName.setText(contract.getPropertyId());
 
-        propertyAddress = findViewById(R.id.contract_address_name);
-        propertyPrice = findViewById(R.id.contract_price_detail);
-
         fetchUser();
+        queryProperty();
     }
 
     public void fetchUser() {
@@ -127,6 +125,10 @@ public class ContractActivity extends AppCompatActivity {
                             if(ds.exists())
                             {
                                 Property property = ds.toObject(Property.class);
+
+                                TextView propertyAddress = findViewById(R.id.contract_address_name);
+                                TextView propertyPrice = findViewById(R.id.contract_price_detail);
+
                                 propertyAddress.setText(property.getAddress(getApplicationContext()));
                                 propertyPrice.setText((int) property.getMonthlyPrice());
 
