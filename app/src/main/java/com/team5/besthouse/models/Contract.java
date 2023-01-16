@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import com.google.firebase.Timestamp;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Contract implements Parcelable {
 
@@ -52,6 +53,19 @@ public class Contract implements Parcelable {
             return new Contract[size];
         }
     };
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Contract contract = (Contract) o;
+        return Objects.equals(id, contract.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 
     public void setId(String id) {
         this.id = id;
