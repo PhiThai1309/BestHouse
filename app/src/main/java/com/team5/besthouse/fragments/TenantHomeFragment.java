@@ -15,7 +15,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -31,7 +30,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -42,9 +40,6 @@ import com.google.android.gms.tasks.CancellationToken;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnTokenCanceledListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.elevation.SurfaceColors;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentChange;
@@ -56,7 +51,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 import com.team5.besthouse.R;
 import com.team5.besthouse.activities.MainActivity;
-import com.team5.besthouse.activities.MoreActivity;
+import com.team5.besthouse.fragments.Inflate.MorePropertyFragment;
 import com.team5.besthouse.adapters.PropertyAdapter;
 import com.team5.besthouse.adapters.PropertyPartialCardAdapter;
 import com.team5.besthouse.constants.UnchangedValues;
@@ -68,6 +63,7 @@ import com.team5.besthouse.models.User;
 import com.team5.besthouse.services.StoreService;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -83,7 +79,7 @@ public class TenantHomeFragment extends Fragment {
     private Context context;
     private RecyclerView featureView;
     private RecyclerView propertyView;
-    private List<Property> list;
+    private ArrayList<Property> list;
     private PropertyAdapter adapter1;
     private PropertyPartialCardAdapter adapter2;
     private StoreService storeService;
@@ -240,8 +236,12 @@ public class TenantHomeFragment extends Fragment {
 //                bottomSheet.findViewById(R.id.more_property);
 //                bottomSheet.show();
 
-                MoreActivity addPhotoBottomDialogFragment = new MoreActivity();
-                addPhotoBottomDialogFragment.show(((MainActivity) getContext()).getSupportFragmentManager(), "ActionBottomDialogFragment.TAG");
+                Bundle bundle = new Bundle();
+                bundle.putParcelableArrayList("list",  list);
+
+                MorePropertyFragment bottomDialogFragment = new MorePropertyFragment();
+                bottomDialogFragment.setArguments(bundle);
+                bottomDialogFragment.show(((MainActivity) getContext()).getSupportFragmentManager(), "ActionBottomDialogFragment.TAG");
 //                addPhotoBottomDialogFragment.setCancelable(false);
             }
         });

@@ -6,9 +6,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.MoreActivity"
+    tools:context=".fragments.Inflate.MorePropertyFragment"
     android:orientation="vertical"
-    android:fillViewport="true">
+    android:fitsSystemWindows="true">
 
     <ImageView
         android:layout_width="match_parent"

@@ -1,22 +1,17 @@
-package com.team5.besthouse.activities;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+package com.team5.besthouse.fragments.Inflate;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -30,7 +25,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 import com.team5.besthouse.R;
 import com.team5.besthouse.adapters.PropertyCardAdapter;
-import com.team5.besthouse.adapters.PropertyPartialCardAdapter;
 import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.models.Contract;
 import com.team5.besthouse.models.ContractStatus;
@@ -42,7 +36,7 @@ import com.team5.besthouse.services.StoreService;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MoreActivity extends BottomSheetDialogFragment {
+public class MoreLanlordFragment extends BottomSheetDialogFragment {
     private Context context;
     private RecyclerView propertyView;
     private List<Property> list;
@@ -52,14 +46,14 @@ public class MoreActivity extends BottomSheetDialogFragment {
 
     FirebaseFirestore db;
 
-    public MoreActivity() {
+    public MoreLanlordFragment() {
     }
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         BottomSheetDialog bottomSheetDialog = (BottomSheetDialog) super.onCreateDialog (savedInstanceState);
-        View view = LayoutInflater.from(getContext()).inflate (R.layout.activity_more, null);
+        View view = LayoutInflater.from(getContext()).inflate (R.layout.activity_more_landlord, null);
         bottomSheetDialog.setContentView(view);
 
         //get db instance
@@ -68,24 +62,24 @@ public class MoreActivity extends BottomSheetDialogFragment {
         // set up store service
         storeService = new StoreService(getActivity());
 
-        progressIndicator = view.findViewById(R.id.more_progressBar);
-        progressIndicator.setVisibility(View.VISIBLE);
+//        progressIndicator = view.findViewById(R.id.more_progressBar);
+//        progressIndicator.setVisibility(View.VISIBLE);
 
         list = new ArrayList<>();
 
-        propertyView = (RecyclerView) view.findViewById(R.id.more_property);
-        LinearLayoutManager linearLayoutManager2 = new LinearLayoutManager(getActivity());
-        //Set the layout manager
-        linearLayoutManager2.setStackFromEnd(false);
-        linearLayoutManager2.setReverseLayout(false);
-        propertyView.setHasFixedSize(true);
-        propertyView.setLayoutManager(linearLayoutManager2);
-
-        propertyView.setNestedScrollingEnabled(false);
-        adapter2 = new PropertyCardAdapter(getActivity(), list);
-        propertyView.setAdapter(adapter2);
-
-        propertyView.setHasFixedSize(true);
+//        propertyView = (RecyclerView) view.findViewById(R.id.more_property);
+//        LinearLayoutManager linearLayoutManager2 = new LinearLayoutManager(getActivity());
+//        //Set the layout manager
+//        linearLayoutManager2.setStackFromEnd(false);
+//        linearLayoutManager2.setReverseLayout(false);
+//        propertyView.setHasFixedSize(true);
+//        propertyView.setLayoutManager(linearLayoutManager2);
+//
+//        propertyView.setNestedScrollingEnabled(false);
+//        adapter2 = new PropertyCardAdapter(getActivity(), list);
+//        propertyView.setAdapter(adapter2);
+//
+//        propertyView.setHasFixedSize(true);
 
         return bottomSheetDialog;
     }
@@ -100,7 +94,7 @@ public class MoreActivity extends BottomSheetDialogFragment {
                     @SuppressLint("NotifyDataSetChanged")
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                        progressIndicator.setVisibility(View.VISIBLE);
+//                        progressIndicator.setVisibility(View.VISIBLE);
                         if(error != null)
                         {
                             Log.w("ERROR ERROR ", error);
@@ -141,7 +135,7 @@ public class MoreActivity extends BottomSheetDialogFragment {
                                                     if (ok) {
                                                         list.add(p);
 //                                                          Log.i("ADDED" , p.toString());
-                                                        adapter2.notifyDataSetChanged();
+//                                                        adapter2.notifyDataSetChanged();
                                                     }
                                                 }
                                             });
@@ -154,10 +148,10 @@ public class MoreActivity extends BottomSheetDialogFragment {
                                 if (newDoc.getType().equals(DocumentChange.Type.MODIFIED)) {
                                     list.add(p);
                                 }
-                                adapter2.notifyDataSetChanged();
+//                                adapter2.notifyDataSetChanged();
                             }
                         }
-                        progressIndicator.setVisibility(View.GONE);
+//                        progressIndicator.setVisibility(View.GONE);
                     }
                 });
     }

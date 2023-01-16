@@ -6,14 +6,14 @@
     android:orientation="horizontal"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <TextView
-        android:id="@+id/see_more_title"
+        android:id="@+id/details_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         style="@style/Bold_Heading"
         android:layout_weight="1"
         android:text="Property details"/>
     <TextView
-        android:id="@+id/see_more"
+        android:id="@+id/more"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/SeeMore"

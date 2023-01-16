@@ -51,7 +51,6 @@ public class DetailActivity extends AppCompatActivity {
     private StoreService storeService;
     private Landlord landlord;
 
-    FirebaseFirestore database;
     View progressIndicator;
 
     @Override
@@ -59,7 +58,6 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        database = FirebaseFirestore.getInstance();
         db = FirebaseFirestore.getInstance();
 
         progressIndicator = findViewById(R.id.progressBar);
@@ -68,7 +66,7 @@ public class DetailActivity extends AppCompatActivity {
         // set up store service
         storeService = new StoreService(getApplicationContext());
 
-        property = (Property) getIntent().getSerializableExtra("property");
+        property = (Property) getIntent().getParcelableExtra("property");
 
         if (property == null) property = Property.STATICPROPERTY;
 
@@ -177,14 +175,16 @@ public class DetailActivity extends AppCompatActivity {
 //        GridViewCustomAdapter GridViewCustomAdapter = new GridViewCustomAdapter(this, property.getUtilities());
 //        grid.setAdapter(GridViewCustomAdapter);
 
-        for(Utilities utility : property.getUtilities()) {
-            String ult = utility.toString().toLowerCase(Locale.ROOT);
-            View ulView = findViewById(this.getResources().
-                    getIdentifier(ult, "id", this.getPackageName()));
-            TextView ulText = ulView.findViewById(R.id.grid_text);
-            ulText.setText(utility.toString());
+        if(property.getUtilities() != null) {
+            for(Utilities utility : property.getUtilities()) {
+                String ult = utility.toString().toLowerCase(Locale.ROOT);
+                View ulView = findViewById(this.getResources().
+                        getIdentifier(ult, "id", this.getPackageName()));
+                TextView ulText = ulView.findViewById(R.id.grid_text);
+                ulText.setText(utility.toString());
+            }
         }
-
+//
         for (Utilities dir : Utilities.values()) {
             String ult = dir.toString().toLowerCase(Locale.ROOT);
             View ulView = findViewById(this.getResources().
@@ -250,7 +250,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     public void fetchUser() {
-        database.collection(UnchangedValues.USERS_TABLE).whereEqualTo("email", property.getLandlordEmail()).get()
+        db.collection(UnchangedValues.USERS_TABLE).whereEqualTo("email", property.getLandlordEmail()).get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {

@@ -45,6 +45,7 @@ import com.team5.besthouse.services.StoreService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -149,7 +150,7 @@ public class AccountFragment extends Fragment {
 //                                                    Log.i("TAG", "onEvent: " + v.getResult().getDocuments().size());
                                                     for (QueryDocumentSnapshot document : v.getResult()) {
                                                         Contract contract = document.toObject(Contract.class);
-                                                        if(contract.getTenantEmail() == user.getEmail()){
+                                                        if(!Objects.equals(contract.getTenantEmail(), user.getEmail())){
                                                             ok = false;
                                                             break;
                                                         }

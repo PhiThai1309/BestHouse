@@ -146,10 +146,15 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <include
-                    layout="@layout/layout_see_details"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    style="@style/Bold_Heading"
+                    android:text="Tenant details"/>
 
                 <include
+                    android:id="@+id/contract_tenant_details"
                     layout="@layout/layout_details"/>
             </LinearLayout>
         </LinearLayout>
