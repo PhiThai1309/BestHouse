@@ -2,7 +2,7 @@ package com.team5.besthouse.models;
 
 import java.util.HashMap;
 
-public abstract class User {
+public class User {
     private String email;
     private String password;
     private String fullName;

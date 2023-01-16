@@ -38,9 +38,11 @@ import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.databinding.FragmentAccountBinding;
 import com.team5.besthouse.models.Contract;
 import com.team5.besthouse.models.ContractStatus;
+import com.team5.besthouse.models.Landlord;
 import com.team5.besthouse.models.Property;
 import com.team5.besthouse.models.Tenant;
 import com.team5.besthouse.models.User;
+import com.team5.besthouse.models.UserRole;
 import com.team5.besthouse.services.StoreService;
 
 import java.util.ArrayList;
@@ -116,70 +118,45 @@ public class AccountFragment extends Fragment {
 
         //filter for all rents such that its end date is after today on the db side
         FirebaseFirestore database = FirebaseFirestore.getInstance();
-        database.collection(UnchangedValues.CONTRACTS_TABLE)
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @SuppressLint("NotifyDataSetChanged")
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                        progressIndicator.setVisibility(View.VISIBLE);
-                        if(error != null)
-                        {
-                            Log.w("ERROR ERROR ", error);
-                            return;
-                        }
-//                        Log.w("ERROR ERROR ", value.getDocumentChanges().get(0).getDocument().getData().toString());
+        Gson gson = new Gson();
+        User user = gson.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), User.class);
+        String userEmail = user.getEmail();
 
-                        //filter for rents that begins before today on the client side
-                        assert value != null;
-                        for(DocumentChange newDoc : value.getDocumentChanges()){
-                            Contract p = newDoc.getDocument().toObject(Contract.class);
+        if (user.getRole() == UserRole.LANDLORD){
+            database.collection(UnchangedValues.CONTRACTS_TABLE)
+                    .whereEqualTo("landlordEmail", userEmail)
+                    .addSnapshotListener(eventListener);
+        }
+        else {
+            database.collection(UnchangedValues.CONTRACTS_TABLE)
+                    .whereEqualTo("tenantEmail", userEmail)
+                    .addSnapshotListener(eventListener);
+        }
+
+    }
+
+    EventListener<QuerySnapshot> eventListener = new EventListener<QuerySnapshot>() {
+        @SuppressLint("NotifyDataSetChanged")
+        @Override
+        public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+            progressIndicator.setVisibility(View.VISIBLE);
+            if(error != null)
+            {
+                Log.w("ERROR: ", error);
+                return;
+            }
+            assert value != null;
+            for(DocumentChange newDoc : value.getDocumentChanges()){
+                Contract p = newDoc.getDocument().toObject(Contract.class);
 //                            Log.i("Property", p.getId() == null ? "null address!" : p.getId());
 //                            Log.i("Property", newDoc.getType().toString());
-                            if(newDoc.getType() == DocumentChange.Type.ADDED){
-                                list.remove(p);
-                                try {
-                                    //get all contracts that have its end date after today and is from this property
-
-//                                    Log.i(TAG, "onEvent: " + p);
-                                    database.collection(UnchangedValues.CONTRACTS_TABLE)
-                                            .whereEqualTo("id", p.getId())
-                                            .get()
-                                            .addOnCompleteListener(v -> {
-                                                if (v.isSuccessful()){
-                                                    boolean ok = true;
-//                                                    Log.i("TAG", "onEvent: " + v.getResult().getDocuments().size());
-                                                    for (QueryDocumentSnapshot document : v.getResult()) {
-                                                        Contract contract = document.toObject(Contract.class);
-                                                        if(!Objects.equals(contract.getTenantEmail(), user.getEmail())){
-                                                            ok = false;
-                                                            break;
-                                                        }
-                                                    }
-                                                    if (ok) {
-                                                        list.add(p);
-//                                                        Log.i("ADDED" , p.toString());
-                                                        adapter1.notifyDataSetChanged();
-//                                                        adapter2.notifyDataSetChanged();
-                                                    }
-                                                }
-                                            });
-                                } catch (Exception e) {
-                                    Log.d("ERROR 2", "Error adding object : " + newDoc.toString() + ", Exception " + e.getMessage());
-                                }
-                            }
-                            else {
-                                list.remove(p);
-                                if (newDoc.getType().equals(DocumentChange.Type.MODIFIED)) {
-                                    list.add(p);
-                                }
-                                adapter1.notifyDataSetChanged();
-//                                adapter2.notifyDataSetChanged();
-                            }
-                        }
-                        progressIndicator.setVisibility(View.GONE);
-                    }
-                });
-    }
+                list.remove(p);
+                list.add(p);
+                adapter1.notifyDataSetChanged();
+            }
+            progressIndicator.setVisibility(View.GONE);
+        }
+    };
 
     public void logOutMenu(){
         MaterialToolbar logout = binding.getRoot().findViewById(R.id.logout_toolbar);
