@@ -3,6 +3,9 @@ package com.team5.besthouse.activities;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
+
 import com.team5.besthouse.broadcastreceiverandservice.ConnectionReceiver;
 
 public abstract class BaseActivity extends AppCompatActivity implements ConnectionReceiver.OnConnectivityChangedListener {

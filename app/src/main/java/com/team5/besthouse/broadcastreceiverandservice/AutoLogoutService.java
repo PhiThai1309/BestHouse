@@ -7,7 +7,6 @@ import android.os.IBinder;
 import android.util.Log;
 
 public class AutoLogoutService extends Service {
-    private AutoLogoutService. listener;
     public static CountDownTimer timer;
     @Override
     public void onCreate(){

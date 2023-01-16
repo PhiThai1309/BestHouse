@@ -59,11 +59,8 @@ public class PropertyAdapter extends RecyclerView.Adapter<PropertyAdapter.TaskVi
                 public void onClick(View v) {
                     Intent intent = new Intent(mInflater.getContext(), DetailActivity.class);
                     intent.putExtra("property", current);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
                     mInflater.getContext().startActivity(intent);
                     notifyDataSetChanged();
-
-
                 }
             });
         } else {
