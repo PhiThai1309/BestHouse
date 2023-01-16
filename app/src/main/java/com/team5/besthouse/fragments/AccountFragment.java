@@ -33,8 +33,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 import com.team5.besthouse.R;
 import com.team5.besthouse.activities.LoginActivity;
-import com.team5.besthouse.activities.MainActivity;
-import com.team5.besthouse.adapters.ContractAdapter;
+import com.team5.besthouse.adapters.ContractPartialAdapter;
 import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.databinding.FragmentAccountBinding;
 import com.team5.besthouse.models.Contract;
@@ -64,9 +63,12 @@ public class AccountFragment extends Fragment {
 
 
     private RecyclerView historyView;
-    private List<Property> list;
-    private ContractAdapter adapter1;
+    private List<Contract> list;
+    private ContractPartialAdapter adapter1;
     private LinearProgressIndicator progressIndicator;
+
+    Gson gson;
+    User user;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -101,6 +103,10 @@ public class AccountFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        storeService = new StoreService(getContext().getApplicationContext());
+
+        gson = new Gson();
+        user = gson.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), Tenant.class);
     }
 
     @Override
@@ -109,8 +115,7 @@ public class AccountFragment extends Fragment {
 
         //filter for all rents such that its end date is after today on the db side
         FirebaseFirestore database = FirebaseFirestore.getInstance();
-        database.collection(UnchangedValues.PROPERTIES_TABLE)
-                .orderBy("propertyName")
+        database.collection(UnchangedValues.CONTRACTS_TABLE)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @SuppressLint("NotifyDataSetChanged")
                     @Override
@@ -126,7 +131,7 @@ public class AccountFragment extends Fragment {
                         //filter for rents that begins before today on the client side
                         assert value != null;
                         for(DocumentChange newDoc : value.getDocumentChanges()){
-                            Property p = newDoc.getDocument().toObject(Property.class);
+                            Contract p = newDoc.getDocument().toObject(Contract.class);
 //                            Log.i("Property", p.getId() == null ? "null address!" : p.getId());
 //                            Log.i("Property", newDoc.getType().toString());
                             if(newDoc.getType() == DocumentChange.Type.ADDED){
@@ -134,13 +139,9 @@ public class AccountFragment extends Fragment {
                                 try {
                                     //get all contracts that have its end date after today and is from this property
 
-                                    Gson gson = new Gson();
-                                    User user = gson.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), Tenant.class);
-
 //                                    Log.i(TAG, "onEvent: " + p);
                                     database.collection(UnchangedValues.CONTRACTS_TABLE)
-                                            .whereEqualTo("propertyId", p.getId())
-                                            .whereGreaterThanOrEqualTo("endDate", Timestamp.now())
+                                            .whereEqualTo("id", p.getId())
                                             .get()
                                             .addOnCompleteListener(v -> {
                                                 if (v.isSuccessful()){
@@ -148,7 +149,7 @@ public class AccountFragment extends Fragment {
 //                                                    Log.i("TAG", "onEvent: " + v.getResult().getDocuments().size());
                                                     for (QueryDocumentSnapshot document : v.getResult()) {
                                                         Contract contract = document.toObject(Contract.class);
-                                                        if(contract.getStartDate().compareTo(Timestamp.now()) <= 0 && (contract.getContractStatus().equals(ContractStatus.ACTIVE) || (user.getEmail().equals(contract.getTenantEmail()) && contract.getContractStatus().equals(ContractStatus.PENDING)))){
+                                                        if(contract.getTenantEmail() == user.getEmail()){
                                                             ok = false;
                                                             break;
                                                         }
@@ -233,7 +234,7 @@ public class AccountFragment extends Fragment {
         historyView.setHasFixedSize(true);
         historyView.setLayoutManager(linearLayoutManager);
 
-        adapter1 = new ContractAdapter(getContext(), list);
+        adapter1 = new ContractPartialAdapter(getContext(), list);
         historyView.setAdapter(adapter1);
         historyView.setHasFixedSize(true);
 
@@ -241,7 +242,8 @@ public class AccountFragment extends Fragment {
         TextView seeMoreTitle = historyTitle.findViewById(R.id.see_more_title);
         seeMoreTitle.setText("Contract History");
 
-
+        TextView accountName = binding.getRoot().findViewById(R.id.account_name);
+        accountName.setText(user.getFullName());
 
         // Inflate the layout for this fragment
         return binding.getRoot();

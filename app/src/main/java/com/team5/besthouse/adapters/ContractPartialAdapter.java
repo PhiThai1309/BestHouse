@@ -19,14 +19,14 @@ import com.team5.besthouse.models.Property;
 
 import java.util.List;
 
-public class ContractAdapter extends RecyclerView.Adapter<ContractAdapter.TaskViewHolder> {
+public class ContractPartialAdapter extends RecyclerView.Adapter<ContractPartialAdapter.TaskViewHolder> {
     private final LayoutInflater mInflater;
     private List<Contract> contractList;
 
     private String key = "";
 
     // Constructor
-    public ContractAdapter(Context context, List<Contract> contracts) {
+    public ContractPartialAdapter(Context context, List<Contract> contracts) {
         mInflater = LayoutInflater.from(context);
         contractList = contracts;
     }
@@ -60,7 +60,7 @@ public class ContractAdapter extends RecyclerView.Adapter<ContractAdapter.TaskVi
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(mInflater.getContext(), ContractActivity.class);
-                    intent.putExtra("property", current);
+                    intent.putExtra("contract", current);
 
                     mInflater.getContext().startActivity(intent);
                     notifyDataSetChanged();
@@ -77,10 +77,7 @@ public class ContractAdapter extends RecyclerView.Adapter<ContractAdapter.TaskVi
     // Return the size of the data set
     @Override
     public int getItemCount() {
-        if(contractList.size() == 0){
-            return 0;
-        }
-        return contractList.size();
+        return Math.min(contractList.size(), 5);
     }
 
     //TaskViewHolder class to hold the views

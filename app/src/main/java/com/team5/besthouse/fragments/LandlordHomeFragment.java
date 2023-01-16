@@ -198,6 +198,26 @@ public class LandlordHomeFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+
+        //code for landlords to get list of contracts
+//    void getContracts(){
+//        Gson gson = new Gson();
+//        User user = gson.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), Landlord.class);
+//
+//        db.collection(UnchangedValues.CONTRACTS_TABLE)
+//                .whereEqualTo("contractStatus", ContractStatus.PENDING)
+//                .whereEqualTo("landlordEmail", user.getEmail())
+//                .get().addOnCompleteListener(task -> {
+//                    if (task.isSuccessful()) {
+//                        for (QueryDocumentSnapshot document : task.getResult()) {
+//                            Contract contract = document.toObject(Contract.class);
+//
+//                           //add to list and notify adapter
+//                        }
+//                    }
+//                });
+//    }
+
         //filter for all rents such that its end date is after today on the db side
         FirebaseFirestore database = FirebaseFirestore.getInstance();
         database.collection(UnchangedValues.PROPERTIES_TABLE)

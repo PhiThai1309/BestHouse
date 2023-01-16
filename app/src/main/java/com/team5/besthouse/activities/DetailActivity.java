@@ -135,25 +135,6 @@ public class DetailActivity extends AppCompatActivity {
             makeContract();
         });
 
-        //code for landlords to get list of contracts
-//    void getContracts(){
-//        Gson gson = new Gson();
-//        User user = gson.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), Landlord.class);
-//
-//        db.collection(UnchangedValues.CONTRACTS_TABLE)
-//                .whereEqualTo("contractStatus", ContractStatus.PENDING)
-//                .whereEqualTo("landlordEmail", user.getEmail())
-//                .get().addOnCompleteListener(task -> {
-//                    if (task.isSuccessful()) {
-//                        for (QueryDocumentSnapshot document : task.getResult()) {
-//                            Contract contract = document.toObject(Contract.class);
-//
-//                           //add to list and notify adapter
-//                        }
-//                    }
-//                });
-//    }
-
 //        Log.d(TAG, property.getLandlordEmail());
 //        database1.collection(UnchangedValues.USERS_TABLE)
 //                .whereEqualTo("email",true)
@@ -281,14 +262,15 @@ public class DetailActivity extends AppCompatActivity {
                             if(ds.exists())
                             {
                                 progressIndicator.setVisibility(View.GONE);
-                                TextView landlordName = findViewById(R.id.details_landlordName);
+                                View userDetails = findViewById(R.id.details_user);
+                                TextView landlordName = userDetails.findViewById(R.id.details_landlordName);
                                 landlordName.setText(ds.getString("fullName"));
 //                                   Log.d("TESSSSS", ds.getString("email"));
 
-                                TextView landlordEmail = findViewById(R.id.details_landlordEmail);
+                                TextView landlordEmail = userDetails.findViewById(R.id.details_landlordEmail);
                                 landlordEmail.setText(ds.getString("email"));
 
-                                TextView landlordPhone = findViewById(R.id.details_landlordPhone);
+                                TextView landlordPhone = userDetails.findViewById(R.id.details_landlordPhone);
                                 landlordPhone.setText(ds.getString("phoneNumber"));
 
                             }

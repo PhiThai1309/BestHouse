@@ -1,4 +1,4 @@
-package com.team5.besthouse.activities;
+package com.team5.besthouse.fragments;
 
 import android.os.Bundle;
 

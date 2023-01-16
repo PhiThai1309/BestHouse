@@ -53,11 +53,13 @@
                         android:layout_width="100dp"
                         android:layout_height="100dp"
                         android:src="@drawable/besthouse_logo"/>
+
                     <TextView
+                        android:id="@+id/account_name"
+                        style="@style/Bold_Heading"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/place_holder"
-                        style="@style/Bold_Heading"/>
+                        android:text="@string/place_holder" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
             <com.google.android.material.progressindicator.LinearProgressIndicator

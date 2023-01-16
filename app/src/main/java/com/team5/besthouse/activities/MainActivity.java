@@ -5,19 +5,16 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.view.Window;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.material.elevation.SurfaceColors;
 import com.google.android.material.navigation.NavigationBarView;
 import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.fragments.AccountFragment;
+import com.team5.besthouse.fragments.ChatFragment;
 import com.team5.besthouse.fragments.TenantHomeFragment;
 import com.team5.besthouse.fragments.MapsFragment;
 import com.team5.besthouse.R;
