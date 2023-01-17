@@ -48,7 +48,12 @@ public class ContractPartialAdapter extends RecyclerView.Adapter<ContractPartial
             // Get the task at the position
             Contract current = contractList.get(position);
             // Set the name of the view holder
-            holder.name.setText(current.getContractStatus().toString());
+            if(current.getContractStatus() == null) {
+                holder.name.setText("No contract available at the moment");
+            } else {
+                holder.name.setText(current.getContractStatus().toString());
+            }
+
             // Set the address of the view holder
             holder.address.setText(current.convertStartDay().toString());
             //Set the prize of the view holder

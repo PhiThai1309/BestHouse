@@ -3,10 +3,14 @@ package com.team5.besthouse.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.Exclude;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Objects;
 import java.util.TimeZone;
@@ -131,4 +135,14 @@ public class Contract implements Parcelable {
         parcel.writeParcelable(startDate, i);
         parcel.writeParcelable(endDate, i);
     }
+
+    @Exclude
+    public static Contract STATICCONTRACT = new Contract(
+            null,
+            "",
+            "",
+            "",
+            null,
+            null
+    );
 }

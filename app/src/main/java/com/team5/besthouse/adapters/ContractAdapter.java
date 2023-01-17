@@ -3,6 +3,7 @@ package com.team5.besthouse.adapters;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,7 +61,7 @@ public class ContractAdapter extends RecyclerView.Adapter<ContractAdapter.TaskVi
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(mInflater.getContext(), ContractActivity.class);
-                    intent.putExtra("property", current);
+                    intent.putExtra("contract", (Parcelable) current);
 
                     mInflater.getContext().startActivity(intent);
                     notifyDataSetChanged();

@@ -38,10 +38,13 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 import com.team5.besthouse.R;
 import com.team5.besthouse.activities.LoginActivity;
+import com.team5.besthouse.activities.MainActivity;
 import com.team5.besthouse.adapters.ContractPartialAdapter;
 import com.team5.besthouse.adapters.PropertyPartialCardAdapter;
 import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.databinding.FragmentAccountBinding;
+import com.team5.besthouse.fragments.Inflate.MoreContractFragment;
+import com.team5.besthouse.fragments.Inflate.MorePropertyFragment;
 import com.team5.besthouse.models.Contract;
 import com.team5.besthouse.models.Property;
 import com.team5.besthouse.models.Tenant;
@@ -51,6 +54,7 @@ import com.team5.besthouse.services.StoreService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -69,13 +73,15 @@ public class AccountFragment extends Fragment {
 
 
     private RecyclerView historyView;
-    private List<Contract> contractList;
+    private ArrayList<Contract> contractList;
     private ContractPartialAdapter adapter1;
     private LinearProgressIndicator progressIndicator;
 
     private RecyclerView propertyView;
     private List<Property> propertyList;
     private PropertyPartialCardAdapter adapter;
+
+    private View historyTitle, historyWrapper;
 
     Gson gson;
     User user;
@@ -166,15 +172,20 @@ public class AccountFragment extends Fragment {
                 adapter1.notifyDataSetChanged();
             }
 
-            View historyTitle = binding.getRoot().findViewById(R.id.contract_history_title);
-            View historyWrapper = binding.getRoot().findViewById(R.id.contract_history_wrapper);
+            historyTitle = binding.getRoot().findViewById(R.id.contract_history_title);
+            historyWrapper = binding.getRoot().findViewById(R.id.contract_history_wrapper);
+            TextView seeMoreButton = historyTitle.findViewById(R.id.see_more);
+            TextView noData = historyWrapper.findViewById(R.id.display_none);
 
             if(contractList.isEmpty()) {
-                TextView seeMoreButton = historyTitle.findViewById(R.id.see_more);
+                contractList.add(Contract.STATICCONTRACT);
+                adapter1.notifyDataSetChanged();
                 seeMoreButton.setVisibility(View.GONE);
-                historyView.setVisibility(View.GONE);
+//                historyView.setVisibility(View.GONE);
+            } else if(contractList.size() <= 5 && contractList.size() > 0) {
+                seeMoreButton.setVisibility(View.GONE);
+                noData.setVisibility(View.GONE);
             } else {
-                TextView noData = historyWrapper.findViewById(R.id.display_none);
                 noData.setVisibility(View.GONE);
             }
 //            progressIndicator.setVisibility(View.GONE);
@@ -247,13 +258,25 @@ public class AccountFragment extends Fragment {
 //        progressIndicator.setVisibility(View.VISIBLE);
 
         //Contract History setup here--------------------------------------------------------
-        View historyTitle = binding.getRoot().findViewById(R.id.contract_history_title);
+        historyTitle = binding.getRoot().findViewById(R.id.contract_history_title);
         TextView seeMoreTitle = historyTitle.findViewById(R.id.see_more_title);
         seeMoreTitle.setText("Contract History");
 
-        View historyWrapper = binding.getRoot().findViewById(R.id.contract_history_wrapper);
+        historyWrapper = binding.getRoot().findViewById(R.id.contract_history_wrapper);
         historyView = historyWrapper.findViewById(R.id.contract_history);
 
+        TextView moreContract = historyTitle.findViewById(R.id.see_more);
+        moreContract.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle bundle = new Bundle();
+                bundle.putParcelableArrayList("list",  contractList);
+
+                MoreContractFragment bottomDialogFragment = new MoreContractFragment();
+                bottomDialogFragment.setArguments(bundle);
+                bottomDialogFragment.show(requireActivity().getSupportFragmentManager(), "ActionBottomDialogFragment.TAG");
+            }
+        });
         contractList = new ArrayList<>();
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false);
@@ -281,7 +304,9 @@ public class AccountFragment extends Fragment {
         View propertyLayout = binding.getRoot().findViewById(R.id.property_list_title);
         TextView propertyTitle = propertyLayout.findViewById(R.id.see_more_title);
         propertyTitle.setText("Your property");
+
         propertyList = new ArrayList<>();
+
         propertyView = binding.getRoot().findViewById(R.id.account_property);
         LinearLayoutManager linearLayoutManager2 = new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false);
         //Set the layout manager
@@ -292,6 +317,7 @@ public class AccountFragment extends Fragment {
         adapter = new PropertyPartialCardAdapter(getContext(), propertyList);
         propertyView.setAdapter(adapter);
         historyView.setHasFixedSize(true);
+
         // Inflate the layout for this fragment
         return binding.getRoot();
     }

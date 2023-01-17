@@ -54,7 +54,7 @@ public class ContractActivity extends AppCompatActivity {
 
         database = FirebaseFirestore.getInstance();
         // set up store service
-        storeService = new StoreService(this);
+        storeService = new StoreService(getApplicationContext());
 
         //Set color to the navigation bar to match with the bottom navigation view
         getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(this));
