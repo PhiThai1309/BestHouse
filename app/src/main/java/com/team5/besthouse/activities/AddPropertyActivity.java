@@ -107,7 +107,7 @@ public class AddPropertyActivity extends BaseActivity implements RecyclerViewInt
         ptypeSpinner = (Spinner) ptype.findViewById(R.id.box);
 
         //Set hint for adding property address textbox
-        View pAddress = findViewById(R.id.property_address);
+        View pAddress = findViewById(R.id.property_price);
         pAddressEditText = (EditText) pAddress.findViewById(R.id.box);
         pAddressEditText.setHint("Address:");
 
@@ -120,7 +120,7 @@ public class AddPropertyActivity extends BaseActivity implements RecyclerViewInt
         pAreaEditText = findViewById(R.id.propertyArea).findViewById(R.id.box);
 
         //Set hint for adding property price textbox
-        View price = findViewById(R.id.property_price);
+        View price = findViewById(R.id.last_chat_time);
         TextInputLayout priceWrapper= price.findViewById(R.id.textInput_wrapper);
         priceEditText = price.findViewById(R.id.box);
         priceEditText.setInputType(InputType.TYPE_CLASS_NUMBER);

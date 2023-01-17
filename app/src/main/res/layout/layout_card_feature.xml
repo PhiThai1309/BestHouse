@@ -71,7 +71,7 @@
                     android:src="@drawable/ic_round_location_on_24" />
 
                 <TextView
-                    android:id="@+id/property_address"
+                    android:id="@+id/property_price"
                     style="@style/Rec_SubHeading"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

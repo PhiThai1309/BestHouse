@@ -117,7 +117,7 @@ public class PropertyPartialCardAdapter extends RecyclerView.Adapter<PropertyPar
         public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.property_name);
-            price = itemView.findViewById(R.id.property_price);
+            price = itemView.findViewById(R.id.last_chat_time);
             address = itemView.findViewById(R.id.property_address);
             cardView = itemView.findViewById(R.id.cardView);
         }

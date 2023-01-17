@@ -27,45 +27,37 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_gravity="start"
             android:layout_weight="2"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp"
             android:gravity="center_vertical"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingHorizontal="20dp">
 
             <TextView
                 android:id="@+id/property_name"
+                style="@style/Card_Heading"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/place_holder"
-                style="@style/Card_Heading"/>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:layout_marginVertical="10dp"
-                android:orientation="horizontal">
-                <ImageView
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
-                    android:src="@drawable/ic_outline_location_on_grey_24"/>
-                <TextView
-                    android:id="@+id/property_address"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    style="@style/Card_SubHeading"
-                    android:text="@string/place_holder"
-                    android:maxLines="1"/>
-            </LinearLayout>
+                android:paddingVertical="5dp"
+                android:text="@string/place_holder" />
 
 
             <TextView
                 android:id="@+id/property_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:paddingVertical="5dp"
+                android:text="@string/place_holder" />
+
+            <TextView
+                android:id="@+id/last_chat_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:paddingVertical="5dp"
                 android:text="@string/place_holder"
-                android:textColor="@color/md_theme_primary"
-                android:maxLines="1"/>
+                android:textColor="@color/md_theme_primary" />
         </LinearLayout>
 
     </LinearLayout>

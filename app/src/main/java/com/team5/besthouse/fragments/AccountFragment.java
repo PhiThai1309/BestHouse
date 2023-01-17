@@ -120,7 +120,7 @@ public class AccountFragment extends Fragment {
         storeService = new StoreService(getContext().getApplicationContext());
 
         gson = new Gson();
-        user = gson.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), Tenant.class);
+        user = gson.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), User.class);
     }
 
     @Override
@@ -129,8 +129,6 @@ public class AccountFragment extends Fragment {
 
         //filter for all rents such that its end date is after today on the db side
         FirebaseFirestore database = FirebaseFirestore.getInstance();
-        Gson gson = new Gson();
-        User user = gson.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), User.class);
         String userEmail = user.getEmail();
 
         if (user.getRole() == UserRole.LANDLORD){
@@ -166,7 +164,9 @@ public class AccountFragment extends Fragment {
 //                            Log.i("Property", p.getId() == null ? "null address!" : p.getId());
 //                            Log.i("Property", newDoc.getType().toString());
                 contractList.remove(p);
-                contractList.add(p);
+                if (newDoc.getType() != DocumentChange.Type.REMOVED){
+                    contractList.add(p);
+                }
                 adapter1.notifyDataSetChanged();
             }
 
@@ -310,8 +310,6 @@ public class AccountFragment extends Fragment {
         accountName.setText(user.getFullName());
 
         //Property setup here-------------------------------------------------------------
-        Gson gson = new Gson();
-        User user = gson.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), Tenant.class);
         View propertyWrapper = binding.getRoot().findViewById(R.id.property_list);
 
         View propertyLayout = binding.getRoot().findViewById(R.id.property_list_title);
