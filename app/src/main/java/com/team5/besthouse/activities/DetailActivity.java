@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.view.View;
 import android.util.Log;
@@ -235,8 +236,14 @@ public class DetailActivity extends BaseActivity {
         //crate timestamp that is 12 months from now
         Timestamp endDate = new Timestamp(Date.from(Instant.now().plusSeconds(86400 * 30 * 12)));
 
+        Timestamp compareDate = new Timestamp(Date.from(Instant.now()));
         //12 month contract
         Contract contract = new Contract(ContractStatus.PENDING, property.getLandlordEmail(), user.getEmail(), property.getId(), Timestamp.now(), endDate);
+
+        if(compareDate == contract.getEndDate()) {
+
+            showNotification();
+        }
 
         DocumentReference dc = db.collection(UnchangedValues.CONTRACTS_TABLE).document();
 
