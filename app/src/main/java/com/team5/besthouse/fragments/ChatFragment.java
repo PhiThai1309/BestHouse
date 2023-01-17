@@ -102,8 +102,8 @@ public class ChatFragment extends Fragment {
         Window window = getActivity().getWindow();
         window.setStatusBarColor(Color.TRANSPARENT);
 //
-//        progressIndicator = binding.getRoot().findViewById(R.id.account_progressBar);
-//        progressIndicator.setVisibility(View.VISIBLE);
+        progressIndicator = binding.getRoot().findViewById(R.id.account_progressBar);
+        progressIndicator.setVisibility(View.VISIBLE);
 
         chatView = binding.getRoot().findViewById(R.id.contract_history);
 
@@ -148,7 +148,7 @@ public class ChatFragment extends Fragment {
         @SuppressLint("NotifyDataSetChanged")
         @Override
         public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-//            progressIndicator.setVisibility(View.VISIBLE);
+            progressIndicator.setVisibility(View.VISIBLE);
             if(error != null)
             {
                 Log.w("ERROR: ", error);
@@ -170,13 +170,13 @@ public class ChatFragment extends Fragment {
                                         listChats.add(chat);
                                     }
                                     adapter1.notifyDataSetChanged();
-//                                    progressIndicator.setVisibility(View.GONE);
+                                    progressIndicator.setVisibility(View.GONE);
                                 }
                             });
                 }
                 adapter1.notifyDataSetChanged();
             }
-//            progressIndicator.setVisibility(View.GONE);
+            progressIndicator.setVisibility(View.GONE);
         }
     };
 

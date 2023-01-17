@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.google.android.material.elevation.SurfaceColors;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;

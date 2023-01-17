@@ -29,6 +29,7 @@
                 android:text="@string/chats" />
 
             <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/account_progressBar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:indeterminate="true"/>
