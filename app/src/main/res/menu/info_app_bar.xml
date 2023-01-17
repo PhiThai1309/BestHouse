@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/Info"
+        android:id="@+id/info"
         android:title="Information"
         android:contentDescription="Information"
         android:icon="@drawable/ic_outline_info_24"

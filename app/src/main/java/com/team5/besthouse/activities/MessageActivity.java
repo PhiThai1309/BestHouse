@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -33,6 +35,7 @@ import com.team5.besthouse.models.Property;
 import com.team5.besthouse.models.Tenant;
 import com.team5.besthouse.models.TextMessage;
 import com.team5.besthouse.models.User;
+import com.team5.besthouse.models.UserRole;
 import com.team5.besthouse.services.StoreService;
 
 import org.w3c.dom.Text;
@@ -159,6 +162,29 @@ public class MessageActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.info_app_bar, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.info:
+                Intent intent = new Intent(this, DetailActivity.class);
+                intent.putExtra("property", property);
+                //Already click reserve button for the chat to appear, disable the reserve button
+                intent.putExtra("history", true);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 }

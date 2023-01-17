@@ -25,7 +25,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingStart="20dp"
+                android:paddingBottom="12dp"
                 android:text="@string/chats" />
+
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/contract_history"

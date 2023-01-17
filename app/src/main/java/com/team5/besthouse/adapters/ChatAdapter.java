@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -124,7 +125,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.TaskViewHolder
         TextView name;
         TextView lastMessage;
         TextView lastChatTime;
-        CardView cardView;
+        LinearLayout cardView;
 
         public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
