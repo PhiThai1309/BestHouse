@@ -63,7 +63,7 @@ public class SignupActivity extends BaseActivity {
         //Set color to the navigation bar to match with the bottom navigation view
         getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(this));
         Intent intent = getIntent();
-        if(intent!=null)
+        if(intent.getExtras()!=null)
         {
             thirdPartyLoginId = intent.getStringExtra("id");
             thirdPartyLoginEmail = intent.getStringExtra("email");
