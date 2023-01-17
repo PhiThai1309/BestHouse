@@ -16,6 +16,7 @@
         android:layout_height="match_parent"
         android:layout_weight="1"/>
     <ImageButton
+        android:id="@+id/editButton"
         android:layout_width="40dp"
         android:layout_height="match_parent"
         android:background="#00FFFFFF"

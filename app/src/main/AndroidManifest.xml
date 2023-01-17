@@ -18,11 +18,20 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:targetApi="31">
+        <activity
+            android:name=".activities.EditActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+
         <service
             android:name=".broadcastreceiverandservice.AutoLogoutService"
-            android:exported="false"
             android:enabled="true"
-            android:stopWithTask="false"/>
+            android:exported="false"
+            android:stopWithTask="false" />
+
         <activity
             android:name=".activities.BaseActivity"
             android:exported="false">

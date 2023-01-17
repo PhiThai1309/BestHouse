@@ -29,6 +29,7 @@ import com.team5.besthouse.fragments.MapsFragment;
 import com.team5.besthouse.models.Property;
 import com.team5.besthouse.models.Tenant;
 import com.team5.besthouse.models.User;
+import com.team5.besthouse.models.UserRole;
 import com.team5.besthouse.models.Utilities;
 import com.team5.besthouse.services.StoreService;
 
@@ -54,6 +55,9 @@ public class DetailActivity extends BaseActivity {
     private Landlord landlord;
 
     View progressIndicator;
+    Gson gson;
+    User user;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +72,8 @@ public class DetailActivity extends BaseActivity {
         // set up store service
         storeService = new StoreService(getApplicationContext());
 
+        gson = new Gson();
+        user = gson.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), Tenant.class);
 
         Button makeContractButton = findViewById(R.id.createPropertyBtn);
 
@@ -110,6 +116,18 @@ public class DetailActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 finish();
+            }
+        });
+        ImageView editBtn = returnView.findViewById(R.id.editButton);
+        if(user.getRole() == UserRole.TENANT){
+            editBtn.setVisibility(View.GONE);
+        }
+        editBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent editIntent = new Intent(getApplicationContext(), EditActivity.class);
+                editIntent.putExtra("property", property);
+                startActivity(editIntent);
             }
         });
 
@@ -206,14 +224,9 @@ public class DetailActivity extends BaseActivity {
 
         TextView price = findViewById(R.id.details_price);
         price.setText((int) property.getMonthlyPrice() + ".000 VND / Month");
-
-
     }
 
     public void makeContract() {
-        Gson gson = new Gson();
-        User user = gson.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), Tenant.class);
-
         //get final day to check for last day that the user can hire
         AtomicReference<Timestamp> finalDayToHire = new AtomicReference<>(new Timestamp(Date.from(Instant.now().plusSeconds(68400L * 30 * 12 * 100))));
 
