@@ -42,6 +42,11 @@
     <string name="or_text_separated_line">OR</string>
 
 
+    <string name="facebook_app_id">689963932856138</string>
+    <string name="fb_login_protocol_scheme">fb689963932856138</string>
+    <string name="facebook_client_token">691af87f8afd0647726668a9cd702c2b</string>
+
+
     <string name="message">Message</string>
     <string name="see_more"><![CDATA[See more >>]]></string>
 </resources>

@@ -16,6 +16,8 @@ import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -113,6 +115,7 @@ public class SignupActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 tempDisconnectGoogleAccount();
+
                 deleteFireAuthUser();
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK| Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -277,6 +280,11 @@ public class SignupActivity extends BaseActivity {
                         }
                     });
         }
+
+    }
+
+    private void tempDisconnectFacebookAccount() {
+        LoginManager.getInstance().logOut();
 
     }
 
