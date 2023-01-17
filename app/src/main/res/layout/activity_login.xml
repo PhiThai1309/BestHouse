@@ -119,27 +119,32 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingHorizontal="@dimen/_80sdp">
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:gravity="center">
+                <ImageButton
                     app:tint="@null"
                     android:id="@+id/signIn_Google_Button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
                     android:backgroundTint="@color/WHITE"
-                    android:elevation="@dimen/_15sdp"
+                    android:padding="12dp"
+                    android:background="@drawable/edittext_background"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true"
                     android:src="@drawable/google_logo"
-                    app:maxImageSize="@dimen/_30sdp"
+                    android:layout_marginHorizontal="20dp"
                     />
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                <ImageButton
                     app:tint="@null"
+                    android:layout_marginHorizontal="20dp"
                     android:id="@+id/signIn_Facebook_Button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
                     android:backgroundTint="@color/WHITE"
-                    android:elevation="@dimen/_15sdp"
+                    android:padding="12dp"
+                    android:background="@drawable/edittext_background"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true"
                     android:src="@drawable/facebook_logo"
-                    app:maxImageSize="@dimen/_30sdp"
-                    android:layout_marginStart="@dimen/_40sdp"
                     />
             </LinearLayout>
 

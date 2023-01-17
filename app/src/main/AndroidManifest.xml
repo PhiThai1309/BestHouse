@@ -59,7 +59,7 @@
             android:name=".activities.MessageActivity"
             android:exported="false"
             android:label="@string/title_activity_message"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:windowSoftInputMode="adjustResize">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />

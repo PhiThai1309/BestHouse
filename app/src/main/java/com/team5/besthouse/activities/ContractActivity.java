@@ -59,7 +59,7 @@ public class ContractActivity extends BaseActivity {
         storeService = new StoreService(getApplicationContext());
 
         //Set color to the navigation bar to match with the bottom navigation view
-        getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(this));
+        getWindow().setNavigationBarColor(Color.TRANSPARENT);
         Window window = getWindow();
         window.setStatusBarColor(Color.TRANSPARENT);
 

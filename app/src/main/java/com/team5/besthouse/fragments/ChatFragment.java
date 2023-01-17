@@ -1,6 +1,7 @@
 package com.team5.besthouse.fragments;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -99,10 +100,10 @@ public class ChatFragment extends Fragment {
         //Set color to the navigation bar to match with the bottom navigation view
         getActivity().getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(getActivity()));
         Window window = getActivity().getWindow();
-        window.setStatusBarColor(getActivity().getResources().getColor(R.color.md_theme_surfaceVariant));
-
-        progressIndicator = binding.getRoot().findViewById(R.id.account_progressBar);
-        progressIndicator.setVisibility(View.VISIBLE);
+        window.setStatusBarColor(Color.TRANSPARENT);
+//
+//        progressIndicator = binding.getRoot().findViewById(R.id.account_progressBar);
+//        progressIndicator.setVisibility(View.VISIBLE);
 
         chatView = binding.getRoot().findViewById(R.id.contract_history);
 
@@ -147,7 +148,7 @@ public class ChatFragment extends Fragment {
         @SuppressLint("NotifyDataSetChanged")
         @Override
         public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-            progressIndicator.setVisibility(View.VISIBLE);
+//            progressIndicator.setVisibility(View.VISIBLE);
             if(error != null)
             {
                 Log.w("ERROR: ", error);
@@ -169,13 +170,13 @@ public class ChatFragment extends Fragment {
                                         listChats.add(chat);
                                     }
                                     adapter1.notifyDataSetChanged();
-                                    progressIndicator.setVisibility(View.GONE);
+//                                    progressIndicator.setVisibility(View.GONE);
                                 }
                             });
                 }
                 adapter1.notifyDataSetChanged();
             }
-            progressIndicator.setVisibility(View.GONE);
+//            progressIndicator.setVisibility(View.GONE);
         }
     };
 
