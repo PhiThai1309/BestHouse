@@ -16,6 +16,8 @@ import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -61,7 +63,7 @@ public class SignupActivity extends BaseActivity {
         //Set color to the navigation bar to match with the bottom navigation view
         getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(this));
         Intent intent = getIntent();
-        if(intent!=null)
+        if(intent.getExtras()!=null)
         {
             thirdPartyLoginId = intent.getStringExtra("id");
             thirdPartyLoginEmail = intent.getStringExtra("email");
@@ -113,6 +115,7 @@ public class SignupActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 tempDisconnectGoogleAccount();
+
                 deleteFireAuthUser();
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK| Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -125,16 +128,18 @@ public class SignupActivity extends BaseActivity {
     private void deleteFireAuthUser()
     {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-        user.delete()
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Log.d("ACCOUNT DELETE", task.toString());
+        if(user!=null)
+        {
+            user.delete()
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Log.d("ACCOUNT DELETE", task.toString());
+                            }
                         }
-                    }
-                });
+                    });
+        }
     }
 
 
@@ -277,6 +282,11 @@ public class SignupActivity extends BaseActivity {
                         }
                     });
         }
+
+    }
+
+    private void tempDisconnectFacebookAccount() {
+        LoginManager.getInstance().logOut();
 
     }
 

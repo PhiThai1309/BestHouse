@@ -22,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -238,6 +239,7 @@ public class AccountFragment extends Fragment {
             public boolean onMenuItemClick(MenuItem item) {
                 if (storeService.clearTheStore()) {
                     try {
+                        LoginManager.getInstance().logOut();
                         tempDisconnectGoogleAccount();
                         firebaseAuth = FirebaseAuth.getInstance();
                         firebaseAuth.signOut(); // sign out from firebase
