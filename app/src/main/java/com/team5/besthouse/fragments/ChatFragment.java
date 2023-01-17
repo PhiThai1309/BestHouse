@@ -1,6 +1,7 @@
 package com.team5.besthouse.fragments;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -99,8 +100,8 @@ public class ChatFragment extends Fragment {
         //Set color to the navigation bar to match with the bottom navigation view
         getActivity().getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(getActivity()));
         Window window = getActivity().getWindow();
-        window.setStatusBarColor(getActivity().getResources().getColor(R.color.md_theme_surfaceVariant));
-
+        window.setStatusBarColor(Color.TRANSPARENT);
+//
         progressIndicator = binding.getRoot().findViewById(R.id.account_progressBar);
         progressIndicator.setVisibility(View.VISIBLE);
 

@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -173,7 +174,7 @@ public class AccountFragment extends Fragment {
 
             historyTitle = binding.getRoot().findViewById(R.id.contract_history_title);
             historyWrapper = binding.getRoot().findViewById(R.id.contract_history_wrapper);
-            TextView seeMoreBtn = historyTitle.findViewById(R.id.see_more);
+            ImageView seeMoreBtn = historyTitle.findViewById(R.id.see_more);
             TextView noneData = historyWrapper.findViewById(R.id.display_none);
 
             if(contractList.isEmpty()) {
@@ -213,7 +214,7 @@ public class AccountFragment extends Fragment {
 
             propertyTitle = binding.getRoot().findViewById(R.id.property_list_title);
             propertyWrapper = binding.getRoot().findViewById(R.id.property_list);
-            TextView seeMoreButton = propertyTitle.findViewById(R.id.see_more);
+            ImageView seeMoreButton = propertyTitle.findViewById(R.id.see_more);
             TextView noData = propertyWrapper.findViewById(R.id.display_none);
 
             if(propertyList.isEmpty()) {
@@ -282,8 +283,8 @@ public class AccountFragment extends Fragment {
         historyWrapper = binding.getRoot().findViewById(R.id.contract_history_wrapper);
         historyView = historyWrapper.findViewById(R.id.recycler_view);
 
-        TextView moreContract = historyTitle.findViewById(R.id.see_more);
-        moreContract.setOnClickListener(new View.OnClickListener() {
+//        ImageView moreContract = historyTitle.findViewById(R.id.see_more);
+        historyTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Bundle bundle = new Bundle();
@@ -324,8 +325,8 @@ public class AccountFragment extends Fragment {
 
         propertyTitle.setText("Your property");
 
-        TextView moreProperty = propertyLayout.findViewById(R.id.see_more);
-        moreProperty.setOnClickListener(new View.OnClickListener() {
+//        TextView moreProperty = propertyLayout.findViewById(R.id.see_more);
+        propertyLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Bundle bundle = new Bundle();

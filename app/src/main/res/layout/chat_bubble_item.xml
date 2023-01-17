@@ -8,7 +8,9 @@
         android:id="@+id/chat_left_msg_layout"
         android:orientation="vertical"
         android:layout_width="wrap_content"
+        android:background="@drawable/shape_bg_incoming_bubble"
         android:layout_height="wrap_content"
+        android:layout_marginVertical="4dp"
         android:layout_gravity="start"
         >
 
@@ -17,6 +19,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:paddingStart="14dp"
+            style="@style/NormalText"
+            android:textColor="@color/WHITE"
             android:layout_margin="10dp"/>
 
     </LinearLayout>
@@ -26,6 +31,8 @@
         android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginVertical="4dp"
+        android:background="@drawable/shape_bg_outgoing_bubble"
         android:layout_gravity="end"
         >
 
@@ -34,6 +41,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:paddingEnd="16dp"
+            style="@style/NormalText"
+            android:textColor="@color/WHITE"
             android:layout_margin="10dp"/>
 
     </LinearLayout>
