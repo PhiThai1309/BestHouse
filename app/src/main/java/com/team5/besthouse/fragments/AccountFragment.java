@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -20,7 +21,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -192,8 +192,75 @@ public class AccountFragment extends Fragment {
         });
     }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        binding = FragmentAccountBinding.inflate(inflater, container, false);
+        storeService = new StoreService(getActivity().getApplicationContext());
+        logOutMenu();
+//        setSignOutAction();
+
+        //Set color to the navigation bar to match with the bottom navigation view
+        getActivity().getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(getActivity()));
+        Window window = getActivity().getWindow();
+        window.setStatusBarColor(getActivity().getResources().getColor(R.color.md_theme_surfaceVariant));
+
+        progressIndicator = binding.getRoot().findViewById(R.id.account_progressBar);
+        progressIndicator.setVisibility(View.VISIBLE);
+
+        historyView = binding.getRoot().findViewById(R.id.contract_history);
+
+        list = new ArrayList<>();
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false);
+        //Set the layout manager
+        linearLayoutManager.setStackFromEnd(false);
+        linearLayoutManager.setReverseLayout(false);
+        historyView.setHasFixedSize(true);
+        historyView.setLayoutManager(linearLayoutManager);
+
+        adapter1 = new ContractPartialAdapter(getContext(), list);
+        historyView.setAdapter(adapter1);
+        historyView.setHasFixedSize(true);
+
+        View historyTitle = binding.getRoot().findViewById(R.id.contract_history_title);
+        TextView seeMoreTitle = historyTitle.findViewById(R.id.see_more_title);
+        seeMoreTitle.setText("Contract History");
+
+        TextView accountName = binding.getRoot().findViewById(R.id.account_name);
+        accountName.setText(user.getFullName());
+
+        // Inflate the layout for this fragment
+        return binding.getRoot();
+    }
+
+//    private void setSignOutAction() {
+//        binding.signOutButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                // make sure to clear the store service
+//                if (storeService.clearTheStore()) {
+//                    try {
+//                        firebaseAuth = FirebaseAuth.getInstance();
+//                        firebaseAuth.signOut(); // sign out from firebase
+//                        Intent intent = new Intent(getActivity(), LoginActivity.class);
+//                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                        intent.putExtra(UnchangedValues.LOGOUT_PERFORMED, "logout");
+//                        startActivity(intent);
+//                    } catch (Exception e) {
+//                        Log.d("ErrorLogout", e.getMessage());
+//                        e.printStackTrace();
+//                        showTextLong("Error: Can't Logout");
+//                    }
+//                } else {
+//                    showTextLong("Error: Can't Logout");
+//                }
+//            }
+//        });
+//    }
+
     private void tempDisconnectGoogleAccount() {
-       GoogleSignInClient mGoogleSignInAccount = GoogleSignIn.getClient(getActivity(), GoogleSignInOptions.DEFAULT_SIGN_IN) ;
+        GoogleSignInClient mGoogleSignInAccount = GoogleSignIn.getClient(getActivity(), GoogleSignInOptions.DEFAULT_SIGN_IN) ;
         if(mGoogleSignInAccount != null)
         {
             mGoogleSignInAccount.signOut()
