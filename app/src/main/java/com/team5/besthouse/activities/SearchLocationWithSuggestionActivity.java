@@ -6,16 +6,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.maps.model.LatLng;
@@ -28,6 +25,7 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 import com.team5.besthouse.R;
 import com.team5.besthouse.adapters.LocationSuggestionAdapter;
 import com.team5.besthouse.constants.UnchangedValues;
+import com.team5.besthouse.fragments.LandLordMapsFragment;
 import com.team5.besthouse.interfaces.RecyclerViewInterface;
 
 import java.util.ArrayList;
@@ -115,7 +113,7 @@ public class SearchLocationWithSuggestionActivity extends AppCompatActivity impl
            @Override
            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 
-              if(actionId == EditorInfo.IME_ACTION_DONE)
+              if(actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_GO || actionId == EditorInfo.IME_ACTION_SEARCH)
               {
 
                   // create the request
@@ -160,7 +158,7 @@ public class SearchLocationWithSuggestionActivity extends AppCompatActivity impl
      */
     @Override
     public void onItemClick(int position) {
-        Intent i = new Intent(getApplicationContext(), LandLordMapsActivity.class);
+        Intent i = new Intent(getApplicationContext(), LandLordMapsFragment.class);
         i.putExtra(UnchangedValues.LOCATION_ADDRESS, locationTextList.get(position));
         setResult(RESULT_OK, i);
         finish();

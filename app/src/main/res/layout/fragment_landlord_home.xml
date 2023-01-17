@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.LandlordHomeFragment">
@@ -12,9 +13,10 @@
         android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentBottom="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:context=".activities.MainActivity">
 
         <LinearLayout
@@ -39,20 +41,22 @@
                     android:orientation="vertical">
 
                     <TextView
-                        style="@style/Bold_Heading"
+                        style="@style/SubHeading"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
                         android:text="WELCOME!" />
 
                     <TextView
-                        style="@style/Bold_SubHeading"
+                        android:id="@+id/landlord_name"
+                        style="@style/Heading"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="landlord's name" />
                 </LinearLayout>
 
                 <ImageView
+                    android:id="@+id/landlord_account"
                     android:layout_width="60dp"
                     android:layout_height="40dp"
                     android:layout_marginStart="20dp"
@@ -89,16 +93,15 @@
 
     </androidx.core.widget.NestedScrollView>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/float_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_margin="28dp"
-        app:elevation="4sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/ic_baseline_add_35"
-        tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
+        app:icon="@drawable/ic_baseline_add_35"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

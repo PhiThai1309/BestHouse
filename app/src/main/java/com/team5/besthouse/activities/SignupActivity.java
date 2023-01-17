@@ -8,11 +8,17 @@ import androidx.core.view.WindowInsetsControllerCompat;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -35,12 +41,16 @@ import com.team5.besthouse.models.User;
 import org.checkerframework.checker.initialization.qual.Initialized;
 
 import java.util.List;
+import java.util.concurrent.Executor;
 import java.util.regex.Pattern;
 
 public class SignupActivity extends BaseActivity {
 
     private ActivitySignupBinding signupBinding;
     private FirebaseAuth firebaseAuth;
+    private String thirdPartyLoginEmail;
+    private String thirdPartyLoginId;
+    private String thirdPartyLoginName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,10 +60,33 @@ public class SignupActivity extends BaseActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         //Set color to the navigation bar to match with the bottom navigation view
         getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(this));
+        Intent intent = getIntent();
+        if(intent!=null)
+        {
+            thirdPartyLoginId = intent.getStringExtra("id");
+            thirdPartyLoginEmail = intent.getStringExtra("email");
+            thirdPartyLoginName = intent.getStringExtra("name");
+            setProvideAdditionDataView(thirdPartyLoginEmail, thirdPartyLoginName);
 
+        }
 
-        setSignUpAction();
+            setSignUpAction();
+
         setActionBackToLogin();
+    }
+
+    private void setProvideAdditionDataView(String providedEmail, String providedName)
+    {
+       signupBinding.signupTitle.setText("Please Provided More Info");
+       signupBinding.signOutButtonTextView.setText("Confirm");
+       //display providedName
+       signupBinding.name.setText(providedName);
+       signupBinding.name.setKeyListener(null);
+       //display provided Email
+        signupBinding.email.setText(providedEmail);
+        signupBinding.email.setKeyListener(null);
+        //disable pass word edit
+        signupBinding.linearSignup.getChildAt(3).setVisibility(View.GONE);
     }
 
     private void setSignUpAction()
@@ -61,7 +94,13 @@ public class SignupActivity extends BaseActivity {
         signupBinding.signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                validateInput();
+
+                try {
+                    validateInput();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
 
             }
         });
@@ -69,15 +108,33 @@ public class SignupActivity extends BaseActivity {
 
     private void setActionBackToLogin()
     {
+
         signupBinding.loginTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                tempDisconnectGoogleAccount();
+                deleteFireAuthUser();
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK| Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 finish();
             }
         });
+    }
+
+    private void deleteFireAuthUser()
+    {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        user.delete()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Log.d("ACCOUNT DELETE", task.toString());
+                        }
+                    }
+                });
     }
 
 
@@ -158,24 +215,23 @@ public class SignupActivity extends BaseActivity {
                 });
     }
 
-    private void validateInput()
-    {
+    private void validateInput() throws InterruptedException {
         String inputEmail = signupBinding.email.getText().toString();
         String inputPassword = signupBinding.password.getText().toString();
         String inputName = signupBinding.name.getText().toString();
         String inputPhone = signupBinding.phoneNumber.getText().toString();
 
-        if(!Pattern.matches(UnchangedValues.EMAIL_REGEX, inputEmail))
+        if(!Pattern.matches(UnchangedValues.EMAIL_REGEX, inputEmail) && thirdPartyLoginId == null)
         {
             showTextLong("Please Enter Valid Email");
             return;
         }
-        else if (!Pattern.matches(UnchangedValues.PASSWORD_REGEX, inputPassword))
+        else if (!Pattern.matches(UnchangedValues.PASSWORD_REGEX, inputPassword) && thirdPartyLoginId == null)
         {
             showTextLong("Please Enter Valid Password");
             return;
         }
-        else if (!Pattern.matches(UnchangedValues.NAME_REGEX, inputName))
+        else if (!Pattern.matches(UnchangedValues.NAME_REGEX, inputName) && thirdPartyLoginId == null)
         {
             showTextLong("Please Enter Valid Name");
             return;
@@ -190,8 +246,31 @@ public class SignupActivity extends BaseActivity {
             showTextLong("Please Select Your Role");
             return;
         }
-        performEmailPassAuth();
+        if(thirdPartyLoginId == null)
+        {
+            performEmailPassAuth();
+        }
+        else
+        {
+            registerNewAccount(thirdPartyLoginId);
+        }
     }
+
+    private void tempDisconnectGoogleAccount() {
+        GoogleSignInClient mGoogleSignInAccount = GoogleSignIn.getClient(this, GoogleSignInOptions.DEFAULT_SIGN_IN) ;
+        if(mGoogleSignInAccount != null)
+        {
+            mGoogleSignInAccount.signOut()
+                    .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                        }
+                    });
+        }
+
+    }
+
+
 
 
 }

@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Address;
 import static android.content.ContentValues.TAG;
 
@@ -17,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,6 +28,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -36,6 +40,7 @@ import com.google.android.gms.tasks.CancellationToken;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnTokenCanceledListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.elevation.SurfaceColors;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
@@ -44,10 +49,11 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
-import com.team5.besthouse.PropertyAdapter;
-import com.team5.besthouse.PropertyAdapter2;
 import com.team5.besthouse.R;
 import com.team5.besthouse.activities.MainActivity;
+import com.team5.besthouse.fragments.Inflate.MorePropertyFragment;
+import com.team5.besthouse.adapters.PropertyAdapter;
+import com.team5.besthouse.adapters.PropertyPartialCardAdapter;
 import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.models.Contract;
 import com.team5.besthouse.models.ContractStatus;
@@ -57,6 +63,7 @@ import com.team5.besthouse.models.User;
 import com.team5.besthouse.services.StoreService;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -72,9 +79,9 @@ public class TenantHomeFragment extends Fragment {
     private Context context;
     private RecyclerView featureView;
     private RecyclerView propertyView;
-    private List<Property> list;
+    private ArrayList<Property> list;
     private PropertyAdapter adapter1;
-    private PropertyAdapter2 adapter2;
+    private PropertyPartialCardAdapter adapter2;
     private StoreService storeService;
     private View progressIndicator;
 
@@ -133,13 +140,31 @@ public class TenantHomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tenant_home, container, false);
 
+        //Set color to the navigation bar to match with the bottom navigation view
+        getActivity().getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(getActivity()));
+        Window window = getActivity().getWindow();
+        window.setStatusBarColor(Color.TRANSPARENT);
+
         context = inflater.getContext();
 
         progressIndicator = view.findViewById(R.id.home_progressBar);
         progressIndicator.setVisibility(View.VISIBLE);
 
-        //get db instance
+        ImageView homeAccount = view.findViewById(R.id.home_account);
+        homeAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment frag = new AccountFragment();
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.replace(R.id.content, frag);
+                MainActivity.navigationView.setSelectedItemId(R.id.account);
+                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                ft.addToBackStack(null);
+                ft.commit();
+            }
+        });
 
+        //get db instance
         db = FirebaseFirestore.getInstance();
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(view.getContext());
@@ -179,7 +204,7 @@ public class TenantHomeFragment extends Fragment {
         propertyView.setLayoutManager(linearLayoutManager2);
 
         propertyView.setNestedScrollingEnabled(false);
-        adapter2 = new PropertyAdapter2((MainActivity) getContext(), list);
+        adapter2 = new PropertyPartialCardAdapter((MainActivity) getContext(), list);
         propertyView.setAdapter(adapter2);
 
         featureView.setHasFixedSize(true);
@@ -188,6 +213,45 @@ public class TenantHomeFragment extends Fragment {
         tv = view.findViewById(R.id.home_location);
         getLocationPermission();
         getDeviceLocation(tv);
+
+        View topView = view.findViewById(R.id.home_top);
+        TextView topTitle = topView.findViewById(R.id.see_more_title);
+        topTitle.setText("Top near you");
+
+        TextView seeMore = topView.findViewById(R.id.see_more);
+        seeMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                Intent intent = new Intent(getContext(), MoreActivity.class);
+//                startActivity(intent);
+//                getActivity().overridePendingTransition(0, R.anim.slide_in_bottom);
+
+//                CoordinatorLayout linearLayout = view.findViewById(R.id.bottom_sheet);
+//                BottomSheetDialog bottomSheet = new BottomSheetDialog(getContext());
+//                View bottomSheetView = LayoutInflater.from(getContext())
+//                        .inflate(R.layout.activity_more, (LinearLayout) getActivity().findViewById(R.id.bottom_sheet));
+//
+//                bottomSheet.setContentView(bottomSheetView);
+//
+//                bottomSheet.findViewById(R.id.more_property);
+//                bottomSheet.show();
+
+                Bundle bundle = new Bundle();
+                bundle.putParcelableArrayList("list",  list);
+
+                MorePropertyFragment bottomDialogFragment = new MorePropertyFragment();
+                bottomDialogFragment.setArguments(bundle);
+                bottomDialogFragment.show(((MainActivity) getContext()).getSupportFragmentManager(), "ActionBottomDialogFragment.TAG");
+//                addPhotoBottomDialogFragment.setCancelable(false);
+            }
+        });
+
+//        CoordinatorLayout linearLayout = view.findViewById(R.id.bottom_sheet);
+//        BottomSheetDialog bottomSheet = new BottomSheetDialog(getContext());
+//        bottomSheet.setContentView(R.layout.activity_more);
+//
+//        bottomSheet.show();
+
 
         // Inflate the layout for this fragment
         return view;
@@ -219,7 +283,6 @@ public class TenantHomeFragment extends Fragment {
         //filter for all rents such that its end date is after today on the db side
         FirebaseFirestore database = FirebaseFirestore.getInstance();
         database.collection(UnchangedValues.PROPERTIES_TABLE)
-                .orderBy("propertyName")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @SuppressLint("NotifyDataSetChanged")
                     @Override
@@ -264,7 +327,7 @@ public class TenantHomeFragment extends Fragment {
                                                     }
                                                     if (ok) {
                                                         list.add(p);
-//                                                        Log.i("ADDED" , p.toString());
+//                                                          Log.i("ADDED" , p.toString());
                                                         adapter1.notifyDataSetChanged();
                                                         adapter2.notifyDataSetChanged();
                                                     }

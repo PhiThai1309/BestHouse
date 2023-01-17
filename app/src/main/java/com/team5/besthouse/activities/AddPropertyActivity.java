@@ -4,14 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.core.util.LruCacheKt;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -20,26 +18,19 @@ import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.text.Editable;
 import android.text.InputType;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
-import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -54,23 +45,18 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
 import com.team5.besthouse.R;
-import com.team5.besthouse.adapters.LocationSuggestionAdapter;
 import com.team5.besthouse.adapters.PropertyImageInsertAdapter;
 import com.team5.besthouse.adapters.PropertyTypeSelectAdapter;
 import com.team5.besthouse.constants.UnchangedValues;
+import com.team5.besthouse.fragments.LandLordMapsFragment;
 import com.team5.besthouse.interfaces.RecyclerViewInterface;
 import com.team5.besthouse.interfaces.SetReceiveImageURLCallBack;
-import com.team5.besthouse.models.Coordinates;
 import com.team5.besthouse.models.Landlord;
 import com.team5.besthouse.models.Property;
-import com.team5.besthouse.models.PropertyAddress;
 import com.team5.besthouse.models.PropertyStatus;
 import com.team5.besthouse.models.PropertyType;
-import com.team5.besthouse.models.User;
 import com.team5.besthouse.models.Utilities;
 import com.team5.besthouse.services.StoreService;
-
-import org.checkerframework.checker.units.qual.A;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -232,7 +218,7 @@ public class AddPropertyActivity extends BaseActivity implements RecyclerViewInt
     private void setAddAddressAction()
     {
         pAddressEditText.setOnClickListener(v ->{
-            Intent i = new Intent(getApplicationContext(), LandLordMapsActivity.class);
+            Intent i = new Intent(getApplicationContext(), LandLordMapsFragment.class);
             i.putExtra(UnchangedValues.ACTIVITY_REQUEST_CODE, 100);
             startActivityForResult(i, 100);
         });
@@ -377,6 +363,7 @@ public class AddPropertyActivity extends BaseActivity implements RecyclerViewInt
                                                     // display successful message
                                                     progressBar.setVisibility(View.GONE);
                                                     submitButton.setText("SUBMIT");
+
                                                     // display successful message
                                                     showTextLong("New Property is Added");
                                                 }

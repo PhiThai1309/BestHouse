@@ -36,5 +36,6 @@ public class UnchangedValues {
 
 
     public static final String PLACES_API_KEY = "AIzaSyBv1GNlSbCCAeBxZZIEBA1K9HH5UWgAdFw";
+    public static final String WEB_CLIENT_DEFAULT_ID = "989436101239-m5c8v64515a9ka9c243u64elm79mpnjh.apps.googleusercontent.com";
 
 }

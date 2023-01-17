@@ -9,7 +9,7 @@
         android:layout_width="50dp"
         android:layout_height="match_parent"
         android:padding="10dp"
-        android:background="@color/md_theme_background"
+        android:background="#00FFFFFF"
         android:src="@drawable/ic_round_arrow_back_24"/>
     <Space
         android:layout_width="0dp"
@@ -18,7 +18,7 @@
     <ImageButton
         android:layout_width="40dp"
         android:layout_height="match_parent"
-        android:background="@color/md_theme_surface"
+        android:background="#00FFFFFF"
         android:src="@drawable/ic_round_edit_24"/>
 
 </LinearLayout>

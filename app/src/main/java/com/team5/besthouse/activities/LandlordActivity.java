@@ -25,6 +25,7 @@ import com.team5.besthouse.services.StoreService;
 
 public class LandlordActivity extends BaseActivity {
     ActionBar actionBar;
+    public static NavigationBarView navigationView;
     private StoreService storeService;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +35,7 @@ public class LandlordActivity extends BaseActivity {
         //set color for navigation bar
         getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(this));
 
-        actionBar = getSupportActionBar();
-        NavigationBarView navigationView;
+//        actionBar = getSupportActionBar();
         storeService = new StoreService(getApplicationContext());
 
         navigationView = findViewById(R.id.landlord_bottom_navigation);
@@ -71,6 +71,7 @@ public class LandlordActivity extends BaseActivity {
                     LandlordHomeFragment fragment = new LandlordHomeFragment();
                     FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                     fragmentTransaction.replace(R.id.content, fragment, "");
+                    fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                     fragmentTransaction.commit();
                     return true;
 
@@ -78,6 +79,7 @@ public class LandlordActivity extends BaseActivity {
                     AccountFragment fragment2 = new AccountFragment();
                     FragmentTransaction fragmentTransaction2 = getSupportFragmentManager().beginTransaction();
                     fragmentTransaction2.replace(R.id.content, fragment2, "");
+                    fragmentTransaction2.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                     fragmentTransaction2.commit();
                     return true;
             }

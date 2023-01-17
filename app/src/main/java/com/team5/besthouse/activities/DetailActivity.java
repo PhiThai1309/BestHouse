@@ -25,6 +25,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 import com.team5.besthouse.R;
 import com.team5.besthouse.constants.UnchangedValues;
+import com.team5.besthouse.fragments.MapsFragment;
 import com.team5.besthouse.models.Property;
 import com.team5.besthouse.models.Tenant;
 import com.team5.besthouse.models.User;
@@ -52,7 +53,6 @@ public class DetailActivity extends BaseActivity {
     private StoreService storeService;
     private Landlord landlord;
 
-    FirebaseFirestore database;
     View progressIndicator;
 
     @Override
@@ -60,7 +60,6 @@ public class DetailActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        database = FirebaseFirestore.getInstance();
         db = FirebaseFirestore.getInstance();
 
         progressIndicator = findViewById(R.id.progressBar);
@@ -69,7 +68,14 @@ public class DetailActivity extends BaseActivity {
         // set up store service
         storeService = new StoreService(getApplicationContext());
 
-        property = (Property) getIntent().getSerializableExtra("property");
+
+        Button makeContractButton = findViewById(R.id.createPropertyBtn);
+
+        property = (Property) getIntent().getParcelableExtra("property");
+        boolean disableReservation = getIntent().getBooleanExtra("history", false);
+        if(disableReservation){
+            makeContractButton.setEnabled(false);
+        }
 
         if (property == null) property = Property.STATICPROPERTY;
 
@@ -109,12 +115,10 @@ public class DetailActivity extends BaseActivity {
 
         featureOther.setImageResource(R.drawable.ic_outline_square_foot_24);
         TextView otherText = other.findViewById(R.id.feature_text);
-        otherText.setText((int) property.getArea() + "m^2 Square foot");
+        otherText.setText((int) property.getArea() + " Square foot");
 
         TextView desc = findViewById(R.id.details_desc);
         desc.setText(property.getPropertyDescription());
-
-        Button makeContractButton = findViewById(R.id.createPropertyBtn);
 
         TextView nameText = findViewById(R.id.details_name);
 
@@ -135,25 +139,6 @@ public class DetailActivity extends BaseActivity {
 //            Toast.makeText(this, "New property added!", Toast.LENGTH_SHORT).show();
             makeContract();
         });
-
-        //code for landlords to get list of contracts
-//    void getContracts(){
-//        Gson gson = new Gson();
-//        User user = gson.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), Landlord.class);
-//
-//        db.collection(UnchangedValues.CONTRACTS_TABLE)
-//                .whereEqualTo("contractStatus", ContractStatus.PENDING)
-//                .whereEqualTo("landlordEmail", user.getEmail())
-//                .get().addOnCompleteListener(task -> {
-//                    if (task.isSuccessful()) {
-//                        for (QueryDocumentSnapshot document : task.getResult()) {
-//                            Contract contract = document.toObject(Contract.class);
-//
-//                           //add to list and notify adapter
-//                        }
-//                    }
-//                });
-//    }
 
 //        Log.d(TAG, property.getLandlordEmail());
 //        database1.collection(UnchangedValues.USERS_TABLE)
@@ -197,14 +182,16 @@ public class DetailActivity extends BaseActivity {
 //        GridViewCustomAdapter GridViewCustomAdapter = new GridViewCustomAdapter(this, property.getUtilities());
 //        grid.setAdapter(GridViewCustomAdapter);
 
-        for(Utilities utility : property.getUtilities()) {
-            String ult = utility.toString().toLowerCase(Locale.ROOT);
-            View ulView = findViewById(this.getResources().
-                    getIdentifier(ult, "id", this.getPackageName()));
-            TextView ulText = ulView.findViewById(R.id.grid_text);
-            ulText.setText(utility.toString());
+        if(property.getUtilities() != null) {
+            for(Utilities utility : property.getUtilities()) {
+                String ult = utility.toString().toLowerCase(Locale.ROOT);
+                View ulView = findViewById(this.getResources().
+                        getIdentifier(ult, "id", this.getPackageName()));
+                TextView ulText = ulView.findViewById(R.id.grid_text);
+                ulText.setText(utility.toString());
+            }
         }
-
+//
         for (Utilities dir : Utilities.values()) {
             String ult = dir.toString().toLowerCase(Locale.ROOT);
             View ulView = findViewById(this.getResources().
@@ -219,6 +206,8 @@ public class DetailActivity extends BaseActivity {
 
         TextView price = findViewById(R.id.details_price);
         price.setText((int) property.getMonthlyPrice() + ".000 VND / Month");
+
+
     }
 
     public void makeContract() {
@@ -256,17 +245,21 @@ public class DetailActivity extends BaseActivity {
 
         dc.set(contract)
                 .addOnCompleteListener(task -> {
+                    Intent intent = new Intent(this, MapsFragment.class);
                     if (task.isSuccessful()) {
                         Toast.makeText(this, "Contract created!", Toast.LENGTH_SHORT).show();
+                        intent.putExtra("created", true);
+                        setResult(200, intent);
                     } else {
                         Toast.makeText(this, "Contract creation failed!", Toast.LENGTH_SHORT).show();
+                        intent.putExtra("created", false);
                     }
                     finish();
                 });
     }
 
     public void fetchUser() {
-        database.collection(UnchangedValues.USERS_TABLE).whereEqualTo("email", property.getLandlordEmail()).get()
+        db.collection(UnchangedValues.USERS_TABLE).whereEqualTo("email", property.getLandlordEmail()).get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -278,14 +271,15 @@ public class DetailActivity extends BaseActivity {
                             if(ds.exists())
                             {
                                 progressIndicator.setVisibility(View.GONE);
-                                TextView landlordName = findViewById(R.id.details_landlordName);
+                                View userDetails = findViewById(R.id.details_user);
+                                TextView landlordName = userDetails.findViewById(R.id.details_landlordName);
                                 landlordName.setText(ds.getString("fullName"));
 //                                   Log.d("TESSSSS", ds.getString("email"));
 
-                                TextView landlordEmail = findViewById(R.id.details_landlordEmail);
+                                TextView landlordEmail = userDetails.findViewById(R.id.details_landlordEmail);
                                 landlordEmail.setText(ds.getString("email"));
 
-                                TextView landlordPhone = findViewById(R.id.details_landlordPhone);
+                                TextView landlordPhone = userDetails.findViewById(R.id.details_landlordPhone);
                                 landlordPhone.setText(ds.getString("phoneNumber"));
 
                             }

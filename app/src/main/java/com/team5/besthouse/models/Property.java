@@ -2,6 +2,8 @@ package com.team5.besthouse.models;
 
 import android.content.Context;
 import android.location.Geocoder;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -16,7 +18,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-public class Property implements Serializable {
+public class Property implements Parcelable {
     private String id;
     private String landlordEmail;
     private String propertyName;
@@ -68,6 +70,35 @@ public class Property implements Serializable {
         this.area = area;
     }
 
+    protected Property(Parcel in) {
+        id = in.readString();
+        landlordEmail = in.readString();
+        propertyName = in.readString();
+        propertyDescription = in.readString();
+        latitude = in.readDouble();
+        longitude = in.readDouble();
+        imageURLList = in.createStringArrayList();
+        bedrooms = in.readInt();
+        bathrooms = in.readInt();
+        monthlyPrice = in.readFloat();
+        area = in.readFloat();
+        utilities = new ArrayList<>();
+        utilities = in.readArrayList(Utilities.class.getClassLoader());
+
+    }
+
+    public static final Creator<Property> CREATOR = new Creator<Property>() {
+        @Override
+        public Property createFromParcel(Parcel in) {
+            return new Property(in);
+        }
+
+        @Override
+        public Property[] newArray(int size) {
+            return new Property[size];
+        }
+    };
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -89,6 +120,11 @@ public class Property implements Serializable {
             this.imageURLList = imageURLList;
             return true;
         }
+    }
+
+    @Exclude
+    public Double getNonSqrtDistance(Double latitude, Double longitude){
+        return Math.pow(this.latitude - latitude, 2) + Math.pow(this.longitude - longitude, 2);
     }
 
     @Exclude
@@ -247,4 +283,25 @@ public class Property implements Serializable {
 
     @Exclude
     public static LatLng STATICCOORD = new LatLng(10.7640637,106.6820005);
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(id);
+        parcel.writeString(landlordEmail);
+        parcel.writeString(propertyName);
+        parcel.writeString(propertyDescription);
+        parcel.writeDouble(latitude);
+        parcel.writeDouble(longitude);
+        parcel.writeStringList(imageURLList);
+        parcel.writeInt(bedrooms);
+        parcel.writeInt(bathrooms);
+        parcel.writeFloat(monthlyPrice);
+        parcel.writeFloat(area);
+        parcel.writeList(utilities);
+    }
 }

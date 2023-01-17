@@ -30,7 +30,7 @@ public class LandlordPropertyAdapter extends RecyclerView.Adapter<LandlordProper
     @Override
     public LandlordPropertyAdapter.TaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // Inflate the view
-        View itemView = mInflater.inflate(R.layout.layout_feature, parent, false);
+        View itemView = mInflater.inflate(R.layout.layout_card_feature, parent, false);
         return new LandlordPropertyAdapter.TaskViewHolder(itemView);
     }
 

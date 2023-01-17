@@ -3,20 +3,26 @@ package com.team5.besthouse.fragments;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.elevation.SurfaceColors;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
@@ -25,13 +31,13 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
-import com.team5.besthouse.PropertyAdapter;
-import com.team5.besthouse.PropertyAdapter2;
 import com.team5.besthouse.R;
 import com.team5.besthouse.activities.AddPropertyActivity;
 import com.team5.besthouse.activities.LandlordActivity;
-import com.team5.besthouse.activities.MainActivity;
 import com.team5.besthouse.adapters.LandlordPropertyAdapter;
+import com.team5.besthouse.adapters.PropertyAdapter;
+import com.team5.besthouse.adapters.PropertyCardAdapter;
+import com.team5.besthouse.adapters.PropertyPartialCardAdapter;
 import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.models.Contract;
 import com.team5.besthouse.models.ContractStatus;
@@ -54,14 +60,15 @@ public class LandlordHomeFragment extends Fragment {
     private LandlordPropertyAdapter landlordAdapter;
 
     private Context context;
-    private RecyclerView featureView;
+    private RecyclerView listingView;
     private RecyclerView propertyView;
     private PropertyAdapter adapter1;
-    private PropertyAdapter2 adapter2;
+    private PropertyCardAdapter adapter2;
     private StoreService storeService;
     private View progressIndicator;
 
     FirebaseFirestore db;
+    User user;
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -105,12 +112,116 @@ public class LandlordHomeFragment extends Fragment {
     }
 
     @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_landlord_home, container, false);
+
+        //Set color to the navigation bar to match with the bottom navigation view
+        getActivity().getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(getActivity()));
+        Window window = getActivity().getWindow();
+        window.setStatusBarColor(Color.TRANSPARENT);
+
+        context = inflater.getContext();
+
+        progressIndicator = view.findViewById(R.id.home_progressBar);
+        progressIndicator.setVisibility(View.VISIBLE);
+
+        ImageView homeAccount = view.findViewById(R.id.landlord_account);
+        homeAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment frag = new AccountFragment();
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.replace(R.id.content, frag);
+                LandlordActivity.navigationView.setSelectedItemId(R.id.account);
+                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                ft.addToBackStack(null);
+                ft.commit();
+            }
+        });
+
+        //get db instance
+        db = FirebaseFirestore.getInstance();
+
+        // set up store service
+        storeService = new StoreService(context);
+
+        Gson gson = new Gson();
+        user = gson.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), Tenant.class);
+
+        TextView name = view.findViewById(R.id.landlord_name);
+        name.setText(user.getFullName());
+
+
+        //Get the recycler view and
+        listingView = (RecyclerView) view.findViewById(R.id.posted_property);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false);
+        //Set the layout manager
+        linearLayoutManager.setStackFromEnd(false);
+        linearLayoutManager.setReverseLayout(false);
+        listingView.setHasFixedSize(true);
+        listingView.setLayoutManager(linearLayoutManager);
+
+        SnapHelper helper = new LinearSnapHelper();
+        helper.attachToRecyclerView(listingView);
+
+        list = new ArrayList<>();
+        adapter2 = new PropertyCardAdapter((LandlordActivity) getContext(), list);
+        listingView.setAdapter(adapter2);
+        listingView.setHasFixedSize(true);
+
+        //Floating action button configure
+        ExtendedFloatingActionButton floatBtn = view.findViewById(R.id.float_button);
+        listingView.addOnScrollListener(new RecyclerView.OnScrollListener(){
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy){
+                if (dy > 10)
+                    floatBtn.shrink();
+                else if (dy < 0)
+                    floatBtn.extend();
+            }
+        });
+
+        floatBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), AddPropertyActivity.class);
+//               intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            }
+        });
+
+        // Inflate the layout for this fragment
+        return view;
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
+
+        //code for landlords to get list of contracts
+//    void getContracts(){
+//        Gson gson = new Gson();
+//        User user = gson.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), Landlord.class);
+//
+//        db.collection(UnchangedValues.CONTRACTS_TABLE)
+//                .whereEqualTo("contractStatus", ContractStatus.PENDING)
+//                .whereEqualTo("landlordEmail", user.getEmail())
+//                .get().addOnCompleteListener(task -> {
+//                    if (task.isSuccessful()) {
+//                        for (QueryDocumentSnapshot document : task.getResult()) {
+//                            Contract contract = document.toObject(Contract.class);
+//
+//                           //add to list and notify adapter
+//                        }
+//                    }
+//                });
+//    }
+
+
         //filter for all rents such that its end date is after today on the db side
         FirebaseFirestore database = FirebaseFirestore.getInstance();
         database.collection(UnchangedValues.PROPERTIES_TABLE)
-                .orderBy("propertyName")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @SuppressLint("NotifyDataSetChanged")
                     @Override
@@ -134,12 +245,9 @@ public class LandlordHomeFragment extends Fragment {
                                 try {
                                     //get all contracts that have its end date after today and is from this property
 
-                                    Gson gson = new Gson();
-                                    User user = gson.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), Tenant.class);
-
 //                                    Log.i(TAG, "onEvent: " + p);
                                     database.collection(UnchangedValues.CONTRACTS_TABLE)
-                                            .whereEqualTo("propertyId", p.getId())
+                                            .whereEqualTo("landlordEmail", p.getLandlordEmail())
                                             .get()
                                             .addOnCompleteListener(v -> {
                                                 if (v.isSuccessful()){
@@ -176,55 +284,5 @@ public class LandlordHomeFragment extends Fragment {
                         progressIndicator.setVisibility(View.GONE);
                     }
                 });
-    }
-
-
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_landlord_home, container, false);
-
-        context = inflater.getContext();
-
-        progressIndicator = view.findViewById(R.id.home_progressBar);
-        progressIndicator.setVisibility(View.VISIBLE);
-
-        //get db instance
-
-        db = FirebaseFirestore.getInstance();
-
-        // set up store service
-        storeService = new StoreService(context);
-
-        //Get the recycler view and
-        featureView = (RecyclerView) view.findViewById(R.id.posted_property);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false);
-        //Set the layout manager
-        linearLayoutManager.setStackFromEnd(false);
-        linearLayoutManager.setReverseLayout(false);
-        featureView.setHasFixedSize(true);
-        featureView.setLayoutManager(linearLayoutManager);
-
-        SnapHelper helper = new LinearSnapHelper();
-        helper.attachToRecyclerView(featureView);
-
-        list = new ArrayList<>();
-        adapter2 = new PropertyAdapter2((LandlordActivity) getContext(), list);
-        featureView.setAdapter(adapter2);
-        featureView.setHasFixedSize(true);
-
-        FloatingActionButton fab = view.findViewById(R.id.float_button);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getContext(), AddPropertyActivity.class);
-//              intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-            }
-        });
-
-        // Inflate the layout for this fragment
-        return view;
     }
 }
