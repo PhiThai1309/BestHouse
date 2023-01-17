@@ -128,16 +128,18 @@ public class SignupActivity extends BaseActivity {
     private void deleteFireAuthUser()
     {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-        user.delete()
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Log.d("ACCOUNT DELETE", task.toString());
+        if(user!=null)
+        {
+            user.delete()
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Log.d("ACCOUNT DELETE", task.toString());
+                            }
                         }
-                    }
-                });
+                    });
+        }
     }
 
 
