@@ -280,7 +280,6 @@ public class LoginActivity extends BaseActivity {
 
         if(requestCode == 100) // handler login credential from google login activity
         {
-            Log.d("NEW_USER", "in");
             Task<GoogleSignInAccount> accountTask = GoogleSignIn.getSignedInAccountFromIntent(data);
             try{
                // credential is correct. perform the auth in fireauth
@@ -290,7 +289,16 @@ public class LoginActivity extends BaseActivity {
             {
                 Log.d("NEW_USER", e.toString());
             }
-
+        }
+        else if(requestCode == 200 && resultCode == RESULT_OK)
+        {
+            String id = data.getStringExtra("userid") ;
+            performGetDataFromFS(id, new DirectUICallback() {
+                @Override
+                public void direct(boolean isCredentialCorrected, UserRole loginUserRole) {
+                   onDirect(isCredentialCorrected,loginUserRole );
+                }
+            });
         }
     }
 
@@ -310,14 +318,10 @@ public class LoginActivity extends BaseActivity {
                         if(authResult.getAdditionalUserInfo().isNewUser())
                         {
                             //user is new
-                            Log.d("NEW_USER", authResult.getUser().getEmail());
-                            Log.d("NEW_USER", authResult.getUser().getUid());
                             onDirect(authResult.getUser());
                         }
                         else
                         {
-                            Log.d("NEW_USER", authResult.getUser().getEmail());
-                            Log.d("NEW_USER", authResult.getUser().getUid());
                             performGetDataFromFS(user.getUid(), new DirectUICallback() {
                                 @Override
                                 public void direct(boolean isCredentialCorrected, UserRole loginUserRole) {
@@ -345,8 +349,7 @@ public class LoginActivity extends BaseActivity {
           intent.putExtra("email", thirdPartyLoginUser.getEmail());
           intent.putExtra("id", thirdPartyLoginUser.getUid());
           intent.putExtra("name", thirdPartyLoginUser.getDisplayName());
-          intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-          startActivity(intent);
+          startActivityForResult(intent, 200);
        }
     }
 
