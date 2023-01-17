@@ -1,24 +1,19 @@
 package com.team5.besthouse.broadcastreceiverandservice;
 
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
-import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.team5.besthouse.activities.BaseActivity;
 import com.team5.besthouse.activities.LoginActivity;
-import com.team5.besthouse.activities.MainActivity;
 import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.services.StoreService;
 
 public class AutoLogoutService extends Service {
-    private static final long LOGOUT_TIMEOUT = 10 * 1000; // 30 seconds
+    private static final long LOGOUT_TIMEOUT = 10 * 1000; // 10 seconds
     private static final String TAG = "UserInteractionService";
 
     private FirebaseAuth firebaseAuth;
@@ -42,7 +37,6 @@ public class AutoLogoutService extends Service {
             public void run() {
                 if (System.currentTimeMillis() - lastInteractionTime > LOGOUT_TIMEOUT) {
                     Log.d(TAG, "Logging out due to inactivity");
-                    //firebaseAuth.signOut();
                     if(currentUser != null) {
                         setSignOutAction();
                         stopSelf();
