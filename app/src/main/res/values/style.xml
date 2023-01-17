@@ -15,6 +15,8 @@
     </style>
 
     <style name="Card">
+        <item name="cardUseCompatPadding">true</item>
+        <item name="cardPreventCornerOverlap">true</item>
         <item name="cornerFamily">rounded</item>
         <!-- below items does not work with normal ImageView -->
         <item name="cornerSizeTopRight">20dp</item>
@@ -24,6 +26,8 @@
     </style>
 
     <style name="Card2">
+        <item name="cardUseCompatPadding">true</item>
+        <item name="cardPreventCornerOverlap">true</item>
         <item name="cornerFamily">rounded</item>
         <!-- below items does not work with normal ImageView -->
         <item name="cornerSizeTopRight">16dp</item>
@@ -33,10 +37,11 @@
     </style>
 
     <style name="CardStyle">
-        <item name="android:layout_margin">16dp</item>
+        <item name="cardUseCompatPadding">true</item>
+        <item name="cardPreventCornerOverlap">true</item>
         <item name="cardCornerRadius">20dp</item>
         <item name="strokeWidth">0dp</item>
-        <item name="cardElevation">6dp</item>
+        <item name="cardElevation">4dp</item>
     </style>
 
     <style name="AppTheme.GrayStatusBar" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -54,9 +59,17 @@
         <item name="android:textColor">@color/md_theme_onPrimaryContainer</item>
         <item name="android:textStyle">bold</item>
         <item name="android:layout_marginTop">20dp</item>
+        <item name="android:layout_marginBottom">12dp</item>
     </style>
 
     <style name="Bold_Heading" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">30sp</item>
+        <item name="android:textColor">@color/md_theme_onPrimaryContainer</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:paddingTop">12dp</item>
+    </style>
+
+    <style name="Bold_Heading_None" parent="@android:style/Widget.TextView">
         <item name="android:textSize">30sp</item>
         <item name="android:textColor">@color/md_theme_onPrimaryContainer</item>
         <item name="android:textStyle">bold</item>
@@ -75,6 +88,16 @@
     <style name="SubHeading" parent="@android:style/Widget.TextView">
         <item name="android:textSize">18sp</item>
         <item name="android:fontFamily">sans-serif-thin</item>
+    </style>
+
+    <style name="SeeMore" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">sans-serif-thin</item>
+    </style>
+
+    <style name="Bold_SubHeading2" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="NormalText" parent="@android:style/Widget.TextView">
@@ -96,10 +119,22 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="Rec_Heading" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">@color/md_theme_onPrimary</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="Card_SubHeading" parent="@android:style/Widget.TextView">
         <item name="android:textSize">13sp</item>
         <item name="android:fontFamily">sans-serif-thin</item>
-        <item name="android:layout_marginStart">10dp</item>
+        <item name="android:layout_marginStart">4dp</item>
+    </style>
+
+    <style name="Rec_SubHeading" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/md_theme_onPrimary</item>
+        <item name="android:layout_marginStart">4dp</item>
     </style>
 
     <style name="Cart_Price" parent="@android:style/Widget.TextView">
@@ -114,8 +149,28 @@
     </style>
 
 <!--   Continue Button  -->
-    <style name="continue_button">
-        <item name="android:backgroundTint">@color/almost_dark</item>
+    <style name="button">
+        <item name="android:paddingHorizontal">20dp</item>
+        <item name="android:paddingVertical">14dp</item>
         <item name="cornerRadius">10dp</item>
     </style>
+
+<!--    Search Suggestion View-->
+    <style name="Suggestion_Heading" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">@color/md_theme_onPrimaryContainer</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Suggestion_SubHeading" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">sans-serif-thin</item>
+    </style>
+
+    <style name="Suggestion_Location" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/md_theme_primary</item>
+<!--        <item name="android:fontFamily">sans-serif-thin</item>-->
+    </style>
+
 </resources>

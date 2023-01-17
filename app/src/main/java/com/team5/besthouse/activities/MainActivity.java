@@ -5,36 +5,45 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.graphics.Color;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.Window;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.material.elevation.SurfaceColors;
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.material.navigation.NavigationBarView;
 import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.fragments.AccountFragment;
-import com.team5.besthouse.fragments.HomeFragment;
+import com.team5.besthouse.fragments.ChatFragment;
+import com.team5.besthouse.fragments.TenantHomeFragment;
 import com.team5.besthouse.fragments.MapsFragment;
 import com.team5.besthouse.R;
 import com.team5.besthouse.services.StoreService;
-import com.team5.besthouse.constants.UnchangedValues;
 
 public class MainActivity extends AppCompatActivity {
     ActionBar actionBar;
+    public static NavigationBarView navigationView;
     private StoreService storeService;
+
+    public boolean locationPermissionGranted;
+    public Location lastKnownLocation;
+    protected FusedLocationProviderClient fusedLocationProviderClient;
+
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.logout_app_bar, menu);
+//        MenuItem item = menu.getItem(0);
+//        item.setVisible(true);
+//        return true;
+//    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Set color to the navigation bar to match with the bottom navigation view
-        getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(this));
+//        actionBar = getSupportActionBar();
 
-        actionBar = getSupportActionBar();
-        NavigationBarView navigationView;
         storeService = new StoreService(getApplicationContext());
 //        LinearLayout navbar = findViewById(R.id.main_navbar);
 //
@@ -52,13 +61,10 @@ public class MainActivity extends AppCompatActivity {
         // When we open the application first
         // time the fragment should be shown to the user
         // in this case it is home fragment
-        HomeFragment fragment = new HomeFragment();
+        TenantHomeFragment fragment = new TenantHomeFragment();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.content, fragment, "");
         fragmentTransaction.commit();
-
-        Window window = getWindow();
-        window.setStatusBarColor(Color.TRANSPARENT);
 
         String a = storeService.getStringValue(UnchangedValues.LOGIN_USER);
 
@@ -81,9 +87,10 @@ public class MainActivity extends AppCompatActivity {
             switch (menuItem.getItemId()) {
 
                 case R.id.main:
-                    HomeFragment fragment = new HomeFragment();
+                    TenantHomeFragment fragment = new TenantHomeFragment();
                     FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                     fragmentTransaction.replace(R.id.content, fragment, "");
+                    fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                     fragmentTransaction.commit();
                     return true;
 
@@ -91,17 +98,29 @@ public class MainActivity extends AppCompatActivity {
                     AccountFragment fragment2 = new AccountFragment();
                     FragmentTransaction fragmentTransaction2 = getSupportFragmentManager().beginTransaction();
                     fragmentTransaction2.replace(R.id.content, fragment2, "");
+                    fragmentTransaction2.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                     fragmentTransaction2.commit();
+                    return true;
+
+                case R.id.chat:
+                    ChatFragment fragment4 = new ChatFragment();
+                    FragmentTransaction fragmentTransaction4 = getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction4.replace(R.id.content, fragment4, "");
+                    fragmentTransaction4.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                    fragmentTransaction4.commit();
                     return true;
 
                 case R.id.search:
                     MapsFragment fragment3 = new MapsFragment();
                     FragmentTransaction fragmentTransaction3 = getSupportFragmentManager().beginTransaction();
                     fragmentTransaction3.replace(R.id.content, fragment3, "");
+                    fragmentTransaction3.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                     fragmentTransaction3.commit();
                     return true;
             }
             return false;
         }
     };
+
+
 }

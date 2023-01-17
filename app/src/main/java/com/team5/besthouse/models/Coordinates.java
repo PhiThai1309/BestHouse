@@ -1,5 +1,9 @@
 package com.team5.besthouse.models;
 
+import androidx.annotation.NonNull;
+
+import com.google.firebase.firestore.Exclude;
+
 import java.io.Serializable;
 
 public class Coordinates implements Serializable {
@@ -40,6 +44,16 @@ public class Coordinates implements Serializable {
 
     public void setLatitude(double latitude) {
         this.latitude = latitude;
+    }
+
+    @NonNull
+    @Override
+    @Exclude
+    public String toString() {
+        return "Coordinates{" +
+                "latitude=" + latitude +
+                ", longitude=" + longitude +
+                '}';
     }
 
     public static Coordinates STATICCOORD() {

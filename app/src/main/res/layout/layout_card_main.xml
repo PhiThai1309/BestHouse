@@ -5,14 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     style="@style/CardStyle"
+    android:layout_marginHorizontal="10dp"
     app:cardBackgroundColor="@color/md_theme_surface">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-
         android:weightSum="3.1">
+
         <com.google.android.material.imageview.ShapeableImageView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -27,7 +28,8 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"
-            android:layout_marginLeft="20dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
             android:gravity="center_vertical"
             android:orientation="vertical">
 

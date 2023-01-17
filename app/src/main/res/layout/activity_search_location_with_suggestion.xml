@@ -13,7 +13,7 @@
         app:layout_constraintTop_toTopOf="parent">
         <include
             android:id="@+id/searchBar"
-            layout="@layout/searchlocation_layout" />
+            layout="@layout/layout_searchlocation" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
