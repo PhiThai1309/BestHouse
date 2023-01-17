@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -19,6 +20,11 @@ import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.elevation.SurfaceColors;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
@@ -165,6 +171,7 @@ public class AccountFragment extends Fragment {
             public boolean onMenuItemClick(MenuItem item) {
                 if (storeService.clearTheStore()) {
                     try {
+                        tempDisconnectGoogleAccount();
                         firebaseAuth = FirebaseAuth.getInstance();
                         firebaseAuth.signOut(); // sign out from firebase
                         Intent intent = new Intent(getActivity(), LoginActivity.class);
@@ -251,6 +258,21 @@ public class AccountFragment extends Fragment {
 //            }
 //        });
 //    }
+
+    private void tempDisconnectGoogleAccount() {
+        GoogleSignInClient mGoogleSignInAccount = GoogleSignIn.getClient(getActivity(), GoogleSignInOptions.DEFAULT_SIGN_IN) ;
+        if(mGoogleSignInAccount != null)
+        {
+            mGoogleSignInAccount.signOut()
+                    .addOnCompleteListener( getActivity(), new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            Log.d("SIGNOUT", "complete");
+                        }
+                    });
+        }
+
+    }
 
     private void showTextLong(String text)
     {
