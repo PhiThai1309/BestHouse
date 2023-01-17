@@ -6,11 +6,13 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.media.Image;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,7 +44,7 @@ public class ContractActivity extends BaseActivity {
     private Contract contract;
     private View progressIndicator;
     private TextView propertyAddress, propertyPrice;
-    TextView seeMore;
+    ImageView seeMore;
 
     FirebaseFirestore database;
     StoreService storeService;
@@ -71,9 +73,6 @@ public class ContractActivity extends BaseActivity {
 
         TextView endDate = findViewById(R.id.contract_end_date);
         endDate.setText(contract.convertEndDay().toString());
-
-        TextView propertyName = findViewById(R.id.contract_property_name);
-        propertyName.setText(contract.getPropertyId());
 
         propertyAddress = findViewById(R.id.contract_address_name);
         propertyPrice = findViewById(R.id.contract_price_detail);
@@ -147,12 +146,15 @@ public class ContractActivity extends BaseActivity {
                             {
                                 Property property = ds.toObject(Property.class);
 
+                                TextView propertyName = findViewById(R.id.contract_property_name);
+                                propertyName.setText(property.getPropertyName());
+
                                 propertyAddress.setText(property.getAddress(getApplicationContext()).toString());
                                 propertyPrice.setText(String.valueOf(property.getMonthlyPrice()) + " /Month");
 
                                 View propertyDetails = findViewById(R.id.property_details);
-                                seeMore = propertyDetails.findViewById(R.id.more);
-                                seeMore.setOnClickListener(new View.OnClickListener() {
+//                                seeMore = propertyDetails.findViewById(R.id.more);
+                                propertyDetails.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
                                         Intent intent = new Intent(ContractActivity.this, DetailActivity.class);

@@ -71,7 +71,8 @@
         </activity>
         <activity
             android:name=".activities.LandlordActivity"
-            android:exported="false">
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />

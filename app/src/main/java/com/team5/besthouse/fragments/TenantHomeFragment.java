@@ -218,8 +218,8 @@ public class TenantHomeFragment extends Fragment {
         TextView topTitle = topView.findViewById(R.id.see_more_title);
         topTitle.setText("Top near you");
 
-        TextView seeMore = topView.findViewById(R.id.see_more);
-        seeMore.setOnClickListener(new View.OnClickListener() {
+//        ImageView seeMore = topView.findViewById(R.id.see_more);
+        topView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 //                Intent intent = new Intent(getContext(), MoreActivity.class);
