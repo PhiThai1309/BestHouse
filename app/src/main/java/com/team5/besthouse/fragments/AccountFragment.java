@@ -20,6 +20,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.elevation.SurfaceColors;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
@@ -195,6 +201,7 @@ public class AccountFragment extends Fragment {
             public boolean onMenuItemClick(MenuItem item) {
                 if (storeService.clearTheStore()) {
                     try {
+                        tempDisconnectGoogleAccount();
                         firebaseAuth = FirebaseAuth.getInstance();
                         firebaseAuth.signOut(); // sign out from firebase
                         Intent intent = new Intent(getActivity(), LoginActivity.class);
@@ -215,13 +222,18 @@ public class AccountFragment extends Fragment {
         });
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        binding = FragmentAccountBinding.inflate(inflater, container, false);
-        storeService = new StoreService(getActivity().getApplicationContext());
-        logOutMenu();
-//        setSignOutAction();
+    private void tempDisconnectGoogleAccount() {
+       GoogleSignInClient mGoogleSignInAccount = GoogleSignIn.getClient(getActivity(), GoogleSignInOptions.DEFAULT_SIGN_IN) ;
+        if(mGoogleSignInAccount != null)
+        {
+            mGoogleSignInAccount.signOut()
+                    .addOnCompleteListener( getActivity(), new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            Log.d("SIGNOUT", "complete");
+                        }
+                    });
+        }
 
         //Set color to the navigation bar to match with the bottom navigation view
         getActivity().getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(getActivity()));
@@ -292,31 +304,6 @@ public class AccountFragment extends Fragment {
         // Inflate the layout for this fragment
         return binding.getRoot();
     }
-
-//    private void setSignOutAction() {
-//        binding.signOutButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                // make sure to clear the store service
-//                if (storeService.clearTheStore()) {
-//                    try {
-//                        firebaseAuth = FirebaseAuth.getInstance();
-//                        firebaseAuth.signOut(); // sign out from firebase
-//                        Intent intent = new Intent(getActivity(), LoginActivity.class);
-//                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                        intent.putExtra(UnchangedValues.LOGOUT_PERFORMED, "logout");
-//                        startActivity(intent);
-//                    } catch (Exception e) {
-//                        Log.d("ErrorLogout", e.getMessage());
-//                        e.printStackTrace();
-//                        showTextLong("Error: Can't Logout");
-//                    }
-//                } else {
-//                    showTextLong("Error: Can't Logout");
-//                }
-//            }
-//        });
-//    }
 
     private void showTextLong(String text)
     {

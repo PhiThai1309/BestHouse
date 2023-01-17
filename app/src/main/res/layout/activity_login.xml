@@ -128,12 +128,27 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="@dimen/_80sdp">
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    app:tint="@null"
                     android:id="@+id/signIn_Google_Button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/WHITE"
+                    android:elevation="@dimen/_15sdp"
+                    android:src="@drawable/google_logo"
+                    app:maxImageSize="@dimen/_30sdp"
+                    />
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    app:tint="@null"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/WHITE"
+                    android:elevation="@dimen/_15sdp"
+                    android:src="@drawable/facebook_logo"
+                    app:maxImageSize="@dimen/_30sdp"
+                    android:layout_marginStart="@dimen/_40sdp"
                     />
             </LinearLayout>
 
