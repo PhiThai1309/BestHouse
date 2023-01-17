@@ -5,16 +5,19 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.Window;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.material.elevation.SurfaceColors;
 import com.google.android.material.navigation.NavigationBarView;
+import com.team5.besthouse.broadcastreceiverandservice.AutoLogoutService;
 import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.fragments.AccountFragment;
 import com.team5.besthouse.fragments.TenantHomeFragment;
@@ -25,6 +28,7 @@ import com.team5.besthouse.services.StoreService;
 public class MainActivity extends BaseActivity {
     ActionBar actionBar;
     private StoreService storeService;
+
 
     public boolean locationPermissionGranted;
     public Location lastKnownLocation;
@@ -73,6 +77,8 @@ public class MainActivity extends BaseActivity {
 
         showTextLong(a);
     }
+
+
 
     private void showTextLong(String text)
     {
