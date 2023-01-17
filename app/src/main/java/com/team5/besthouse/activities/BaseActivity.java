@@ -34,7 +34,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
         if (autoLogoutService != null) {
             autoLogoutService.updateInteractionTime();
         }
-        Toast.makeText((Context)BaseActivity.this, "updating", Toast.LENGTH_SHORT).show();
         return super.dispatchTouchEvent(ev);
     }
 

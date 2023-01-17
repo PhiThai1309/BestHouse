@@ -59,11 +59,6 @@
                     android:inputType="textEmailAddress" />
             </com.google.android.material.card.MaterialCardView>
 
-            <include
-                android:id="@+id/login_email"
-                layout="@layout/layout_input"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"/>
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
@@ -84,11 +79,6 @@
 
             </com.google.android.material.card.MaterialCardView>
 
-            <include
-                android:id="@+id/login_password"
-                layout="@layout/layout_input"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"/>
 
             <TextView
                 android:id="@+id/signupTitle"
