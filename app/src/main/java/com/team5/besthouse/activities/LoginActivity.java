@@ -1,6 +1,7 @@
 package com.team5.besthouse.activities;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -11,19 +12,28 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.elevation.SurfaceColors;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthCredential;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldPath;
@@ -50,6 +60,7 @@ public class LoginActivity extends AppCompatActivity {
     private ActivityLoginBinding loginBinding;
     private StoreService storeService;
     private FirebaseAuth firebaseAuth;
+    private GoogleSignInClient googleSignInClient;
     FirebaseFirestore database;
 
     @Override
@@ -62,6 +73,12 @@ public class LoginActivity extends AppCompatActivity {
         storeService = new StoreService(getApplicationContext());
 
         database = FirebaseFirestore.getInstance();
+
+        GoogleSignInOptions googleSignInOptions =  new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(UnchangedValues.WEB_CLIENT_DEFAULT_ID).requestEmail().build();
+
+        googleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
+
 
         firebaseAuth = FirebaseAuth.getInstance();
 //        Window window = getWindow();
@@ -76,6 +93,7 @@ public class LoginActivity extends AppCompatActivity {
         handlePutExtra();
         setMoveToSignUpAction();
         setLoginAction();
+        setGoogleLoginBtn();
     }
 
     private void checkAlreadyLogin()
@@ -171,13 +189,16 @@ public class LoginActivity extends AppCompatActivity {
                             String userId = documentSnapshot.getId();
                             User loginUser = null;
                             UserRole userRole = null;
-                            if (documentSnapshot.getString(UnchangedValues.USER_ROLE).compareTo("TENANT") == 0) {
-                                loginUser = new Tenant(userEmail, userName, userPhone, new ArrayList<>());
-                                userRole = UserRole.TENANT;
-                            }
-                            if (documentSnapshot.getString(UnchangedValues.USER_ROLE).compareTo("LANDLORD") == 0) {
-                                loginUser = new Landlord(userEmail, userName, userPhone, new ArrayList<>(), new ArrayList<>());
-                                userRole = UserRole.LANDLORD;
+                            try {
+                                if (documentSnapshot.getString(UnchangedValues.USER_ROLE).compareTo("TENANT") == 0) {
+                                    loginUser = new Tenant(userEmail, userName, userPhone, new ArrayList<>());
+                                    userRole = UserRole.TENANT;
+                                }
+                                if (documentSnapshot.getString(UnchangedValues.USER_ROLE).compareTo("LANDLORD") == 0) {
+                                    loginUser = new Landlord(userEmail, userName, userPhone, new ArrayList<>(), new ArrayList<>());
+                                    userRole = UserRole.LANDLORD;
+                                }
+                            } catch (Exception e) {
                             }
                             //save data to share preference
                             if (loginUser != null) {
@@ -218,28 +239,7 @@ public class LoginActivity extends AppCompatActivity {
                             performGetDataFromFS(user.getUid(), new DirectUICallback() {
                                 @Override
                                 public void direct(boolean isCredentialCorrected, UserRole loginUserRole) {
-                                    if(isCredentialCorrected && loginUserRole != null)
-                                    {
-                                        Intent intent = null;
-                                        if(loginUserRole == UserRole.LANDLORD)
-                                        {
-                                            intent = new Intent(getApplicationContext(), LandlordActivity.class);
-                                        }
-                                        else if (loginUserRole == UserRole.TENANT)
-                                        {
-                                            intent = new Intent(getApplicationContext(), MainActivity.class);
-                                        }
-                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                        startActivity(intent);
-                                        finish();
-                                    }
-                                    else
-                                    {
-                                        showTextLong("Invalid Credential!");
-                                        // clear input
-                                        loginBinding.email.getText().clear();
-                                        loginBinding.password.getText().clear();
-                                    }
+                                    onDirect(isCredentialCorrected,loginUserRole);
                                 }
                             });
                         }
@@ -269,6 +269,120 @@ public class LoginActivity extends AppCompatActivity {
            return false;
        }
         return true;
+    }
+
+    private void setGoogleLoginBtn()
+    {
+        loginBinding.signInGoogleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = googleSignInClient.getSignInIntent();
+                startActivityForResult(intent, 100);
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == 100) // handler login credential from google login activity
+        {
+            Log.d("NEW_USER", "in");
+            Task<GoogleSignInAccount> accountTask = GoogleSignIn.getSignedInAccountFromIntent(data);
+            try{
+               // credential is correct. perform the auth in fireauth
+                GoogleSignInAccount account = accountTask.getResult(ApiException.class);
+                performGoogleAuth (account);
+            }catch (Exception e)
+            {
+                Log.d("NEW_USER", e.toString());
+            }
+
+        }
+    }
+
+    /**
+     * this method is learned from https://www.youtube.com/watch?v=gD9uQf5UU-g
+     * @param account
+     */
+    private void performGoogleAuth(GoogleSignInAccount account)
+    {
+        AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
+        firebaseAuth.signInWithCredential(credential)
+                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                    @Override
+                    public void onSuccess(AuthResult authResult) {
+                        FirebaseUser user = firebaseAuth.getCurrentUser();
+                        // check if user is new or existing
+                        if(authResult.getAdditionalUserInfo().isNewUser())
+                        {
+                            //user is new
+                            Log.d("NEW_USER", authResult.getUser().getEmail());
+                            Log.d("NEW_USER", authResult.getUser().getUid());
+                            onDirect(authResult.getUser());
+                        }
+                        else
+                        {
+                            Log.d("NEW_USER", authResult.getUser().getEmail());
+                            Log.d("NEW_USER", authResult.getUser().getUid());
+                            performGetDataFromFS(user.getUid(), new DirectUICallback() {
+                                @Override
+                                public void direct(boolean isCredentialCorrected, UserRole loginUserRole) {
+                                    onDirect(isCredentialCorrected, loginUserRole);
+                                }
+                            });
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("NEW_USER", e.getMessage());
+                    }
+                });
+    }
+
+    /**
+     *
+     */
+    private void onDirect(FirebaseUser thirdPartyLoginUser)
+    {
+       if (thirdPartyLoginUser != null)
+       {
+          Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
+          intent.putExtra("email", thirdPartyLoginUser.getEmail());
+          intent.putExtra("id", thirdPartyLoginUser.getUid());
+          intent.putExtra("name", thirdPartyLoginUser.getDisplayName());
+          intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+          startActivity(intent);
+       }
+    }
+
+    private void onDirect(boolean isCredentialCorrected, UserRole loginUserRole)
+    {
+        if(isCredentialCorrected && loginUserRole != null)
+        {
+            Intent intent = null;
+            if(loginUserRole == UserRole.LANDLORD)
+            {
+                intent = new Intent(getApplicationContext(), LandlordActivity.class);
+            }
+            else if (loginUserRole == UserRole.TENANT)
+            {
+                intent = new Intent(getApplicationContext(), MainActivity.class);
+            }
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+        }
+        else
+        {
+            showTextLong("Invalid Credential!");
+            // clear input
+            loginBinding.email.getText().clear();
+            loginBinding.password.getText().clear();
+        }
     }
 
     private void showTextLong(String text)

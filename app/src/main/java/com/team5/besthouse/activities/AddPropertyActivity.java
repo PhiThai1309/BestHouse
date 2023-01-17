@@ -367,6 +367,7 @@ public class AddPropertyActivity extends AppCompatActivity implements RecyclerVi
                                                     // display successful message
                                                     progressBar.setVisibility(View.GONE);
                                                     submitButton.setText("SUBMIT");
+
                                                     // display successful message
                                                     showTextLong("New Property is Added");
                                                 }
