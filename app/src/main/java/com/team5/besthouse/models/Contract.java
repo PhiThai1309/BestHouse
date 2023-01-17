@@ -103,9 +103,15 @@ public class Contract implements Parcelable {
     }
 
     public Date convertStartDay(){
+        if(startDate == null) {
+            return null;
+        }
         return startDate.toDate();
     }
     public Date convertEndDay(){
+        if(endDate == null) {
+            return null;
+        }
         return endDate.toDate();
     }
 

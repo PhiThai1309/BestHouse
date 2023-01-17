@@ -12,16 +12,23 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
 import com.team5.besthouse.R;
 import com.team5.besthouse.activities.DetailActivity;
 import com.team5.besthouse.activities.MainActivity;
+import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.models.Property;
+import com.team5.besthouse.models.User;
+import com.team5.besthouse.models.UserRole;
+import com.team5.besthouse.services.StoreService;
 
 import java.util.List;
 
 public class PropertyAdapter extends RecyclerView.Adapter<PropertyAdapter.TaskViewHolder> {
     private final LayoutInflater mInflater;
     private List<Property> propertyList;
+
+    StoreService storeService;
 
     private String key = "";
 
@@ -62,6 +69,14 @@ public class PropertyAdapter extends RecyclerView.Adapter<PropertyAdapter.TaskVi
                     Intent intent = new Intent(mInflater.getContext(), DetailActivity.class);
                     intent.putExtra("property", (Parcelable) current);
 
+                    // set up store service
+                    storeService = new StoreService(mInflater.getContext());
+
+                    Gson gson = new Gson();
+                    User user = gson.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), User.class);
+                    if(user.getRole() == UserRole.LANDLORD){
+                        intent.putExtra("history", true);
+                    }
                     mInflater.getContext().startActivity(intent);
                     notifyDataSetChanged();
                 }

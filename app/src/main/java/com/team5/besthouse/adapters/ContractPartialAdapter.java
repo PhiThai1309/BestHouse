@@ -49,28 +49,35 @@ public class ContractPartialAdapter extends RecyclerView.Adapter<ContractPartial
             Contract current = contractList.get(position);
             // Set the name of the view holder
             if(current.getContractStatus() == null) {
-                holder.name.setText("No contract available at the moment");
+                holder.name.setText(" ");
             } else {
                 holder.name.setText(current.getContractStatus().toString());
             }
 
-            // Set the address of the view holder
-            holder.address.setText(current.convertStartDay().toString());
+            if(current.convertStartDay() == null) {
+                holder.address.setText(" ");
+            } else {
+                // Set the address of the view holder
+                holder.address.setText(current.convertStartDay().toString());
+            }
+
             //Set the prize of the view holder
             holder.price.setText(current.getId());
 
-            // Set the click listener
-            holder.cardView.setOnClickListener(new View.OnClickListener() {
-                @SuppressLint("NotifyDataSetChanged")
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(mInflater.getContext(), ContractActivity.class);
-                    intent.putExtra("contract", current);
+            if(current.getContractStatus() != null && current.convertStartDay() != null) {
+                // Set the click listener
+                holder.cardView.setOnClickListener(new View.OnClickListener() {
+                    @SuppressLint("NotifyDataSetChanged")
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(mInflater.getContext(), ContractActivity.class);
+                        intent.putExtra("contract", current);
 
-                    mInflater.getContext().startActivity(intent);
-                    notifyDataSetChanged();
-                }
-            });
+                        mInflater.getContext().startActivity(intent);
+                        notifyDataSetChanged();
+                    }
+                });
+            }
         } else {
             // Covers the case of data not being ready yet.
             holder.name.setText("Error");

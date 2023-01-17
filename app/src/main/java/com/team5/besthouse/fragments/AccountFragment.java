@@ -38,7 +38,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 import com.team5.besthouse.R;
 import com.team5.besthouse.activities.LoginActivity;
-import com.team5.besthouse.activities.MainActivity;
 import com.team5.besthouse.adapters.ContractPartialAdapter;
 import com.team5.besthouse.adapters.PropertyPartialCardAdapter;
 import com.team5.besthouse.constants.UnchangedValues;
@@ -54,7 +53,6 @@ import com.team5.besthouse.services.StoreService;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -78,10 +76,10 @@ public class AccountFragment extends Fragment {
     private LinearProgressIndicator progressIndicator;
 
     private RecyclerView propertyView;
-    private List<Property> propertyList;
+    private ArrayList<Property> propertyList;
     private PropertyPartialCardAdapter adapter;
 
-    private View historyTitle, historyWrapper;
+    private View historyTitle, historyWrapper, propertyTitle, propertyWrapper;
 
     Gson gson;
     User user;
@@ -174,19 +172,19 @@ public class AccountFragment extends Fragment {
 
             historyTitle = binding.getRoot().findViewById(R.id.contract_history_title);
             historyWrapper = binding.getRoot().findViewById(R.id.contract_history_wrapper);
-            TextView seeMoreButton = historyTitle.findViewById(R.id.see_more);
-            TextView noData = historyWrapper.findViewById(R.id.display_none);
+            TextView seeMoreBtn = historyTitle.findViewById(R.id.see_more);
+            TextView noneData = historyWrapper.findViewById(R.id.display_none);
 
             if(contractList.isEmpty()) {
-                contractList.add(Contract.STATICCONTRACT);
-                adapter1.notifyDataSetChanged();
-                seeMoreButton.setVisibility(View.GONE);
-//                historyView.setVisibility(View.GONE);
-            } else if(contractList.size() <= 5 && contractList.size() > 0) {
-                seeMoreButton.setVisibility(View.GONE);
-                noData.setVisibility(View.GONE);
+//                contractList.add(Contract.STATICCONTRACT);
+//                adapter1.notifyDataSetChanged();
+                seeMoreBtn.setVisibility(View.GONE);
+                historyView.setVisibility(View.GONE);
+            } else if(contractList.size() <= 5) {
+                seeMoreBtn.setVisibility(View.GONE);
+                noneData.setVisibility(View.GONE);
             } else {
-                noData.setVisibility(View.GONE);
+                noneData.setVisibility(View.GONE);
             }
 //            progressIndicator.setVisibility(View.GONE);
         }
@@ -210,6 +208,23 @@ public class AccountFragment extends Fragment {
                 propertyList.remove(p);
                 propertyList.add(p);
                 adapter.notifyDataSetChanged();
+            }
+
+            propertyTitle = binding.getRoot().findViewById(R.id.property_list_title);
+            propertyWrapper = binding.getRoot().findViewById(R.id.property_list);
+            TextView seeMoreButton = propertyTitle.findViewById(R.id.see_more);
+            TextView noData = propertyWrapper.findViewById(R.id.display_none);
+
+            if(propertyList.isEmpty()) {
+//                contractList.add(Contract.STATICCONTRACT);
+//                adapter1.notifyDataSetChanged();
+                seeMoreButton.setVisibility(View.GONE);
+                propertyView.setVisibility(View.GONE);
+            } else if(propertyList.size() <= 5) {
+                seeMoreButton.setVisibility(View.GONE);
+                noData.setVisibility(View.GONE);
+            } else {
+                noData.setVisibility(View.GONE);
             }
 //            progressIndicator.setVisibility(View.GONE);
         }
@@ -263,7 +278,7 @@ public class AccountFragment extends Fragment {
         seeMoreTitle.setText("Contract History");
 
         historyWrapper = binding.getRoot().findViewById(R.id.contract_history_wrapper);
-        historyView = historyWrapper.findViewById(R.id.contract_history);
+        historyView = historyWrapper.findViewById(R.id.recycler_view);
 
         TextView moreContract = historyTitle.findViewById(R.id.see_more);
         moreContract.setOnClickListener(new View.OnClickListener() {
@@ -297,17 +312,34 @@ public class AccountFragment extends Fragment {
         //Property setup here-------------------------------------------------------------
         Gson gson = new Gson();
         User user = gson.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), Tenant.class);
-        if(user.getRole() == UserRole.TENANT) {
-            LinearLayout propertyList = binding.getRoot().findViewById(R.id.property_list);
-            propertyList.setVisibility(View.GONE);
-        }
+        View propertyWrapper = binding.getRoot().findViewById(R.id.property_list);
+
         View propertyLayout = binding.getRoot().findViewById(R.id.property_list_title);
         TextView propertyTitle = propertyLayout.findViewById(R.id.see_more_title);
+
+        if(user.getRole() == UserRole.TENANT) {
+            propertyWrapper.setVisibility(View.GONE);
+            propertyTitle.setVisibility(View.GONE);
+        }
+
         propertyTitle.setText("Your property");
+
+        TextView moreProperty = propertyLayout.findViewById(R.id.see_more);
+        moreProperty.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle bundle = new Bundle();
+                bundle.putParcelableArrayList("list",  propertyList);
+
+                MorePropertyFragment bottomDialogFragment = new MorePropertyFragment();
+                bottomDialogFragment.setArguments(bundle);
+                bottomDialogFragment.show(requireActivity().getSupportFragmentManager(), "ActionBottomDialogFragment.TAG");
+            }
+        });
 
         propertyList = new ArrayList<>();
 
-        propertyView = binding.getRoot().findViewById(R.id.account_property);
+        propertyView = propertyWrapper.findViewById(R.id.recycler_view);
         LinearLayoutManager linearLayoutManager2 = new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false);
         //Set the layout manager
         linearLayoutManager.setStackFromEnd(false);
