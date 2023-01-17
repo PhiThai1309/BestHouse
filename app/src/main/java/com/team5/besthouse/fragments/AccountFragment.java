@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,23 +29,20 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.elevation.SurfaceColors;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
-import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 import com.team5.besthouse.R;
 import com.team5.besthouse.activities.LoginActivity;
 import com.team5.besthouse.adapters.ContractPartialAdapter;
+import com.team5.besthouse.adapters.PropertyPartialCardAdapter;
 import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.databinding.FragmentAccountBinding;
 import com.team5.besthouse.models.Contract;
-import com.team5.besthouse.models.ContractStatus;
-import com.team5.besthouse.models.Landlord;
 import com.team5.besthouse.models.Property;
 import com.team5.besthouse.models.Tenant;
 import com.team5.besthouse.models.User;
@@ -53,7 +51,6 @@ import com.team5.besthouse.services.StoreService;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -72,9 +69,13 @@ public class AccountFragment extends Fragment {
 
 
     private RecyclerView historyView;
-    private List<Contract> list;
+    private List<Contract> contractList;
     private ContractPartialAdapter adapter1;
     private LinearProgressIndicator progressIndicator;
+
+    private RecyclerView propertyView;
+    private List<Property> propertyList;
+    private PropertyPartialCardAdapter adapter;
 
     Gson gson;
     User user;
@@ -139,13 +140,17 @@ public class AccountFragment extends Fragment {
                     .addSnapshotListener(eventListener);
         }
 
+        database.collection(UnchangedValues.PROPERTIES_TABLE)
+                .whereEqualTo("landlordEmail", userEmail)
+                .addSnapshotListener(eventListenerProperty);
+
     }
 
     EventListener<QuerySnapshot> eventListener = new EventListener<QuerySnapshot>() {
         @SuppressLint("NotifyDataSetChanged")
         @Override
         public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-            progressIndicator.setVisibility(View.VISIBLE);
+//            progressIndicator.setVisibility(View.VISIBLE);
             if(error != null)
             {
                 Log.w("ERROR: ", error);
@@ -156,11 +161,46 @@ public class AccountFragment extends Fragment {
                 Contract p = newDoc.getDocument().toObject(Contract.class);
 //                            Log.i("Property", p.getId() == null ? "null address!" : p.getId());
 //                            Log.i("Property", newDoc.getType().toString());
-                list.remove(p);
-                list.add(p);
+                contractList.remove(p);
+                contractList.add(p);
                 adapter1.notifyDataSetChanged();
             }
-            progressIndicator.setVisibility(View.GONE);
+
+            View historyTitle = binding.getRoot().findViewById(R.id.contract_history_title);
+            View historyWrapper = binding.getRoot().findViewById(R.id.contract_history_wrapper);
+
+            if(contractList.isEmpty()) {
+                TextView seeMoreButton = historyTitle.findViewById(R.id.see_more);
+                seeMoreButton.setVisibility(View.GONE);
+                historyView.setVisibility(View.GONE);
+            } else {
+                TextView noData = historyWrapper.findViewById(R.id.display_none);
+                noData.setVisibility(View.GONE);
+            }
+//            progressIndicator.setVisibility(View.GONE);
+        }
+    };
+
+    EventListener<QuerySnapshot> eventListenerProperty = new EventListener<QuerySnapshot>() {
+        @SuppressLint("NotifyDataSetChanged")
+        @Override
+        public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+//            progressIndicator.setVisibility(View.VISIBLE);
+            if(error != null)
+            {
+                Log.w("ERROR: ", error);
+                return;
+            }
+            assert value != null;
+            for(DocumentChange newDoc : value.getDocumentChanges()){
+                Property p = newDoc.getDocument().toObject(Property.class);
+//                            Log.i("Property", p.getId() == null ? "null address!" : p.getId());
+//                            Log.i("Property", newDoc.getType().toString());
+                propertyList.remove(p);
+                propertyList.add(p);
+                adapter.notifyDataSetChanged();
+            }
+//            progressIndicator.setVisibility(View.GONE);
         }
     };
 
@@ -199,18 +239,22 @@ public class AccountFragment extends Fragment {
         storeService = new StoreService(getActivity().getApplicationContext());
         logOutMenu();
 //        setSignOutAction();
-
         //Set color to the navigation bar to match with the bottom navigation view
         getActivity().getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(getActivity()));
         Window window = getActivity().getWindow();
         window.setStatusBarColor(getActivity().getResources().getColor(R.color.md_theme_surfaceVariant));
+//        progressIndicator = binding.getRoot().findViewById(R.id.account_progressBar);
+//        progressIndicator.setVisibility(View.VISIBLE);
 
-        progressIndicator = binding.getRoot().findViewById(R.id.account_progressBar);
-        progressIndicator.setVisibility(View.VISIBLE);
+        //Contract History setup here--------------------------------------------------------
+        View historyTitle = binding.getRoot().findViewById(R.id.contract_history_title);
+        TextView seeMoreTitle = historyTitle.findViewById(R.id.see_more_title);
+        seeMoreTitle.setText("Contract History");
 
-        historyView = binding.getRoot().findViewById(R.id.contract_history);
+        View historyWrapper = binding.getRoot().findViewById(R.id.contract_history_wrapper);
+        historyView = historyWrapper.findViewById(R.id.contract_history);
 
-        list = new ArrayList<>();
+        contractList = new ArrayList<>();
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false);
         //Set the layout manager
@@ -219,17 +263,35 @@ public class AccountFragment extends Fragment {
         historyView.setHasFixedSize(true);
         historyView.setLayoutManager(linearLayoutManager);
 
-        adapter1 = new ContractPartialAdapter(getContext(), list);
+        adapter1 = new ContractPartialAdapter(getContext(), contractList);
         historyView.setAdapter(adapter1);
         historyView.setHasFixedSize(true);
 
-        View historyTitle = binding.getRoot().findViewById(R.id.contract_history_title);
-        TextView seeMoreTitle = historyTitle.findViewById(R.id.see_more_title);
-        seeMoreTitle.setText("Contract History");
-
+        //Account name setup here---------------------------------------------------------
         TextView accountName = binding.getRoot().findViewById(R.id.account_name);
         accountName.setText(user.getFullName());
 
+        //Property setup here-------------------------------------------------------------
+        Gson gson = new Gson();
+        User user = gson.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), Tenant.class);
+        if(user.getRole() == UserRole.TENANT) {
+            LinearLayout propertyList = binding.getRoot().findViewById(R.id.property_list);
+            propertyList.setVisibility(View.GONE);
+        }
+        View propertyLayout = binding.getRoot().findViewById(R.id.property_list_title);
+        TextView propertyTitle = propertyLayout.findViewById(R.id.see_more_title);
+        propertyTitle.setText("Your property");
+        propertyList = new ArrayList<>();
+        propertyView = binding.getRoot().findViewById(R.id.account_property);
+        LinearLayoutManager linearLayoutManager2 = new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false);
+        //Set the layout manager
+        linearLayoutManager.setStackFromEnd(false);
+        linearLayoutManager.setReverseLayout(false);
+        propertyView.setHasFixedSize(true);
+        propertyView.setLayoutManager(linearLayoutManager2);
+        adapter = new PropertyPartialCardAdapter(getContext(), propertyList);
+        propertyView.setAdapter(adapter);
+        historyView.setHasFixedSize(true);
         // Inflate the layout for this fragment
         return binding.getRoot();
     }
