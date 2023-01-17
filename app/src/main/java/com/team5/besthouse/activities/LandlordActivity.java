@@ -1,6 +1,7 @@
 package com.team5.besthouse.activities;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
@@ -22,7 +23,7 @@ import com.team5.besthouse.fragments.LandlordHomeFragment;
 import com.team5.besthouse.services.StoreService;
 
 
-public class LandlordActivity extends AppCompatActivity {
+public class LandlordActivity extends BaseActivity {
     ActionBar actionBar;
     public static NavigationBarView navigationView;
     private StoreService storeService;

@@ -44,7 +44,7 @@ import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.regex.Pattern;
 
-public class SignupActivity extends AppCompatActivity {
+public class SignupActivity extends BaseActivity {
 
     private ActivitySignupBinding signupBinding;
     private FirebaseAuth firebaseAuth;

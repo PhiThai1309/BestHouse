@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.material.navigation.NavigationBarView;
+import com.team5.besthouse.broadcastreceiverandservice.AutoLogoutService;
 import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.fragments.AccountFragment;
 import com.team5.besthouse.fragments.ChatFragment;
@@ -20,10 +21,11 @@ import com.team5.besthouse.fragments.MapsFragment;
 import com.team5.besthouse.R;
 import com.team5.besthouse.services.StoreService;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
     ActionBar actionBar;
     public static NavigationBarView navigationView;
     private StoreService storeService;
+
 
     public boolean locationPermissionGranted;
     public Location lastKnownLocation;
@@ -71,15 +73,16 @@ public class MainActivity extends AppCompatActivity {
         //mark user is login
         storeService.storeBooleanValue(UnchangedValues.IS_LOGIN_TENANT, true);
 
-       showTextLong(a);
-
-
+        showTextLong(a);
     }
+
+
 
     private void showTextLong(String text)
     {
         Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
     }
+
 
     private final NavigationBarView.OnItemSelectedListener selectedListener = new NavigationBarView.OnItemSelectedListener() {
         @Override

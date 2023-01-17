@@ -1,6 +1,7 @@
 package com.team5.besthouse.adapters;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -62,9 +63,12 @@ public class PropertyPartialCardAdapter extends RecyclerView.Adapter<PropertyPar
 //                    ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
 //                            MainActivity.this, imageView, ViewCompat.getTransitionName(imageView));
                     intent.putExtra("property", current);
-
-                    mInflater.getContext().startActivity(intent);
+                    ((Activity)mInflater.getContext()).startActivity(intent);
                     notifyDataSetChanged();
+
+
+
+
                 }
             });
         } else {
