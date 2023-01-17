@@ -27,29 +27,17 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <LinearLayout
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/more_property"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <com.google.android.material.progressindicator.LinearProgressIndicator
-                android:id="@+id/more_progressBar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/more_property"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                tools:listitem="@layout/layout_card_main"
-                android:nestedScrollingEnabled="true"
-                android:focusableInTouchMode="true"
-                android:clipToPadding="false"/>
-        </LinearLayout>
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            tools:listitem="@layout/layout_card_main"
+            android:nestedScrollingEnabled="true"
+            android:focusableInTouchMode="true"
+            android:clipToPadding="false"/>
     </androidx.core.widget.NestedScrollView>
 
 </LinearLayout>
