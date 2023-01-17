@@ -36,7 +36,7 @@ public class ContractAdapter extends RecyclerView.Adapter<ContractAdapter.TaskVi
     @Override
     public ContractAdapter.TaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // Inflate the view
-        View itemView = mInflater.inflate(R.layout.layout_card_main, parent, false);
+        View itemView = mInflater.inflate(R.layout.layout_contract, parent, false);
         return new ContractAdapter.TaskViewHolder(itemView);
     }
 

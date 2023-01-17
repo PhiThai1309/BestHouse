@@ -19,6 +19,7 @@ import com.google.android.material.navigation.NavigationBarView;
 import com.team5.besthouse.R;
 import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.fragments.AccountFragment;
+import com.team5.besthouse.fragments.ChatFragment;
 import com.team5.besthouse.fragments.LandlordHomeFragment;
 import com.team5.besthouse.services.StoreService;
 
@@ -81,6 +82,14 @@ public class LandlordActivity extends BaseActivity {
                     fragmentTransaction2.replace(R.id.content, fragment2, "");
                     fragmentTransaction2.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                     fragmentTransaction2.commit();
+                    return true;
+
+                case R.id.chat:
+                    ChatFragment fragment4 = new ChatFragment();
+                    FragmentTransaction fragmentTransaction4 = getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction4.replace(R.id.content, fragment4, "");
+                    fragmentTransaction4.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                    fragmentTransaction4.commit();
                     return true;
             }
             return false;

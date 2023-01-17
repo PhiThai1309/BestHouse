@@ -101,7 +101,7 @@ public class ContractPartialAdapter extends RecyclerView.Adapter<ContractPartial
         public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.property_name);
-            price = itemView.findViewById(R.id.last_chat_time);
+            price = itemView.findViewById(R.id.property_address);
             address = itemView.findViewById(R.id.property_price);
             cardView = itemView.findViewById(R.id.cardView);
         }
