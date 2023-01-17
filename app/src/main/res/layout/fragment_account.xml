@@ -62,10 +62,6 @@
                         android:text="@string/place_holder" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-            <com.google.android.material.progressindicator.LinearProgressIndicator
-                android:id="@+id/account_progressBar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
             <!--            <LinearLayout-->
             <!--                android:layout_width="match_parent"-->
             <!--                android:layout_height="wrap_content"-->
@@ -90,15 +86,29 @@
                 android:id="@+id/contract_history_title"
                 layout="@layout/layout_see_more"/>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/contract_history"
+
+            <include
+                android:id="@+id/contract_history_wrapper"
+                layout="@layout/layout_recyclerview_wrap"/>
+
+            <LinearLayout
+                android:id="@+id/property_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:clipToPadding="false"
-                android:orientation="vertical"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                tools:listitem="@layout/layout_card_main" />
+                android:orientation="vertical">
+                <include
+                    android:id="@+id/property_list_title"
+                    layout="@layout/layout_see_more"/>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/account_property"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
+                    android:orientation="vertical"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                    tools:listitem="@layout/layout_card_main"/>
+            </LinearLayout>
             <!--            <Button-->
             <!--                android:id="@+id/signOutButton"-->
             <!--                android:layout_width="match_parent"-->
