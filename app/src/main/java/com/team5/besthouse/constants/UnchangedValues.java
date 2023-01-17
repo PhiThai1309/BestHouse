@@ -9,6 +9,8 @@ public class UnchangedValues {
     public static final String USERS_TABLE = "users";
     public static final String PROPERTIES_TABLE = "properties";
     public static final String CONTRACTS_TABLE = "contracts";
+    public static final String CHATS_TABLE = "chats";
+    public static final String MESSAGES_TABLE = "messages";
 
     public static final String NAME_REGEX = "^[a-zA-Z\\s]+";
     public static final String EMAIL_REGEX = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
@@ -21,6 +23,7 @@ public class UnchangedValues {
     public static final String USER_PASS_COL = "password";
     public static final String USER_PHONE_COL = "phoneNumber";
     public static final String USER_ROLE = "role";
+    public static final String CONTRACTS_ID_COL = "contractId";
 
     public static final String IS_LOGIN_TENANT = "tenantLoginSession";
     public static final String IS_LOGIN_LANDLORD = "landlordLoginSession";

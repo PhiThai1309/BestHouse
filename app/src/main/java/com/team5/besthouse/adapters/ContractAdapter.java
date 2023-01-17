@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.team5.besthouse.R;
 import com.team5.besthouse.activities.ContractActivity;
 import com.team5.besthouse.models.Contract;
-import com.team5.besthouse.models.Property;
 
 import java.util.List;
 
@@ -35,15 +34,15 @@ public class ContractAdapter extends RecyclerView.Adapter<ContractAdapter.TaskVi
     // Create the view holder
     @NonNull
     @Override
-    public TaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ContractAdapter.TaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // Inflate the view
-        View itemView = mInflater.inflate(R.layout.layout_contract, parent, false);
-        return new TaskViewHolder(itemView);
+        View itemView = mInflater.inflate(R.layout.layout_card_main, parent, false);
+        return new ContractAdapter.TaskViewHolder(itemView);
     }
 
     // Bind the data to the view holder
     @Override
-    public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ContractAdapter.TaskViewHolder holder, int position) {
         //if task is not null
         if (contractList != null) {
             // Get the task at the position
@@ -61,8 +60,8 @@ public class ContractAdapter extends RecyclerView.Adapter<ContractAdapter.TaskVi
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(mInflater.getContext(), ContractActivity.class);
-                    intent.putExtra("contract", (Parcelable) current);
-
+                    intent.putExtra("property", current);
+//                    intent.putExtra("contract", (Parcelable) current);
                     mInflater.getContext().startActivity(intent);
                     notifyDataSetChanged();
                 }

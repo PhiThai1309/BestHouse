@@ -1,4 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
+
     <style name="AppTheme" parent="Theme.Material3.Light.NoActionBar">
 
         <item name="colorPrimary">@color/md_theme_primary</item>
@@ -38,8 +39,18 @@
         <item name="harmonizeBLACK">true</item>
         <item name="colorPrimaryInverse">@color/md_theme_inversePrimary</item>
     </style>
+
     <style name="ThemeOverlay.BestHouse.FullscreenContainer" parent="">
         <item name="fullscreenBackgroundColor">@color/light_blue_600</item>
         <item name="fullscreenTextColor">@color/light_blue_A200</item>
     </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

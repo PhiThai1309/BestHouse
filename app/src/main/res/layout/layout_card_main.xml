@@ -49,18 +49,19 @@
                     android:layout_width="15dp"
                     android:layout_height="15dp"
                     android:src="@drawable/ic_outline_location_on_grey_24"/>
+
                 <TextView
                     android:id="@+id/property_address"
+                    style="@style/Card_SubHeading"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/Card_SubHeading"
-                    android:text="@string/place_holder"
-                    android:maxLines="1"/>
+                    android:maxLines="1"
+                    android:text="@string/place_holder" />
             </LinearLayout>
 
 
             <TextView
-                android:id="@+id/property_price"
+                android:id="@+id/last_chat_time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/place_holder"

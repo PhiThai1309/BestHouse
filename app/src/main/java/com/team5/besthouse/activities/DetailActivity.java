@@ -15,8 +15,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.elevation.SurfaceColors;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -26,6 +28,7 @@ import com.google.gson.Gson;
 import com.team5.besthouse.R;
 import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.fragments.MapsFragment;
+import com.team5.besthouse.models.Chat;
 import com.team5.besthouse.models.Property;
 import com.team5.besthouse.models.Tenant;
 import com.team5.besthouse.models.User;
@@ -255,19 +258,32 @@ public class DetailActivity extends BaseActivity {
 
         contract.setId(dc.getId());
 
+        Intent intent = new Intent(this, MapsFragment.class);
 
         dc.set(contract)
                 .addOnCompleteListener(task -> {
-                    Intent intent = new Intent(this, MapsFragment.class);
-                    if (task.isSuccessful()) {
-                        Toast.makeText(this, "Contract created!", Toast.LENGTH_SHORT).show();
-                        intent.putExtra("created", true);
-                        setResult(200, intent);
+                    if (task.isSuccessful()){
+                        DocumentReference dr =  db.collection("chats").document();
+                        Chat chat = new Chat(contract.getId());
+                        chat.setId(dr.getId());
+                        dr.set(chat).addOnCompleteListener(task1 -> {
+                            if (task1.isSuccessful()) {
+                                Toast.makeText(this, "Contract created!", Toast.LENGTH_SHORT).show();
+                                intent.putExtra("created", true);
+                                setResult(200, intent);
+                            }
+                            else {
+                                dc.delete();
+                                Toast.makeText(this, "Contract creation failed!", Toast.LENGTH_SHORT).show();
+                                intent.putExtra("created", false);
+                            }
+                            finish();
+                        });
                     } else {
                         Toast.makeText(this, "Contract creation failed!", Toast.LENGTH_SHORT).show();
                         intent.putExtra("created", false);
+                        finish();
                     }
-                    finish();
                 });
     }
 

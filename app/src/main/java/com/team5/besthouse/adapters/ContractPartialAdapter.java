@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.team5.besthouse.R;
 import com.team5.besthouse.activities.ContractActivity;
 import com.team5.besthouse.models.Contract;
-import com.team5.besthouse.models.Property;
 
 import java.util.List;
 
@@ -102,8 +101,8 @@ public class ContractPartialAdapter extends RecyclerView.Adapter<ContractPartial
         public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.property_name);
-            price = itemView.findViewById(R.id.property_price);
-            address = itemView.findViewById(R.id.property_address);
+            price = itemView.findViewById(R.id.last_chat_time);
+            address = itemView.findViewById(R.id.property_price);
             cardView = itemView.findViewById(R.id.cardView);
         }
     }

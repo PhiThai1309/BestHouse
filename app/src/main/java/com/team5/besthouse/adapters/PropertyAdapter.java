@@ -67,7 +67,7 @@ public class PropertyAdapter extends RecyclerView.Adapter<PropertyAdapter.TaskVi
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(mInflater.getContext(), DetailActivity.class);
-                    intent.putExtra("property", (Parcelable) current);
+                    intent.putExtra("property", current);
 
                     // set up store service
                     storeService = new StoreService(mInflater.getContext());
@@ -106,7 +106,7 @@ public class PropertyAdapter extends RecyclerView.Adapter<PropertyAdapter.TaskVi
             super(itemView);
             name = itemView.findViewById(R.id.property_name);
 //            price = itemView.findViewById(R.id.property_price);
-            address = itemView.findViewById(R.id.property_address);
+            address = itemView.findViewById(R.id.property_price);
             cardView = itemView.findViewById(R.id.cardView);
         }
     }
