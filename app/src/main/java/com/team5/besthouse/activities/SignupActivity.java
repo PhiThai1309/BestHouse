@@ -44,7 +44,7 @@ import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.regex.Pattern;
 
-public class SignupActivity extends AppCompatActivity {
+public class SignupActivity extends BaseActivity {
 
     private ActivitySignupBinding signupBinding;
     private FirebaseAuth firebaseAuth;
@@ -163,11 +163,21 @@ public class SignupActivity extends AppCompatActivity {
                    .addOnSuccessListener(
                            documentReference -> {
                                // move back to login with toast successful message
-                               Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                               intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                               intent.putExtra(UnchangedValues.ACCOUNT_CREATED_INTENT, true);
-                               startActivity(intent);
-                               finish();
+                               if(thirdPartyLoginId == null)
+                               {
+                                   Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                                   intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                   intent.putExtra(UnchangedValues.ACCOUNT_CREATED_INTENT, true);
+                                   startActivity(intent);
+                               }
+                               else {
+                                   Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                                   intent.putExtra("userid", thirdPartyLoginId);
+                                   setResult(RESULT_OK, intent);
+                                   finish();
+                               }
+
+
                            }
                    ).addOnFailureListener(new OnFailureListener() {
                        @Override

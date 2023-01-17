@@ -64,7 +64,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class AddPropertyActivity extends AppCompatActivity implements RecyclerViewInterface{
+public class AddPropertyActivity extends BaseActivity implements RecyclerViewInterface{
 
     private ImageButton returnButton;
     private EditText pAddressEditText;

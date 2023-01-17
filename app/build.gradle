@@ -62,8 +62,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging'
     implementation 'com.google.firebase:firebase-firestore'
     implementation 'com.google.firebase:firebase-auth'
-
-
+    implementation 'com.google.android.gms:play-services-auth:18.1.0'
 
     //gson
     implementation 'com.google.code.gson:gson:2.10'

@@ -38,7 +38,7 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContractActivity extends AppCompatActivity {
+public class ContractActivity extends BaseActivity {
     private Contract contract;
     private View progressIndicator;
     private TextView propertyAddress, propertyPrice;

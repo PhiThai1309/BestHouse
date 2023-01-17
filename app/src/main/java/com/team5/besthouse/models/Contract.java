@@ -103,10 +103,10 @@ public class Contract implements Parcelable {
     }
 
     public Date convertStartDay(){
-        return new Date(startDate.getNanoseconds());
+        return startDate.toDate();
     }
     public Date convertEndDay(){
-        return new Date(endDate.getNanoseconds());
+        return endDate.toDate();
     }
 
     public void setStartDate(Timestamp startDate) {

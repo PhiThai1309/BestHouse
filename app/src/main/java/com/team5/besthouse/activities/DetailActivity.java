@@ -45,7 +45,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class DetailActivity extends AppCompatActivity {
+import org.w3c.dom.Text;
+
+public class DetailActivity extends BaseActivity {
     private FirebaseFirestore db;
     private Property property;
     private StoreService storeService;
