@@ -218,6 +218,7 @@ public class LandlordHomeFragment extends Fragment {
 //                });
 //    }
 
+
         //filter for all rents such that its end date is after today on the db side
         FirebaseFirestore database = FirebaseFirestore.getInstance();
         database.collection(UnchangedValues.PROPERTIES_TABLE)

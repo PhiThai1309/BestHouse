@@ -53,9 +53,6 @@ public class MorePropertyFragment extends BottomSheetDialogFragment {
         View view = LayoutInflater.from(getContext()).inflate (R.layout.activity_more_property, null);
         bottomSheetDialog.setContentView(view);
 
-        progressIndicator = view.findViewById(R.id.more_progressBar);
-        progressIndicator.setVisibility(View.VISIBLE);
-
         list = new ArrayList<>();
 
         Bundle bundle = this.getArguments();
