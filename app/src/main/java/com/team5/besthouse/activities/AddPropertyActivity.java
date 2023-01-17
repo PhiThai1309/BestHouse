@@ -353,8 +353,6 @@ public class AddPropertyActivity extends BaseActivity implements RecyclerViewInt
                             {
                                 FirebaseFirestore firestore = FirebaseFirestore.getInstance();
                                 try {
-                                    HashMap<String,String> hash = new HashMap<>();
-                                    hash.put("aaa", "bbbjhjA");
                                     DocumentReference dc = firestore.collection(UnchangedValues.PROPERTY_TABLE).document();
                                     newProperty.setId(dc.getId());
                                     dc.set(newProperty)
@@ -454,7 +452,7 @@ public class AddPropertyActivity extends BaseActivity implements RecyclerViewInt
             property.setImageURLList(imageURLList) ;
             return property;
         } catch (IOException e) {
-            Log.e("ERRRROORRR", "createNewProperty: " + e.getMessage() );
+            Log.e("ERROR", "createNewProperty: " + e.getMessage() );
         }
 
    return null;

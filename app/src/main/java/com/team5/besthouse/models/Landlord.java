@@ -7,14 +7,14 @@ public class Landlord extends User{
     private List<Property> propertyList;
     private List<Contract> contractList;
 
-    public Landlord(String email, String password, String fullName, String phoneNumber) {
-        super(email, password, fullName, phoneNumber, UserRole.LANDLORD);
+    public Landlord(String email, String password, String fullName, String phoneNumber, String imageUrl) {
+        super(email, password, fullName, phoneNumber, UserRole.LANDLORD, imageUrl);
         propertyList = new ArrayList<>();
         contractList = new ArrayList<>();
     }
 
-    public Landlord(String email, String fullName, String phoneNumber, List<Property> propertyList, List<Contract> contractList) {
-        super(email, fullName, phoneNumber, UserRole.LANDLORD);
+    public Landlord(String email, String fullName, String phoneNumber, List<Property> propertyList, List<Contract> contractList, String imageUrl) {
+        super(email, fullName, phoneNumber, UserRole.LANDLORD, imageUrl);
         this.propertyList = propertyList;
         this.contractList = contractList;
     }
