@@ -80,8 +80,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.TaskViewHolder
                 }
             });
 
-            holder.lastMessage.setText("None");
-            holder.lastChatTime.setText("None");
+            holder.lastMessage.setText("No Chats Yet");
+            holder.lastChatTime.setText("No Chats Yet");
 
             database.collection(UnchangedValues.MESSAGES_TABLE)
                     .whereEqualTo("chatId", current.getId())

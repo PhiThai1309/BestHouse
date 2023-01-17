@@ -60,8 +60,7 @@ public class ContractAdapter extends RecyclerView.Adapter<ContractAdapter.TaskVi
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(mInflater.getContext(), ContractActivity.class);
-                    intent.putExtra("property", current);
-//                    intent.putExtra("contract", (Parcelable) current);
+                    intent.putExtra("contract", current);
                     mInflater.getContext().startActivity(intent);
                     notifyDataSetChanged();
                 }
