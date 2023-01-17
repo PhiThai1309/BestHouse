@@ -1,6 +1,7 @@
-package com.team5.besthouse;
+package com.team5.besthouse.adapters;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,20 +12,20 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.team5.besthouse.R;
 import com.team5.besthouse.activities.DetailActivity;
-import com.team5.besthouse.activities.MainActivity;
 import com.team5.besthouse.models.Property;
 
 import java.util.List;
 
-public class PropertyAdapter2 extends RecyclerView.Adapter<PropertyAdapter2.TaskViewHolder> {
+public class PropertyCardAdapter extends RecyclerView.Adapter<PropertyCardAdapter.TaskViewHolder> {
     private final LayoutInflater mInflater;
     private List<Property> propertyList;
 
     private String key = "";
 
     // Constructor
-    public PropertyAdapter2(MainActivity context, List<Property> tasks) {
+    public PropertyCardAdapter(Context context, List<Property> tasks) {
         mInflater = LayoutInflater.from(context);
         propertyList = tasks;
     }
@@ -34,7 +35,7 @@ public class PropertyAdapter2 extends RecyclerView.Adapter<PropertyAdapter2.Task
     @Override
     public TaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // Inflate the view
-        View itemView = mInflater.inflate(R.layout.main_layout, parent, false);
+        View itemView = mInflater.inflate(R.layout.layout_card_main, parent, false);
         return new TaskViewHolder(itemView);
     }
 
@@ -48,7 +49,7 @@ public class PropertyAdapter2 extends RecyclerView.Adapter<PropertyAdapter2.Task
             // Set the name of the view holder
             holder.name.setText(current.getPropertyName());
             // Set the address of the view holder
-            holder.address.setText(current.getAddress().toString());
+            holder.address.setText(current.getAddress(this.mInflater.getContext()).toString());
             //Set the prize of the view holder
             holder.price.setText(String.valueOf(current.getMonthlyPrice()));
 
@@ -57,6 +58,9 @@ public class PropertyAdapter2 extends RecyclerView.Adapter<PropertyAdapter2.Task
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(mInflater.getContext(), DetailActivity.class);
+
+//                    ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+//                            MainActivity.this, imageView, ViewCompat.getTransitionName(imageView));
                     intent.putExtra("property", current);
 
                     mInflater.getContext().startActivity(intent);
@@ -82,9 +86,9 @@ public class PropertyAdapter2 extends RecyclerView.Adapter<PropertyAdapter2.Task
     // Return the size of the data set
     @Override
     public int getItemCount() {
-        if (propertyList != null)
-            return propertyList.size();
-        else return 0;
+        if (propertyList == null)
+                return 0;
+        return propertyList.size();
     }
 
     //TaskViewHolder class to hold the views

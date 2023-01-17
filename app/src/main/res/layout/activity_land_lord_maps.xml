@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.LandLordMapsActivity"
+    tools:context=".fragments.LandLordMapsFragment"
     android:orientation="vertical">
     <fragment
         android:id="@+id/map"
@@ -22,7 +22,7 @@
 
         <include
             android:id="@+id/searchBar"
-            layout="@layout/searchlocation_layout"/>
+            layout="@layout/layout_searchlocation"/>
     </LinearLayout>
 
     <androidx.appcompat.widget.AppCompatButton

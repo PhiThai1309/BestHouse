@@ -4,43 +4,39 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.core.util.LruCacheKt;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.text.Editable;
 import android.text.InputType;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
+import android.view.Window;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.elevation.SurfaceColors;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -49,23 +45,18 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
 import com.team5.besthouse.R;
-import com.team5.besthouse.adapters.LocationSuggestionAdapter;
 import com.team5.besthouse.adapters.PropertyImageInsertAdapter;
 import com.team5.besthouse.adapters.PropertyTypeSelectAdapter;
 import com.team5.besthouse.constants.UnchangedValues;
+import com.team5.besthouse.fragments.LandLordMapsFragment;
 import com.team5.besthouse.interfaces.RecyclerViewInterface;
 import com.team5.besthouse.interfaces.SetReceiveImageURLCallBack;
-import com.team5.besthouse.models.Coordinates;
 import com.team5.besthouse.models.Landlord;
 import com.team5.besthouse.models.Property;
-import com.team5.besthouse.models.PropertyAddress;
 import com.team5.besthouse.models.PropertyStatus;
 import com.team5.besthouse.models.PropertyType;
-import com.team5.besthouse.models.User;
 import com.team5.besthouse.models.Utilities;
 import com.team5.besthouse.services.StoreService;
-
-import org.checkerframework.checker.units.qual.A;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -77,7 +68,7 @@ public class AddPropertyActivity extends AppCompatActivity implements RecyclerVi
 
     private ImageButton returnButton;
     private EditText pAddressEditText;
-    private EditText pnameEditText, priceEditText, pdescEditText;
+    private TextInputEditText pnameEditText, priceEditText, pdescEditText;
     private EditText pBedRoomEditText, pBathRoomEditText, pAreaEditText;
     private Button submitButton;
     private ProgressBar progressBar;
@@ -91,22 +82,25 @@ public class AddPropertyActivity extends AppCompatActivity implements RecyclerVi
     private StoreService storeService;
     private Landlord loginLandlord;
 
-
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_property);
+
+        //Set color to the navigation bar to match with the bottom navigation view
+        getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(this));
+        Window window = getWindow();
+        window.setStatusBarColor(Color.TRANSPARENT);
+
         // set storage service
         storeService = new StoreService(getApplicationContext());
         Gson json = new Gson();
         loginLandlord= json.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), Landlord.class );
         //Set hint for adding property name textbox
-        View pname = findViewById(R.id.property_name);
-        pnameEditText = (EditText) pname.findViewById(R.id.box);
-        pnameEditText.setHint("Property Name:");
+        View pname = findViewById(R.id.add_property_name);
+        TextInputLayout pnameWrapper= pname.findViewById(R.id.textInput_wrapper);
+        pnameEditText = pname.findViewById(R.id.box);
+        pnameWrapper.setHint("Property Name:");
 
         //Set hint for adding property type textbox
         View ptype = findViewById(R.id.property_type);
@@ -127,14 +121,16 @@ public class AddPropertyActivity extends AppCompatActivity implements RecyclerVi
 
         //Set hint for adding property price textbox
         View price = findViewById(R.id.property_price);
-        priceEditText = (EditText) price.findViewById(R.id.box);
+        TextInputLayout priceWrapper= price.findViewById(R.id.textInput_wrapper);
+        priceEditText = price.findViewById(R.id.box);
         priceEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
-        priceEditText.setHint("Monthly Price:");
+        priceWrapper.setHint("Monthly Price:");
 
         //Set hint for add property description text box
        View description = findViewById(R.id.property_description);
        pdescEditText = description.findViewById(R.id.box);
-       pdescEditText.setHint("Describe the Property in Detail");
+       TextInputLayout desWrapper = findViewById(R.id.descInput_wrapper);
+       desWrapper.setHint("Describe the Property in Detail");
 
        // set the submit button
         View submitButtonHolder = findViewById(R.id.progress_button);
@@ -212,9 +208,9 @@ public class AddPropertyActivity extends AppCompatActivity implements RecyclerVi
     private void setReturnButtonAction()
     {
         returnButton.setOnClickListener(v->{
-            Intent i = new Intent(getApplicationContext(), LandlordActivity.class);
-            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(i);
+//            Intent i = new Intent(getApplicationContext(), LandlordActivity.class);
+//            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//            startActivity(i);
             finish();
         });
     }
@@ -222,7 +218,7 @@ public class AddPropertyActivity extends AppCompatActivity implements RecyclerVi
     private void setAddAddressAction()
     {
         pAddressEditText.setOnClickListener(v ->{
-            Intent i = new Intent(getApplicationContext(), LandLordMapsActivity.class);
+            Intent i = new Intent(getApplicationContext(), LandLordMapsFragment.class);
             i.putExtra(UnchangedValues.ACTIVITY_REQUEST_CODE, 100);
             startActivityForResult(i, 100);
         });
@@ -367,6 +363,7 @@ public class AddPropertyActivity extends AppCompatActivity implements RecyclerVi
                                                     // display successful message
                                                     progressBar.setVisibility(View.GONE);
                                                     submitButton.setText("SUBMIT");
+
                                                     // display successful message
                                                     showTextLong("New Property is Added");
                                                 }
@@ -447,12 +444,10 @@ public class AddPropertyActivity extends AppCompatActivity implements RecyclerVi
             List<Utilities> listU = new ArrayList<>();
             listU.add(Utilities.ELECTRIC);
             listU.add(Utilities.INTERNET);
-            PropertyAddress padress = new PropertyAddress();
-            padress.setStreet(alist.get(0).getAddressLine(0));
-            padress.setCoordinates(new Coordinates(alist.get(0).getLatitude(), alist.get(0).getLongitude(), 17));
+            LatLng coord = new LatLng(alist.get(0).getLatitude(), alist.get(0).getLongitude());
 
             Property property = new Property(null, pnameEditText.getText().toString(),loginLandlord.getEmail()
-                    ,padress, selectPropertyType,  Integer.parseInt(pBedRoomEditText.getText().toString()),
+                    , coord, selectPropertyType,  Integer.parseInt(pBedRoomEditText.getText().toString()),
                     Integer.parseInt(pBathRoomEditText.getText().toString()), listU,
                     Float.parseFloat(priceEditText.getText().toString()), Float.parseFloat(pAreaEditText.getText().toString()));
             property.setPropertyDescription(pdescEditText.getText().toString());

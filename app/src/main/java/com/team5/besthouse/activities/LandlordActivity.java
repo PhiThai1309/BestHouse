@@ -15,18 +15,16 @@ import android.widget.Toast;
 import com.google.android.material.elevation.SurfaceColors;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
-import com.google.android.material.snackbar.Snackbar;
 import com.team5.besthouse.R;
 import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.fragments.AccountFragment;
-import com.team5.besthouse.fragments.HomeFragment;
 import com.team5.besthouse.fragments.LandlordHomeFragment;
-import com.team5.besthouse.models.Landlord;
 import com.team5.besthouse.services.StoreService;
 
 
 public class LandlordActivity extends AppCompatActivity {
     ActionBar actionBar;
+    public static NavigationBarView navigationView;
     private StoreService storeService;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +34,7 @@ public class LandlordActivity extends AppCompatActivity {
         //set color for navigation bar
         getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(this));
 
-        actionBar = getSupportActionBar();
-        NavigationBarView navigationView;
+//        actionBar = getSupportActionBar();
         storeService = new StoreService(getApplicationContext());
 
         navigationView = findViewById(R.id.landlord_bottom_navigation);
@@ -58,17 +55,6 @@ public class LandlordActivity extends AppCompatActivity {
         storeService.storeBooleanValue(UnchangedValues.IS_LOGIN_LANDLORD, true);
 
         showTextLong(a);
-
-        FloatingActionButton fab = findViewById(R.id.float_button);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-               Intent intent = new Intent(LandlordActivity.this, AddPropertyActivity.class);
-               intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-               startActivity(intent);
-               finish();
-            }
-        });
     }
 
     private void showTextLong(String text) {
@@ -84,6 +70,7 @@ public class LandlordActivity extends AppCompatActivity {
                     LandlordHomeFragment fragment = new LandlordHomeFragment();
                     FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                     fragmentTransaction.replace(R.id.content, fragment, "");
+                    fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                     fragmentTransaction.commit();
                     return true;
 
@@ -91,6 +78,7 @@ public class LandlordActivity extends AppCompatActivity {
                     AccountFragment fragment2 = new AccountFragment();
                     FragmentTransaction fragmentTransaction2 = getSupportFragmentManager().beginTransaction();
                     fragmentTransaction2.replace(R.id.content, fragment2, "");
+                    fragmentTransaction2.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                     fragmentTransaction2.commit();
                     return true;
             }

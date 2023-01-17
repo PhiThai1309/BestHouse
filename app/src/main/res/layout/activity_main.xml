@@ -6,15 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".activities.MainActivity">
 
-    <androidx.fragment.app.FragmentContainerView
-        android:name="com.team5.besthouse.fragments.HomeFragment"
-        android:id="@+id/content"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout="@layout/fragment_home"
-        android:clipToPadding="false"
-        android:paddingBottom="80dp"/>
-
     <!--    <LinearLayout-->
     <!--        android:layout_width="match_parent"-->
     <!--        android:layout_height="90dp"-->
@@ -26,6 +17,17 @@
     <!--            android:id="@+id/main_navbar"-->
     <!--            layout="@layout/navbar"/>-->
     <!--    </LinearLayout>-->
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/content"
+        android:name="com.team5.besthouse.fragments.TenantHomeFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="80dp"
+        tools:layout="@layout/fragment_tenant_home"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
