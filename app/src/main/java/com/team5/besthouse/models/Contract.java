@@ -132,12 +132,14 @@ public class Contract implements Parcelable {
         this.endDate = endDate;
     }
 
+    @Exclude
     public String getFormattedStartDate(){
         Locale locale = new Locale.Builder().setLanguage("en").setRegion("US").build();
         DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.DEFAULT, locale);
         return dateFormat.format(getStartDate().toDate());
     }
 
+    @Exclude
     public String getFormattedEndDate(){
         Locale locale = new Locale.Builder().setLanguage("en").setRegion("US").build();
         DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.DEFAULT, locale);
