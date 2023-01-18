@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -18,6 +19,7 @@ import com.team5.besthouse.adapters.ContractAdapter;
 import com.team5.besthouse.adapters.ContractReviewAdapter;
 import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.models.Contract;
+import com.team5.besthouse.models.Property;
 import com.team5.besthouse.models.User;
 import com.team5.besthouse.services.StoreService;
 
@@ -28,11 +30,12 @@ public class PropertyContractsActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     StoreService storeService;
     Context context;
-    ArrayList<Contract> list;
     private ContractReviewAdapter adapter;
     View progressIndicator;
-    User user;
 
+    ArrayList<Contract> list;
+    User user;
+    Property property;
 
     FirebaseFirestore database = FirebaseFirestore.getInstance();
 
@@ -40,6 +43,10 @@ public class PropertyContractsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_property_contracts);
+
+        Intent intent = getIntent();
+
+        property = (Property) intent.getExtras().get("property");
 
         context = getApplicationContext();
 
@@ -74,6 +81,7 @@ public class PropertyContractsActivity extends AppCompatActivity {
         progressIndicator.setVisibility(View.VISIBLE);
         database.collection(UnchangedValues.CONTRACTS_TABLE)
                 .whereEqualTo(UnchangedValues.LANDLORD_EMAIL_COL, user.getEmail())
+                .whereEqualTo(UnchangedValues.PROPERTY_ID_COL, property.getId())
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {

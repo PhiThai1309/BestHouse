@@ -8,10 +8,12 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.Exclude;
 
 import java.io.Serializable;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.TimeZone;
 
@@ -128,6 +130,18 @@ public class Contract implements Parcelable {
 
     public void setEndDate(Timestamp endDate) {
         this.endDate = endDate;
+    }
+
+    public String getFormattedStartDate(){
+        Locale locale = new Locale.Builder().setLanguage("en").setRegion("US").build();
+        DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.DEFAULT, locale);
+        return dateFormat.format(getStartDate().toDate());
+    }
+
+    public String getFormattedEndDate(){
+        Locale locale = new Locale.Builder().setLanguage("en").setRegion("US").build();
+        DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.DEFAULT, locale);
+        return dateFormat.format(getEndDate().toDate());
     }
 
     @Override

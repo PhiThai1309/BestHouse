@@ -24,7 +24,9 @@ import com.team5.besthouse.models.ContractStatus;
 import com.team5.besthouse.models.TextMessage;
 import com.team5.besthouse.models.User;
 
+import java.text.DateFormat;
 import java.util.List;
+import java.util.Locale;
 
 public class ContractReviewAdapter extends RecyclerView.Adapter<ContractReviewAdapter.TaskViewHolder> {
     private final LayoutInflater mInflater;
@@ -42,11 +44,12 @@ public class ContractReviewAdapter extends RecyclerView.Adapter<ContractReviewAd
     @Override
     public TaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // Inflate the view
-        View itemView = mInflater.inflate(R.layout.layout_card_main_chat, parent, false);
+        View itemView = mInflater.inflate(R.layout.layout_contract_pending, parent, false);
         return new TaskViewHolder(itemView);
     }
 
     // Bind the data to the view holder
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
         //if task is not null
@@ -55,20 +58,26 @@ public class ContractReviewAdapter extends RecyclerView.Adapter<ContractReviewAd
             Contract current = contractList.get(position);
             // Set the name of the view holder
 
-            User tenant = database.collection(UnchangedValues.USERS_TABLE)
+            database.collection(UnchangedValues.USERS_TABLE)
                     .whereEqualTo(UnchangedValues.USER_EMAIL_COL, current.getTenantEmail())
                     .limit(1)
-                    .get().getResult().getDocuments().get(0).toObject(User.class);
+                    .get().addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult().getDocuments().get(0);
+                            User user = document.toObject(User.class);
+                            if (user != null) {
+                                holder.name.setText(user.getFullName());
+                            }
+                        }
+                    });
 
-            if (tenant != null) {
-                holder.name.setText(tenant.getFullName());
-            }
-            holder.startDate.setText(current.getStartDate().toDate().toString());
-            holder.endDate.setText(current.getEndDate().toDate().toString());
+            holder.startDate.setText(current.getFormattedStartDate());
+            holder.endDate.setText(current.getFormattedEndDate());
 
             holder.cardView.setOnClickListener(v -> {
                     Intent intent = new Intent(mInflater.getContext(), ContractActivity.class);
                     intent.putExtra("contract", current);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     mInflater.getContext().startActivity(intent);
             });
 
@@ -82,6 +91,8 @@ public class ContractReviewAdapter extends RecyclerView.Adapter<ContractReviewAd
                                     contract.setContractStatus(ContractStatus.REJECT);
                                     database.collection(UnchangedValues.CONTRACTS_TABLE).document(contract.getId()).set(contract);
                                 }
+                                contractList.clear();
+                                notifyDataSetChanged();
                             }
                             Toast.makeText(mInflater.getContext(), "Contract Accepted!", Toast.LENGTH_LONG).show();
                         });
