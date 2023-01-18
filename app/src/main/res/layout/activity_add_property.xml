@@ -42,8 +42,8 @@
                 layout="@layout/layout_spinner_property_select"/>
 
             <include
-                android:id="@+id/property_price"
-                layout="@layout/layout_input"/>
+                android:id="@+id/property_address"
+                layout="@layout/layout_input" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -187,7 +187,7 @@
                 android:orientation="horizontal">
 
                 <include
-                    android:id="@+id/last_chat_time"
+                    android:id="@+id/property_price"
                     layout="@layout/layout_input"/>
 
             </LinearLayout>

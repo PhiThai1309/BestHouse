@@ -22,6 +22,7 @@ public class UnchangedValues {
     public static final String USER_EMAIL_COL = "email" ;
     public static final String USER_PASS_COL = "password";
     public static final String USER_PHONE_COL = "phoneNumber";
+    public static final String USER_IMAGE_URL_COL = "imageUrl";
     public static final String USER_ROLE = "role";
     public static final String CONTRACTS_ID_COL = "contractId";
     public static final String LANDLORD_EMAIL_COL = "landlordEmail";

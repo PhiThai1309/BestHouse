@@ -36,6 +36,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.elevation.SurfaceColors;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -95,6 +96,7 @@ public class AddPropertyActivity extends BaseActivity implements RecyclerViewInt
         storeService = new StoreService(getApplicationContext());
         Gson json = new Gson();
         loginLandlord= json.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), Landlord.class );
+
         //Set hint for adding property name textbox
         View pname = findViewById(R.id.add_property_name);
         TextInputLayout pnameWrapper= pname.findViewById(R.id.textInput_wrapper);
@@ -106,20 +108,21 @@ public class AddPropertyActivity extends BaseActivity implements RecyclerViewInt
         ptypeSpinner = (Spinner) ptype.findViewById(R.id.box);
 
         //Set hint for adding property address textbox
-        View pAddress = findViewById(R.id.property_price);
+        View pAddress = findViewById(R.id.property_address);
         pAddressEditText = (EditText) pAddress.findViewById(R.id.box);
-        pAddressEditText.setHint("Address:");
+        TextInputLayout pAddressWrapper = pAddress.findViewById(R.id.textInput_wrapper);
+        pAddressWrapper.setHint("Address:");
 
         View pBedRoomEditTextView = findViewById(R.id.bedroomQuantity);
         pBedRoomEditText = (EditText) pBedRoomEditTextView.findViewById(R.id.box);
 
         View pBathRoomEditTextView = findViewById(R.id.bathroomQuantity);
-         pBathRoomEditText= (EditText) pBathRoomEditTextView.findViewById(R.id.box);
+        pBathRoomEditText= (EditText) pBathRoomEditTextView.findViewById(R.id.box);
 
         pAreaEditText = findViewById(R.id.propertyArea).findViewById(R.id.box);
 
         //Set hint for adding property price textbox
-        View price = findViewById(R.id.last_chat_time);
+        View price = findViewById(R.id.property_price);
         TextInputLayout priceWrapper= price.findViewById(R.id.textInput_wrapper);
         priceEditText = price.findViewById(R.id.box);
         priceEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
@@ -301,15 +304,22 @@ public class AddPropertyActivity extends BaseActivity implements RecyclerViewInt
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
             byte[] data = baos.toByteArray();
             if(bitmap != null && count > 0) {
-                StorageReference storageRef =  storage.getReference("images/").child(System.currentTimeMillis()+"_"+"currentuserid"+".JPEG");
+                StorageReference storageRef =  storage.getReference("images/").child(System.currentTimeMillis()+"_"+ FirebaseAuth.getInstance().getCurrentUser().getUid() +".JPEG");
                 storageRef.putBytes(data).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        imageURL.add(taskSnapshot.getStorage().getDownloadUrl().toString());
-                        if(imageURL.size() >= 3)
-                        {
-                           callBack.onCallback(imageURL); ;
-                        }
+
+                        taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                    imageURL.add(uri.toString());
+                                    if(imageURL.size() >= 3)
+                                    {
+                                        callBack.onCallback(imageURL); ;
+                                    }
+                            }
+                        });
+
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -352,8 +362,6 @@ public class AddPropertyActivity extends BaseActivity implements RecyclerViewInt
                             {
                                 FirebaseFirestore firestore = FirebaseFirestore.getInstance();
                                 try {
-                                    HashMap<String,String> hash = new HashMap<>();
-                                    hash.put("aaa", "bbbjhjA");
                                     DocumentReference dc = firestore.collection(UnchangedValues.PROPERTY_TABLE).document();
                                     newProperty.setId(dc.getId());
                                     dc.set(newProperty)
@@ -453,7 +461,7 @@ public class AddPropertyActivity extends BaseActivity implements RecyclerViewInt
             property.setImageURLList(imageURLList) ;
             return property;
         } catch (IOException e) {
-            Log.e("ERRRROORRR", "createNewProperty: " + e.getMessage() );
+            Log.e("ERROR", "createNewProperty: " + e.getMessage() );
         }
 
    return null;

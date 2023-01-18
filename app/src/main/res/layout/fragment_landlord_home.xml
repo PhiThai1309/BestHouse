@@ -57,8 +57,8 @@
 
                 <ImageView
                     android:id="@+id/landlord_account"
-                    android:layout_width="60dp"
-                    android:layout_height="40dp"
+                    android:layout_width="@dimen/_50sdp"
+                    android:layout_height="@dimen/_50sdp"
                     android:layout_marginStart="20dp"
                     android:src="@drawable/ic_outline_account_circle_24" />
             </LinearLayout>
