@@ -21,11 +21,13 @@ import com.team5.besthouse.models.User;
 import com.team5.besthouse.models.UserRole;
 import com.team5.besthouse.services.StoreService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PropertyCardAdapter extends RecyclerView.Adapter<PropertyCardAdapter.TaskViewHolder> {
     private final LayoutInflater mInflater;
     private List<Property> propertyList;
+    private int maxItemCount = 1000;
 
     StoreService storeService;
 
@@ -35,6 +37,12 @@ public class PropertyCardAdapter extends RecyclerView.Adapter<PropertyCardAdapte
     public PropertyCardAdapter(Context context, List<Property> tasks) {
         mInflater = LayoutInflater.from(context);
         propertyList = tasks;
+    }
+
+    public PropertyCardAdapter(Context context, ArrayList<Property> propertyList, int maxItemCount) {
+        mInflater = LayoutInflater.from(context);
+        this.propertyList = propertyList;
+        this.maxItemCount = maxItemCount;
     }
 
     // Create the view holder
@@ -102,9 +110,7 @@ public class PropertyCardAdapter extends RecyclerView.Adapter<PropertyCardAdapte
     // Return the size of the data set
     @Override
     public int getItemCount() {
-        if (propertyList == null)
-                return 0;
-        return propertyList.size();
+        return Math.min(propertyList.size(), 5);
     }
 
     //TaskViewHolder class to hold the views

@@ -3,7 +3,6 @@ package com.team5.besthouse.adapters;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.team5.besthouse.R;
 import com.team5.besthouse.activities.ContractActivity;
 import com.team5.besthouse.models.Contract;
@@ -22,10 +22,18 @@ import java.util.List;
 public class ContractAdapter extends RecyclerView.Adapter<ContractAdapter.TaskViewHolder> {
     private final LayoutInflater mInflater;
     private List<Contract> contractList;
+    FirebaseFirestore database = FirebaseFirestore.getInstance();
 
     private String key = "";
+    private int maxItemCount = 1000;
 
     // Constructor
+    public ContractAdapter(Context context, List<Contract> contracts, int maxItemCount) {
+        mInflater = LayoutInflater.from(context);
+        contractList = contracts;
+        this.maxItemCount = maxItemCount;
+    }
+
     public ContractAdapter(Context context, List<Contract> contracts) {
         mInflater = LayoutInflater.from(context);
         contractList = contracts;
@@ -48,11 +56,11 @@ public class ContractAdapter extends RecyclerView.Adapter<ContractAdapter.TaskVi
             // Get the task at the position
             Contract current = contractList.get(position);
             // Set the name of the view holder
-            holder.name.setText(current.getContractStatus().toString());
+            holder.status.setText(current.getContractStatus().toString());
             // Set the address of the view holder
-            holder.address.setText(current.convertStartDay().toString());
+            holder.name.setText(current.getStartDate().toDate().toString());
             //Set the prize of the view holder
-            holder.price.setText(current.getId());
+            holder.startDate.setText(current.getId());
 
             // Set the click listener
             holder.cardView.setOnClickListener(new View.OnClickListener() {
@@ -67,33 +75,32 @@ public class ContractAdapter extends RecyclerView.Adapter<ContractAdapter.TaskVi
             });
         } else {
             // Covers the case of data not being ready yet.
+            holder.status.setText("Error");
             holder.name.setText("Error");
-            holder.address.setText("Error");
-            holder.price.setText(0);
+            holder.startDate.setText(0);
         }
     }
 
     // Return the size of the data set
     @Override
     public int getItemCount() {
-        if(contractList.size() == 0){
-            return 0;
-        }
-        return contractList.size();
+        return Math.min(contractList.size(), maxItemCount);
     }
 
     //TaskViewHolder class to hold the views
     public static class TaskViewHolder extends RecyclerView.ViewHolder {
+        TextView status;
+        TextView startDate;
+        TextView endDate;
         TextView name;
-        TextView price;
-        TextView address;
         CardView cardView;
 
         public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
-            name = itemView.findViewById(R.id.property_name);
-            price = itemView.findViewById(R.id.property_price);
-            address = itemView.findViewById(R.id.property_address);
+            status = itemView.findViewById(R.id.property_name);
+            startDate = itemView.findViewById(R.id.property_price);
+//            endDate = itemView.findViewById(R.id.end_date);
+            name = itemView.findViewById(R.id.property_address);
             cardView = itemView.findViewById(R.id.cardView);
         }
     }

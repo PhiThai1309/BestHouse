@@ -13,8 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.firestore.DocumentChange;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.team5.besthouse.R;
@@ -60,24 +58,32 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.TaskViewHolder
                 Contract contract = documentSnapshot.toObject(Contract.class);
                 if (contract != null) {
                     database.collection(UnchangedValues.PROPERTIES_TABLE).document(contract.getPropertyId()).get().addOnCompleteListener(task -> {
-                        Property property = task.getResult().toObject(Property.class);
-                        if (property != null){
-                            holder.name.setText(property.getPropertyName());
+                        if (task.isSuccessful()) {
+                            Property property = task.getResult().toObject(Property.class);
+                            if (property != null) {
+                                holder.name.setText(property.getPropertyName());
 
-                            // Set on click listener
-                            holder.cardView.setOnClickListener(new View.OnClickListener() {
-                                @SuppressLint("NotifyDataSetChanged")
-                                @Override
-                                public void onClick(View v) {
-                                    Intent intent = new Intent(mInflater.getContext(), MessageActivity.class);
-                                    intent.putExtra("chat", current);
-                                    intent.putExtra("property", property);
-                                    intent.putExtra("contract", contract);
-                                    mInflater.getContext().startActivity(intent);
-                                }
-                            });
+                                // Set on click listener
+                                holder.cardView.setOnClickListener(new View.OnClickListener() {
+                                    @SuppressLint("NotifyDataSetChanged")
+                                    @Override
+                                    public void onClick(View v) {
+                                        Intent intent = new Intent(mInflater.getContext(), MessageActivity.class);
+                                        intent.putExtra("chat", current);
+                                        intent.putExtra("property", property);
+                                        intent.putExtra("contract", contract);
+                                        mInflater.getContext().startActivity(intent);
+                                    }
+                                });
+                            }
+                        }
+                        else{
+                            database.collection(UnchangedValues.CONTRACTS_TABLE).document(current.getContractId()).delete();
                         }
                     });
+                }
+                else {
+                    database.collection(UnchangedValues.CHATS_TABLE).document(current.getId()).delete();
                 }
             });
 

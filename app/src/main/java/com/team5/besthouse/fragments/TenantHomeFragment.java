@@ -51,9 +51,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 import com.team5.besthouse.R;
 import com.team5.besthouse.activities.MainActivity;
+import com.team5.besthouse.adapters.PropertyCardAdapter;
 import com.team5.besthouse.fragments.Inflate.MorePropertyFragment;
 import com.team5.besthouse.adapters.PropertyAdapter;
-import com.team5.besthouse.adapters.PropertyPartialCardAdapter;
 import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.models.Contract;
 import com.team5.besthouse.models.ContractStatus;
@@ -81,7 +81,7 @@ public class TenantHomeFragment extends Fragment {
     private RecyclerView propertyView;
     private ArrayList<Property> list;
     private PropertyAdapter adapter1;
-    private PropertyPartialCardAdapter adapter2;
+    private PropertyCardAdapter adapter2;
     private StoreService storeService;
     private View progressIndicator;
 
@@ -204,7 +204,7 @@ public class TenantHomeFragment extends Fragment {
         propertyView.setLayoutManager(linearLayoutManager2);
 
         propertyView.setNestedScrollingEnabled(false);
-        adapter2 = new PropertyPartialCardAdapter((MainActivity) getContext(), list);
+        adapter2 = new PropertyCardAdapter(getContext(), list, 5);
         propertyView.setAdapter(adapter2);
 
         featureView.setHasFixedSize(true);
