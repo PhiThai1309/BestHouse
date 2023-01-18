@@ -160,6 +160,7 @@ public class ContractActivity extends BaseActivity {
                                         Intent intent = new Intent(ContractActivity.this, DetailActivity.class);
                                         intent.putExtra("property", (Parcelable) property);
                                         intent.putExtra("history", true);
+                                        intent.putExtra("chat", true);
                                         startActivity(intent);
                                     }
                                 });

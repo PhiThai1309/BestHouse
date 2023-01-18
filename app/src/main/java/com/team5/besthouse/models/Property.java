@@ -84,6 +84,8 @@ public class Property implements Parcelable {
         area = in.readFloat();
         utilities = new ArrayList<>();
         utilities = in.readArrayList(Utilities.class.getClassLoader());
+        status = PropertyStatus.valueOf(in.readString());
+        propertyType = PropertyType.valueOf(in.readString());
 
     }
 
@@ -303,5 +305,7 @@ public class Property implements Parcelable {
         parcel.writeFloat(monthlyPrice);
         parcel.writeFloat(area);
         parcel.writeList(utilities);
+        parcel.writeString(status.toString());
+        parcel.writeString(propertyType.toString());
     }
 }
