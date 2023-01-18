@@ -233,6 +233,7 @@ public class LoginActivity extends BaseActivity {
                                     Gson gson = new Gson();
                                     storeService.storeStringValue(UnchangedValues.LOGIN_USER, gson.toJson(loginUser).toString());
                                     storeService.storeStringValue(UnchangedValues.USER_ID_COL, userId);
+                                    storeService.storeStringValue(UnchangedValues.USER_IMAGE_URL_COL, userImageUrl);
                                     direct.direct(true, userRole);
                                 } catch (Exception e) {
                                     showTextLong(e.getMessage());

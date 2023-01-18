@@ -3,6 +3,8 @@ package com.team5.besthouse.fragments;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +15,7 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -21,15 +24,20 @@ import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.elevation.SurfaceColors;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
 import com.team5.besthouse.R;
 import com.team5.besthouse.activities.AddPropertyActivity;
@@ -37,8 +45,8 @@ import com.team5.besthouse.activities.LandlordActivity;
 import com.team5.besthouse.adapters.LandlordPropertyAdapter;
 import com.team5.besthouse.adapters.PropertyAdapter;
 import com.team5.besthouse.adapters.PropertyCardAdapter;
-import com.team5.besthouse.adapters.PropertyPartialCardAdapter;
 import com.team5.besthouse.constants.UnchangedValues;
+import com.team5.besthouse.databinding.FragmentLandlordHomeBinding;
 import com.team5.besthouse.models.Contract;
 import com.team5.besthouse.models.ContractStatus;
 import com.team5.besthouse.models.Property;
@@ -58,15 +66,16 @@ public class LandlordHomeFragment extends Fragment {
     private RecyclerView postedPropertyView;
     private List<Property> list;
     private LandlordPropertyAdapter landlordAdapter;
-
+    private ImageView uerImageView;
     private Context context;
     private RecyclerView listingView;
     private RecyclerView propertyView;
     private PropertyAdapter adapter1;
     private PropertyCardAdapter adapter2;
     private StoreService storeService;
+    private FirebaseAuth firebaseAuth;
     private View progressIndicator;
-
+    private FragmentLandlordHomeBinding binding;
     FirebaseFirestore db;
     User user;
 
@@ -79,6 +88,7 @@ public class LandlordHomeFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private ImageView homeAccount;
 
     public LandlordHomeFragment() {
         // Required empty public constructor
@@ -115,7 +125,7 @@ public class LandlordHomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_landlord_home, container, false);
-
+        binding = FragmentLandlordHomeBinding.inflate(inflater, container, false);
         //Set color to the navigation bar to match with the bottom navigation view
         getActivity().getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(getActivity()));
         Window window = getActivity().getWindow();
@@ -126,7 +136,7 @@ public class LandlordHomeFragment extends Fragment {
         progressIndicator = view.findViewById(R.id.home_progressBar);
         progressIndicator.setVisibility(View.VISIBLE);
 
-        ImageView homeAccount = view.findViewById(R.id.landlord_account);
+        homeAccount = view.findViewById(R.id.landlord_account);
         homeAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -143,8 +153,18 @@ public class LandlordHomeFragment extends Fragment {
         //get db instance
         db = FirebaseFirestore.getInstance();
 
+        //get login user image and name
+        firebaseAuth = FirebaseAuth.getInstance();
+        binding.landlordName.setText(firebaseAuth.getCurrentUser().getDisplayName());
         // set up store service
         storeService = new StoreService(context);
+
+        // load user profile image
+        if(storeService.getStringValue(UnchangedValues.USER_IMAGE_URL_COL) != null)
+        {
+            Log.d("IMAGE", "onCreateView: " + storeService.getStringValue(UnchangedValues.USER_IMAGE_URL_COL));
+            loadImageFromFSUrl(storeService.getStringValue(UnchangedValues.USER_IMAGE_URL_COL));
+        }
 
         Gson gson = new Gson();
         user = gson.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), Tenant.class);
@@ -285,4 +305,32 @@ public class LandlordHomeFragment extends Fragment {
                     }
                 });
     }
+
+    private void loadImageFromFSUrl(String imageURL)
+    {
+        FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+
+        try {
+            StorageReference httpsReference = firebaseStorage.getReferenceFromUrl(imageURL);
+            final long ONE_MEGABYTE = 1024 * 1024;
+            httpsReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                @Override
+                public void onSuccess(byte[] bytes) {
+                   Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0 , bytes.length);
+                   homeAccount.setImageBitmap(bitmap);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle any errors
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+
 }

@@ -79,9 +79,7 @@ public class SignupActivity extends BaseActivity {
         signupBinding = ActivitySignupBinding.inflate(getLayoutInflater());
         setContentView(signupBinding.getRoot());
         firebaseAuth = FirebaseAuth.getInstance();
-        Log.d("USER_IN", ""+ firebaseAuth.getCurrentUser().getUid());
-        Log.d("USER_IN", "" + firebaseAuth.getCurrentUser().getEmail());
-        Log.d("USER_IN", "" + firebaseAuth.getCurrentUser().getPhotoUrl().toString());
+
 
         //Set color to the navigation bar to match with the bottom navigation view
         getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(this));
@@ -156,16 +154,23 @@ public class SignupActivity extends BaseActivity {
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
             byte[] data = baos.toByteArray();
             if(bitmap != null) {
-                StorageReference storageRef =  storage.getReference("users/").child(System.currentTimeMillis()+".JPEG");
+                StorageReference storageRef =  storage.getReference("users/").child(System.currentTimeMillis()+"_"+FirebaseAuth.getInstance().getCurrentUser().getUid()+ ".JPEG");
                 storageRef.putBytes(data).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        imageURL.add(taskSnapshot.getStorage().getDownloadUrl().toString());
-                        if(imageURL.size() >= 1)
-                        {
 
-                            callBack.onCallback(imageURL); ;
-                        }
+                           taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                               @Override
+                               public void onSuccess(Uri uri) {
+
+                                   if(uri != null)
+                                   {
+                                       imageURL.add(uri.toString());
+                                       callBack.onCallback(imageURL); ;
+                                   }
+                               }
+                           });
+
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
