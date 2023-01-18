@@ -37,7 +37,6 @@ import com.team5.besthouse.activities.LandlordActivity;
 import com.team5.besthouse.adapters.LandlordPropertyAdapter;
 import com.team5.besthouse.adapters.PropertyAdapter;
 import com.team5.besthouse.adapters.PropertyCardAdapter;
-import com.team5.besthouse.adapters.PropertyPartialCardAdapter;
 import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.models.Contract;
 import com.team5.besthouse.models.ContractStatus;
