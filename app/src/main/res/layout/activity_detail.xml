@@ -94,16 +94,13 @@
                         layout="@layout/feature_component" />
                 </LinearLayout>
 
-                <androidx.cardview.widget.CardView
 
-                    android:layout_marginStart="@dimen/_20sdp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
 
                     <com.smarteist.autoimageslider.SliderView
                         android:id="@+id/imageSlider"
                         android:layout_width="@dimen/_240sdp"
                         android:layout_height="@dimen/_300sdp"
+                        android:layout_marginStart="@dimen/_20sdp"
                         app:sliderAnimationDuration="600"
                         app:sliderAutoCycleDirection="back_and_forth"
                         app:sliderAutoCycleEnabled="true"
@@ -117,7 +114,7 @@
                         app:sliderIndicatorUnselectedColor="#FFF"
                         app:sliderScrollTimeInSec="4"
                         app:sliderStartAutoCycle="true" />
-                </androidx.cardview.widget.CardView>
+ 
             </LinearLayout>
 
             <LinearLayout
