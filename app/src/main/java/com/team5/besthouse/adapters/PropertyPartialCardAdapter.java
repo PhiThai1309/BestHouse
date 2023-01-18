@@ -4,19 +4,27 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
 import com.team5.besthouse.R;
 import com.team5.besthouse.activities.DetailActivity;
 import com.team5.besthouse.constants.UnchangedValues;
+import com.team5.besthouse.interfaces.GetBitMapCallBack;
 import com.team5.besthouse.models.Property;
 import com.team5.besthouse.models.User;
 import com.team5.besthouse.models.UserRole;
@@ -60,6 +68,13 @@ public class PropertyPartialCardAdapter extends RecyclerView.Adapter<PropertyPar
             holder.address.setText(current.getAddress(this.mInflater.getContext()).toString());
             //Set the prize of the view holder
             holder.price.setText(String.valueOf(current.getMonthlyPrice()));
+
+            loadImageFromFSUrl(current.getImageURLList().get(0), new GetBitMapCallBack() {
+                @Override
+                public void getBitMap(Bitmap bitmap) {
+                    holder.imageView.setImageBitmap(bitmap);
+                }
+            });
 
             holder.cardView.setOnClickListener(new View.OnClickListener() {
                 @SuppressLint("NotifyDataSetChanged")
@@ -113,6 +128,7 @@ public class PropertyPartialCardAdapter extends RecyclerView.Adapter<PropertyPar
         TextView price;
         TextView address;
         CardView cardView;
+        ImageView imageView;
 
         public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -120,6 +136,7 @@ public class PropertyPartialCardAdapter extends RecyclerView.Adapter<PropertyPar
             price = itemView.findViewById(R.id.last_chat_time);
             address = itemView.findViewById(R.id.property_address);
             cardView = itemView.findViewById(R.id.cardView);
+            imageView = itemView.findViewById(R.id.property_image);
         }
     }
 
@@ -130,4 +147,28 @@ public class PropertyPartialCardAdapter extends RecyclerView.Adapter<PropertyPar
 //        mInflater.getContext().startActivity(intent);
 //        notifyDataSetChanged();
 //    }
+private void loadImageFromFSUrl(String imageURL, final GetBitMapCallBack callBack)
+{
+    FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+
+    try {
+        StorageReference httpsReference = firebaseStorage.getReferenceFromUrl(imageURL);
+        final long ONE_MEGABYTE = 1024 * 1024;
+        httpsReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0 , bytes.length);
+                callBack.getBitMap(bitmap);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+            }
+        });
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+
+}
 }

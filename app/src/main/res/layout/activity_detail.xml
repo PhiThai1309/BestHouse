@@ -75,13 +75,11 @@
                 android:weightSum="2.5">
 
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="73dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:orientation="vertical"
-                    android:paddingStart="0dp"
-                    android:paddingEnd="20dp">
+                    android:orientation="vertical">
 
                     <include
                         android:id="@+id/details_bedroom"
@@ -96,14 +94,30 @@
                         layout="@layout/feature_component" />
                 </LinearLayout>
 
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:layout_width="0dp"
-                    android:layout_height="400dp"
-                    android:layout_weight="1.5"
-                    android:adjustViewBounds="true"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/house1"
-                    app:shapeAppearanceOverlay="@style/DetailCardView" />
+                <androidx.cardview.widget.CardView
+                    app:cardCornerRadius="6dp"
+                    android:layout_marginStart="@dimen/_20sdp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <com.smarteist.autoimageslider.SliderView
+                        android:id="@+id/imageSlider"
+                        android:layout_width="@dimen/_240sdp"
+                        android:layout_height="@dimen/_300sdp"
+                        app:sliderAnimationDuration="600"
+                        app:sliderAutoCycleDirection="back_and_forth"
+                        app:sliderAutoCycleEnabled="true"
+                        app:sliderIndicatorAnimationDuration="600"
+                        app:sliderIndicatorGravity="center_horizontal|bottom"
+                        app:sliderIndicatorMargin="15dp"
+                        app:sliderIndicatorOrientation="horizontal"
+                        app:sliderIndicatorPadding="3dp"
+                        app:sliderIndicatorRadius="2dp"
+                        app:sliderIndicatorSelectedColor="#5A5A5A"
+                        app:sliderIndicatorUnselectedColor="#FFF"
+                        app:sliderScrollTimeInSec="4"
+                        app:sliderStartAutoCycle="true" />
+                </androidx.cardview.widget.CardView>
             </LinearLayout>
 
             <LinearLayout

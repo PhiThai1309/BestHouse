@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -25,7 +26,9 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
+import com.smarteist.autoimageslider.SliderView;
 import com.team5.besthouse.R;
+import com.team5.besthouse.adapters.ImageSliderAdapter;
 import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.fragments.MapsFragment;
 import com.team5.besthouse.models.Chat;
@@ -56,6 +59,8 @@ public class DetailActivity extends BaseActivity {
     private Property property;
     private StoreService storeService;
     private Landlord landlord;
+    private SliderView sliderView;
+    private List<Bitmap> sliderViewImageList;
 
     View progressIndicator;
     Gson gson;
@@ -100,6 +105,8 @@ public class DetailActivity extends BaseActivity {
         featureBedroom.setImageResource(R.drawable.ic_outline_single_bed_24);
         TextView bedroomText = bedroom.findViewById(R.id.feature_text);
         bedroomText.setText(property.getBedrooms() + " Bedrooms");
+
+        sliderViewConfig();
 
         //Second feature
         LinearLayout bathroom = findViewById(R.id.details_bathroom);
@@ -227,6 +234,20 @@ public class DetailActivity extends BaseActivity {
 
         TextView price = findViewById(R.id.details_price);
         price.setText((int) property.getMonthlyPrice() + ".000 VND / Month");
+    }
+
+    private void sliderViewConfig()
+    {
+
+        sliderView = findViewById(R.id.imageSlider);
+        if(property.getImageURLList().size() > 0)
+        {
+            ImageSliderAdapter sliderAdapter = new ImageSliderAdapter(this, property.getImageURLList()) ;
+            sliderView.setSliderAdapter(sliderAdapter);
+            sliderView.startAutoCycle();
+        }
+
+
     }
 
     public void makeContract() {

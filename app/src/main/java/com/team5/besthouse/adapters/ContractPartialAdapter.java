@@ -3,17 +3,25 @@ package com.team5.besthouse.adapters;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.team5.besthouse.R;
 import com.team5.besthouse.activities.ContractActivity;
+import com.team5.besthouse.interfaces.GetBitMapCallBack;
 import com.team5.besthouse.models.Contract;
 
 import java.util.List;
@@ -98,12 +106,14 @@ public class ContractPartialAdapter extends RecyclerView.Adapter<ContractPartial
         TextView address;
         CardView cardView;
 
+
         public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.property_name);
             price = itemView.findViewById(R.id.property_address);
             address = itemView.findViewById(R.id.property_price);
             cardView = itemView.findViewById(R.id.cardView);
+
         }
     }
 
@@ -114,4 +124,5 @@ public class ContractPartialAdapter extends RecyclerView.Adapter<ContractPartial
 //        mInflater.getContext().startActivity(intent);
 //        notifyDataSetChanged();
 //    }
+
 }
