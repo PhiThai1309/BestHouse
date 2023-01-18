@@ -2,10 +2,13 @@ package com.team5.besthouse.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.util.Log;
 import android.view.Window;
@@ -55,7 +58,6 @@ public class DetailActivity extends BaseActivity {
     private FirebaseFirestore db;
     private Property property;
     private StoreService storeService;
-    private Landlord landlord;
 
     View progressIndicator;
     Gson gson;
@@ -94,6 +96,9 @@ public class DetailActivity extends BaseActivity {
         //Set color to the navigation bar to match with the bottom navigation view
         getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(this));
 
+        Toolbar toolbar = findViewById(R.id.homeToolbar);
+        this.setSupportActionBar(toolbar);
+
         //first feature
         LinearLayout bedroom = findViewById(R.id.details_bedroom);
         ImageView featureBedroom = bedroom.findViewById(R.id.feature_image);
@@ -113,27 +118,6 @@ public class DetailActivity extends BaseActivity {
         ImageView featureOther = other.findViewById(R.id.feature_image);
         featureOther.setImageResource(R.drawable.ic_outline_done_outline_24);
 
-        View returnView = findViewById(R.id.details_returnBar);
-        ImageView backBtn = returnView.findViewById(R.id.returnButton);
-        backBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
-        ImageView editBtn = returnView.findViewById(R.id.editButton);
-        if(user.getRole() == UserRole.TENANT){
-            editBtn.setVisibility(View.GONE);
-        }
-        editBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent editIntent = new Intent(getApplicationContext(), EditActivity.class);
-                editIntent.putExtra("property", property);
-                startActivity(editIntent);
-            }
-        });
-
         featureOther.setImageResource(R.drawable.ic_outline_square_foot_24);
         TextView otherText = other.findViewById(R.id.feature_text);
         otherText.setText((int) property.getArea() + " Square foot");
@@ -141,67 +125,19 @@ public class DetailActivity extends BaseActivity {
         TextView desc = findViewById(R.id.details_desc);
         desc.setText(property.getPropertyDescription());
 
-        TextView nameText = findViewById(R.id.details_name);
-
         TextView locationText = findViewById(R.id.details_address);
 
         //End of id get
 
-        nameText.setText(property.getPropertyName());
+        toolbar.setTitle(property.getPropertyName());
 
         String location = property.getAddress(getApplicationContext());
         locationText.setText(location);
 
         //button to ask landlord for a contract
         makeContractButton.setOnClickListener(v -> {
-//            Property property = Property.STATICPROPERTY;
-//            db.collection(UnchangedValues.PROPERTIES_TABLE).add(property);
-//
-//            Toast.makeText(this, "New property added!", Toast.LENGTH_SHORT).show();
             makeContract();
         });
-
-//        Log.d(TAG, property.getLandlordEmail());
-//        database1.collection(UnchangedValues.USERS_TABLE)
-//                .whereEqualTo("email",true)
-//                .get()
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if (task.isSuccessful()) {
-//                            for (QueryDocumentSnapshot document : task.getResult()) {
-//                                User user = document.toObject(User.class);
-//                                TextView landlordID = findViewById(R.id.details_lanlordID);
-//                                if(user.getEmail() == property.getLandlordEmail()) {
-//                                    landlordID.setText(user.getEmail());
-//                                    Log.d("Hello", document.get("propertyName").toString());
-////                                Log.d(TAG, user.getEmail());
-//                                }
-//                            }
-//                        } else {
-//                            Log.d(TAG, "Error getting documents: ", task.getException());
-//                        }
-//
-//                    }
-//                });
-
-//        TextView type = findViewById(R.id.property_type);
-//        type.setText(property.getPropertyType().toString().toLowerCase(Locale.ROOT));
-//
-//        TextView utilities = findViewById(R.id.Utilities);
-//        utilities.setText(property.getUtilities().toString().substring(1));
-
-//        GridView grid = findViewById(R.id.home_grid_view);
-
-//        List<Utilities> utilitiesList = new ArrayList<>();
-//        for(int i = 0; i < property.getUtilities().size(); i++) {
-//            utilitiesList.add(property.getUtilities().get(i));
-//        }
-
-//        final ArrayAdapter adapter = new ArrayAdapter<>(this,
-//                android.R.layout.simple_list_item_1, property.getUtilities());
-//        GridViewCustomAdapter GridViewCustomAdapter = new GridViewCustomAdapter(this, property.getUtilities());
-//        grid.setAdapter(GridViewCustomAdapter);
 
         if(property.getUtilities() != null) {
             for(Utilities utility : property.getUtilities()) {
@@ -212,7 +148,7 @@ public class DetailActivity extends BaseActivity {
                 ulText.setText(utility.toString());
             }
         }
-//
+
         for (Utilities dir : Utilities.values()) {
             String ult = dir.toString().toLowerCase(Locale.ROOT);
             View ulView = findViewById(this.getResources().
@@ -323,5 +259,34 @@ public class DetailActivity extends BaseActivity {
                         Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        if(user.getRole() != UserRole.TENANT){
+            getMenuInflater().inflate(R.menu.edit_app_bar, menu);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.edit:
+                Intent editIntent = new Intent(getApplicationContext(), EditActivity.class);
+                editIntent.putExtra("property", property);
+                startActivity(editIntent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }

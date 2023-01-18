@@ -95,6 +95,7 @@ public class AddPropertyActivity extends BaseActivity implements RecyclerViewInt
         storeService = new StoreService(getApplicationContext());
         Gson json = new Gson();
         loginLandlord= json.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), Landlord.class );
+
         //Set hint for adding property name textbox
         View pname = findViewById(R.id.add_property_name);
         TextInputLayout pnameWrapper= pname.findViewById(R.id.textInput_wrapper);
@@ -106,20 +107,21 @@ public class AddPropertyActivity extends BaseActivity implements RecyclerViewInt
         ptypeSpinner = (Spinner) ptype.findViewById(R.id.box);
 
         //Set hint for adding property address textbox
-        View pAddress = findViewById(R.id.property_price);
+        View pAddress = findViewById(R.id.property_address);
         pAddressEditText = (EditText) pAddress.findViewById(R.id.box);
-        pAddressEditText.setHint("Address:");
+        TextInputLayout pAddressWrapper = pAddress.findViewById(R.id.textInput_wrapper);
+        pAddressWrapper.setHint("Address:");
 
         View pBedRoomEditTextView = findViewById(R.id.bedroomQuantity);
         pBedRoomEditText = (EditText) pBedRoomEditTextView.findViewById(R.id.box);
 
         View pBathRoomEditTextView = findViewById(R.id.bathroomQuantity);
-         pBathRoomEditText= (EditText) pBathRoomEditTextView.findViewById(R.id.box);
+        pBathRoomEditText= (EditText) pBathRoomEditTextView.findViewById(R.id.box);
 
         pAreaEditText = findViewById(R.id.propertyArea).findViewById(R.id.box);
 
         //Set hint for adding property price textbox
-        View price = findViewById(R.id.last_chat_time);
+        View price = findViewById(R.id.property_price);
         TextInputLayout priceWrapper= price.findViewById(R.id.textInput_wrapper);
         priceEditText = price.findViewById(R.id.box);
         priceEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
