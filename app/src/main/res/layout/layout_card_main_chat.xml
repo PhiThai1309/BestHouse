@@ -4,7 +4,6 @@
     android:id="@+id/cardView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:weightSum="3.1"
     android:orientation="vertical">
 
     <LinearLayout
@@ -13,25 +12,26 @@
         android:layout_marginHorizontal="18dp"
         android:layout_marginVertical="8dp"
         android:orientation="horizontal">
+
         <com.google.android.material.imageview.ShapeableImageView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:maxHeight="80dp"
             android:layout_weight="0.6"
-            android:scaleType="centerCrop"
-            android:paddingVertical="8dp"
-            android:paddingHorizontal="8dp"
-            app:shapeAppearanceOverlay="@style/Card2"
             android:adjustViewBounds="true"
-            android:src="@drawable/house1"/>
+            android:maxHeight="80dp"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="8dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/house1"
+            app:shapeAppearanceOverlay="@style/Card2" />
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="start"
+            android:layout_marginStart="8dp"
             android:layout_weight="2"
             android:gravity="center_vertical"
-            android:layout_marginStart="8dp"
             android:orientation="vertical">
 
             <TextView
@@ -47,32 +47,31 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
+
                 <TextView
                     android:id="@+id/property_price"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:maxLines="1"
-                    android:layout_weight="1"
                     style="@style/NormalText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:maxLines="1"
                     android:text="@string/place_holder" />
 
                 <TextView
                     android:id="@+id/last_chat_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:maxWidth="80dp"
+                    android:fontFamily="sans-serif-thin"
                     android:maxLines="1"
-                    android:paddingVertical="5dp"
                     android:text="@string/place_holder"
                     android:textColor="@color/md_theme_primary"
-                    android:fontFamily="sans-serif-thin"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 
     <com.google.android.material.divider.MaterialDivider
         android:layout_width="match_parent"
-        android:layout_height="0.2dp"/>
+        android:layout_height="0.2dp" />
 
 </LinearLayout>

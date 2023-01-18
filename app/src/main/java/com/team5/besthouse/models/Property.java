@@ -39,6 +39,10 @@ public class Property implements Parcelable {
         // Do not delete
     }
 
+    public Property(String id){
+            this.id = id;
+    }
+
     public Property(String id, String propertyName, String landlordEmail, LatLng coordinates, PropertyType propertyType, int bedrooms, int bathrooms, List<Utilities> utilities, float monthlyPrice, float area) {
         this.id = id;
         this.propertyName = propertyName;
