@@ -75,7 +75,6 @@ public class AccountFragment extends Fragment {
     private RecyclerView historyView;
     private ArrayList<Contract> contractList;
     private ContractAdapter adapter1;
-    private LinearProgressIndicator progressIndicator;
 
     private RecyclerView propertyView;
     private ArrayList<Property> propertyList;
