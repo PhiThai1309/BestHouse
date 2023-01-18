@@ -20,6 +20,7 @@ import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.AutocompletePrediction;
 import com.google.android.libraries.places.api.model.AutocompleteSessionToken;
 import com.google.android.libraries.places.api.model.RectangularBounds;
+import com.google.android.libraries.places.api.model.TypeFilter;
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.team5.besthouse.R;
@@ -29,6 +30,7 @@ import com.team5.besthouse.fragments.LandLordMapsFragment;
 import com.team5.besthouse.interfaces.RecyclerViewInterface;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class SearchLocationWithSuggestionActivity extends AppCompatActivity implements RecyclerViewInterface {
 
@@ -122,6 +124,7 @@ public class SearchLocationWithSuggestionActivity extends AppCompatActivity impl
                           .setLocationBias(bounds)
                           .setOrigin(HCM_CEN_LATLNG)
                           .setCountries("VN")
+//                          .setTypesFilter(Arrays.asList(TypeFilter.ADDRESS.toString()))
                           .setSessionToken(token)
                           .setQuery(query)
                           .build();

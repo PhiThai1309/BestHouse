@@ -74,45 +74,48 @@ public class Contract implements Parcelable {
         return Objects.hash(id);
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public String getId() {
         return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public ContractStatus getContractStatus() {
         return contractStatus;
     }
 
+    public void setContractStatus(ContractStatus contractStatus) {
+        this.contractStatus = contractStatus;
+    }
+
     public String getLandlordEmail() {
         return landlordEmail;
+    }
+
+    public void setLandlordEmail(String landlordEmail) {
+        this.landlordEmail = landlordEmail;
     }
 
     public String getTenantEmail() {
         return tenantEmail;
     }
 
+    public void setTenantEmail(String tenantEmail) {
+        this.tenantEmail = tenantEmail;
+    }
+
     public String getPropertyId() {
         return propertyId;
     }
 
-    public Timestamp getStartDate() {
-        return startDate;
+    public void setPropertyId(String propertyId) {
+        this.propertyId = propertyId;
     }
 
-    public Date convertStartDay(){
-        if(startDate == null) {
-            return null;
-        }
-        return startDate.toDate();
-    }
-    public Date convertEndDay(){
-        if(endDate == null) {
-            return null;
-        }
-        return endDate.toDate();
+    public Timestamp getStartDate() {
+        return startDate;
     }
 
     public void setStartDate(Timestamp startDate) {

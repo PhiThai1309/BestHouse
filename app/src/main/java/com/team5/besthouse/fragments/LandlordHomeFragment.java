@@ -45,6 +45,7 @@ import com.team5.besthouse.models.Tenant;
 import com.team5.besthouse.models.User;
 import com.team5.besthouse.services.StoreService;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,13 +56,11 @@ import java.util.List;
  */
 public class LandlordHomeFragment extends Fragment {
     private RecyclerView postedPropertyView;
-    private List<Property> list;
+    private ArrayList<Property> list;
     private LandlordPropertyAdapter landlordAdapter;
 
     private Context context;
     private RecyclerView listingView;
-    private RecyclerView propertyView;
-    private PropertyAdapter adapter1;
     private PropertyCardAdapter adapter2;
     private StoreService storeService;
     private View progressIndicator;
@@ -153,21 +152,19 @@ public class LandlordHomeFragment extends Fragment {
 
 
         //Get the recycler view and
-        listingView = (RecyclerView) view.findViewById(R.id.posted_property);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false);
+        listingView = view.findViewById(R.id.posted_property);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(inflater.getContext(), LinearLayoutManager.VERTICAL, false);
         //Set the layout manager
         linearLayoutManager.setStackFromEnd(false);
         linearLayoutManager.setReverseLayout(false);
-        listingView.setHasFixedSize(true);
         listingView.setLayoutManager(linearLayoutManager);
 
         SnapHelper helper = new LinearSnapHelper();
         helper.attachToRecyclerView(listingView);
 
         list = new ArrayList<>();
-        adapter2 = new PropertyCardAdapter((LandlordActivity) getContext(), list);
+        adapter2 = new PropertyCardAdapter(inflater.getContext(), list, false);
         listingView.setAdapter(adapter2);
-        listingView.setHasFixedSize(true);
 
         //Floating action button configure
         ExtendedFloatingActionButton floatBtn = view.findViewById(R.id.float_button);
@@ -198,29 +195,9 @@ public class LandlordHomeFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        //code for landlords to get list of contracts
-//    void getContracts(){
-//        Gson gson = new Gson();
-//        User user = gson.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), Landlord.class);
-//
-//        db.collection(UnchangedValues.CONTRACTS_TABLE)
-//                .whereEqualTo("contractStatus", ContractStatus.PENDING)
-//                .whereEqualTo("landlordEmail", user.getEmail())
-//                .get().addOnCompleteListener(task -> {
-//                    if (task.isSuccessful()) {
-//                        for (QueryDocumentSnapshot document : task.getResult()) {
-//                            Contract contract = document.toObject(Contract.class);
-//
-//                           //add to list and notify adapter
-//                        }
-//                    }
-//                });
-//    }
-
-
-        //filter for all rents such that its end date is after today on the db side
         FirebaseFirestore database = FirebaseFirestore.getInstance();
         database.collection(UnchangedValues.PROPERTIES_TABLE)
+                .whereEqualTo(UnchangedValues.LANDLORD_EMAIL_COL, user.getEmail())
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @SuppressLint("NotifyDataSetChanged")
                     @Override
@@ -228,56 +205,27 @@ public class LandlordHomeFragment extends Fragment {
                         progressIndicator.setVisibility(View.VISIBLE);
                         if(error != null)
                         {
-                            Log.w("ERROR ERROR ", error);
+                            Log.w("ERROR", error);
                             return;
                         }
-//                        Log.w("ERROR ERROR ", value.getDocumentChanges().get(0).getDocument().getData().toString());
-
-                        //filter for rents that begins before today on the client side
                         assert value != null;
+
+                        adapter2.notifyDataSetChanged();
+
                         for(DocumentChange newDoc : value.getDocumentChanges()){
                             Property p = newDoc.getDocument().toObject(Property.class);
-//                            Log.i("Property", p.getId() == null ? "null address!" : p.getId());
-//                            Log.i("Property", newDoc.getType().toString());
-                            if(newDoc.getType() == DocumentChange.Type.ADDED){
-                                list.remove(p);
-                                try {
-                                    //get all contracts that have its end date after today and is from this property
 
-//                                    Log.i(TAG, "onEvent: " + p);
-                                    database.collection(UnchangedValues.CONTRACTS_TABLE)
-                                            .whereEqualTo("landlordEmail", p.getLandlordEmail())
-                                            .get()
-                                            .addOnCompleteListener(v -> {
-                                                if (v.isSuccessful()){
-                                                    boolean ok = true;
-//                                                    Log.i("TAG", "onEvent: " + v.getResult().getDocuments().size());
-                                                    for (QueryDocumentSnapshot document : v.getResult()) {
-                                                        Contract contract = document.toObject(Contract.class);
-                                                        if(contract.getStartDate().compareTo(Timestamp.now()) <= 0 && (contract.getContractStatus().equals(ContractStatus.ACTIVE) || (user.getEmail().equals(contract.getTenantEmail()) && contract.getContractStatus().equals(ContractStatus.PENDING)))){
-                                                            ok = false;
-                                                            break;
-                                                        }
-                                                    }
-                                                    if (ok) {
-                                                        list.add(p);
-//                                                        Log.i("ADDED" , p.toString());
-//                                                        adapter1.notifyDataSetChanged();
-                                                        adapter2.notifyDataSetChanged();
-                                                    }
-                                                }
-                                            });
-                                } catch (Exception e) {
-                                    Log.d("ERROR 2", "Error adding object : " + newDoc.toString() + ", Exception " + e.getMessage());
-                                }
-                            }
-                            else {
+                            Log.i("Property", newDoc.getType().toString());
+                            int i = list.indexOf(p);
+                            if (i >= 0) {
+                                Log.i("Property", "Property already exists, removing");
                                 list.remove(p);
-                                if (newDoc.getType().equals(DocumentChange.Type.MODIFIED)) {
-                                    list.add(p);
-                                }
-//                                adapter1.notifyDataSetChanged();
-                                adapter2.notifyDataSetChanged();
+                                adapter2.notifyItemRemoved(list.indexOf(p));
+                            }
+                            if(newDoc.getType() != DocumentChange.Type.REMOVED){
+                                list.add(p);
+                                Log.i("Property", p.toString());
+                                adapter2.notifyItemInserted(list.indexOf(p));
                             }
                         }
                         progressIndicator.setVisibility(View.GONE);

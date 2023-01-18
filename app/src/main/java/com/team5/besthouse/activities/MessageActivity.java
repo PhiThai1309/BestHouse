@@ -151,7 +151,7 @@ public class MessageActivity extends AppCompatActivity {
                             TextMessage message = doc.getDocument().toObject(TextMessage.class);
                             Log.i("Message", message.toString());
                             messageList.add(message);
-                            messageAdapter.notifyItemInserted(messageList.size() - 1);
+                            messageAdapter.notifyItemInserted(messageList.indexOf(message));
                         }
                         if (messageList.size() > 0) {
                             msgRecyclerView.smoothScrollToPosition(messageList.size() - 1);

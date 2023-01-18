@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.gson.Gson;
 import com.team5.besthouse.R;
 import com.team5.besthouse.activities.DetailActivity;
+import com.team5.besthouse.activities.PropertyContractsActivity;
 import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.models.Property;
 import com.team5.besthouse.models.User;
@@ -22,11 +23,11 @@ import com.team5.besthouse.models.UserRole;
 import com.team5.besthouse.services.StoreService;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class PropertyCardAdapter extends RecyclerView.Adapter<PropertyCardAdapter.TaskViewHolder> {
     private final LayoutInflater mInflater;
-    private List<Property> propertyList;
+    private final ArrayList<Property> propertyList;
+    private boolean toProperty = true;
     private int maxItemCount = 1000;
 
     StoreService storeService;
@@ -34,7 +35,7 @@ public class PropertyCardAdapter extends RecyclerView.Adapter<PropertyCardAdapte
     private String key = "";
 
     // Constructor
-    public PropertyCardAdapter(Context context, List<Property> tasks) {
+    public PropertyCardAdapter(Context context, ArrayList<Property> tasks) {
         mInflater = LayoutInflater.from(context);
         propertyList = tasks;
     }
@@ -43,6 +44,12 @@ public class PropertyCardAdapter extends RecyclerView.Adapter<PropertyCardAdapte
         mInflater = LayoutInflater.from(context);
         this.propertyList = propertyList;
         this.maxItemCount = maxItemCount;
+    }
+
+    public PropertyCardAdapter(Context context, ArrayList<Property> propertyList, boolean toProperty) {
+        mInflater = LayoutInflater.from(context);
+        this.propertyList = propertyList;
+        this.toProperty = toProperty;
     }
 
     // Create the view holder
@@ -72,23 +79,11 @@ public class PropertyCardAdapter extends RecyclerView.Adapter<PropertyCardAdapte
                 @SuppressLint("NotifyDataSetChanged")
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(mInflater.getContext(), DetailActivity.class);
-
-//                    ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-//                            MainActivity.this, imageView, ViewCompat.getTransitionName(imageView));
-                    intent.putExtra("property", current);
-
-                    // set up store service
-                    storeService = new StoreService(mInflater.getContext());
-
-                    Gson gson = new Gson();
-                    User user = gson.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), User.class);
-                    if(user.getRole() == UserRole.LANDLORD){
-                        intent.putExtra("history", true);
+                    if (toProperty) {
+                        goToProperty(current);
+                    } else {
+                        goToContracts(current);
                     }
-
-                    mInflater.getContext().startActivity(intent);
-                    notifyDataSetChanged();
                 }
             });
         } else {
@@ -105,6 +100,31 @@ public class PropertyCardAdapter extends RecyclerView.Adapter<PropertyCardAdapte
 //                updateTask();
 //            }
 //        });
+    }
+
+    private void goToContracts(Property current) {
+        Intent intent = new Intent(mInflater.getContext(), PropertyContractsActivity.class);
+        intent.putExtra("property", current);
+        mInflater.getContext().startActivity(intent);
+    }
+
+    private void goToProperty(Property current) {
+        Intent intent = new Intent(mInflater.getContext(), DetailActivity.class);
+
+//                    ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+//                            MainActivity.this, imageView, ViewCompat.getTransitionName(imageView));
+        intent.putExtra("property", current);
+
+        // set up store service
+        storeService = new StoreService(mInflater.getContext());
+
+        Gson gson = new Gson();
+        User user = gson.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), User.class);
+        if(user.getRole() == UserRole.LANDLORD){
+            intent.putExtra("history", true);
+        }
+
+        mInflater.getContext().startActivity(intent);
     }
 
     // Return the size of the data set
