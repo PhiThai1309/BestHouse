@@ -69,7 +69,11 @@
                 android:layout_height="wrap_content"
                 android:indeterminate="true" />
 
-            <include layout="@layout/layout_search" />
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/search_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingHorizontal="10dp"/>
 
             <TextView
                 style="@style/Bold_Heading"

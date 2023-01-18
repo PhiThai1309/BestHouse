@@ -69,10 +69,10 @@ public class ContractActivity extends BaseActivity {
         this.setSupportActionBar(toolbar);
 
         TextView startDate = findViewById(R.id.contract_start_date);
-        startDate.setText(contract.convertStartDay().toString());
+        startDate.setText(contract.getStartDate().toDate().toString());
 
         TextView endDate = findViewById(R.id.contract_end_date);
-        endDate.setText(contract.convertEndDay().toString());
+        endDate.setText(contract.getEndDate().toDate().toString());
 
         propertyAddress = findViewById(R.id.contract_address_name);
         propertyPrice = findViewById(R.id.contract_price_detail);
@@ -160,6 +160,7 @@ public class ContractActivity extends BaseActivity {
                                         Intent intent = new Intent(ContractActivity.this, DetailActivity.class);
                                         intent.putExtra("property", (Parcelable) property);
                                         intent.putExtra("history", true);
+                                        intent.putExtra("chat", true);
                                         startActivity(intent);
                                     }
                                 });

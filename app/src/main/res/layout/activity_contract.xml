@@ -18,6 +18,8 @@
             style="@style/Widget.Material3.CollapsingToolbar.Large"
             android:layout_width="match_parent"
             android:layout_height="150dp"
+            app:collapsedTitleTextAppearance="@style/Bold_Heading"
+            app:expandedTitleTextAppearance="@style/Bold_Heading"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <com.google.android.material.appbar.MaterialToolbar

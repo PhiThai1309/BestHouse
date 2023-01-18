@@ -10,39 +10,40 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="30dp"/>
+                android:layout_height="30dp" />
 
             <TextView
                 android:id="@+id/see_more_title"
                 style="@style/Bold_Heading"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingStart="20dp"
+                android:layout_marginStart="20dp"
                 android:paddingBottom="12dp"
-                android:text="@string/chats" />
+                android:text="Contracts" />
 
             <com.google.android.material.progressindicator.LinearProgressIndicator
                 android:id="@+id/account_progressBar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:indeterminate="true"/>
+                android:indeterminate="true" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/chat_recycler_view"
+                android:id="@+id/contract_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clipToPadding="false"
                 android:orientation="vertical"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                tools:listitem="@layout/layout_card_main_chat" />
+                tools:listitem="@layout/layout_contract_pending" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

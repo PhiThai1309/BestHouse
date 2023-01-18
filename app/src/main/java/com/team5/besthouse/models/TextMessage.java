@@ -4,6 +4,8 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.Exclude;
 
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.util.Locale;
 import java.util.Objects;
 
 public class TextMessage implements Serializable {
@@ -84,6 +86,20 @@ public class TextMessage implements Serializable {
 
     public void setTime(Timestamp time) {
         this.time = time;
+    }
+
+    @Exclude
+    public String getFormattedTime(){
+        Locale locale = new Locale.Builder().setLanguage("en").setRegion("US").build();
+        DateFormat dateFormat = DateFormat.getTimeInstance(DateFormat.DEFAULT, locale);
+        return dateFormat.format(getTime().toDate());
+    }
+
+    @Exclude
+    public String getFormattedDate(){
+        Locale locale = new Locale.Builder().setLanguage("en").setRegion("US").build();
+        DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.DEFAULT, locale);
+        return dateFormat.format(getTime().toDate());
     }
 
     @Exclude

@@ -21,6 +21,7 @@ import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 import com.team5.besthouse.R;
@@ -105,7 +106,7 @@ public class ChatFragment extends Fragment {
         progressIndicator = binding.getRoot().findViewById(R.id.account_progressBar);
         progressIndicator.setVisibility(View.VISIBLE);
 
-        chatView = binding.getRoot().findViewById(R.id.contract_history);
+        chatView = binding.getRoot().findViewById(R.id.chat_recycler_view);
 
         listChats = new ArrayList<>();
 
@@ -113,12 +114,10 @@ public class ChatFragment extends Fragment {
         //Set the layout manager
         linearLayoutManager.setStackFromEnd(false);
         linearLayoutManager.setReverseLayout(false);
-        chatView.setHasFixedSize(true);
         chatView.setLayoutManager(linearLayoutManager);
 
         adapter1 = new ChatAdapter(getContext(), listChats);
         chatView.setAdapter(adapter1);
-        chatView.setHasFixedSize(true);
 
         // Inflate the layout for this fragment
         return binding.getRoot();
@@ -160,21 +159,22 @@ public class ChatFragment extends Fragment {
 
                 listChats.removeIf(chat -> chat.getContractId().equals(contract.getId()));
 
+                adapter1.notifyDataSetChanged();
+
                 if (newDoc.getType() != DocumentChange.Type.REMOVED){
                     database.collection(UnchangedValues.CHATS_TABLE)
                             .whereEqualTo(UnchangedValues.CONTRACTS_ID_COL, contract.getId())
                             .get().addOnCompleteListener(task -> {
                                 if (task.isSuccessful()) {
-                                    for (int i = 0; i < task.getResult().size(); i++) {
-                                        Chat chat = task.getResult().getDocuments().get(i).toObject(Chat.class);
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        Chat chat = document.toObject(Chat.class);
                                         listChats.add(chat);
+                                        adapter1.notifyItemInserted(listChats.indexOf(chat));
                                     }
-                                    adapter1.notifyDataSetChanged();
                                     progressIndicator.setVisibility(View.GONE);
                                 }
                             });
                 }
-                adapter1.notifyDataSetChanged();
             }
             progressIndicator.setVisibility(View.GONE);
         }

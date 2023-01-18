@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:paddingHorizontal="20dp"
         android:paddingVertical="14dp"
-        style="@style/Bold_SubHeading"
+        style="@style/Bold_SubHeading2"
         android:text="@string/submit_text" />
 
 </RelativeLayout>

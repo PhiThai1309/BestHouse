@@ -40,8 +40,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 import com.team5.besthouse.R;
 import com.team5.besthouse.activities.LoginActivity;
-import com.team5.besthouse.adapters.ContractPartialAdapter;
-import com.team5.besthouse.adapters.PropertyPartialCardAdapter;
+import com.team5.besthouse.adapters.ContractAdapter;
+import com.team5.besthouse.adapters.PropertyCardAdapter;
 import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.databinding.FragmentAccountBinding;
 import com.team5.besthouse.fragments.Inflate.MoreContractFragment;
@@ -74,12 +74,11 @@ public class AccountFragment extends Fragment {
 
     private RecyclerView historyView;
     private ArrayList<Contract> contractList;
-    private ContractPartialAdapter adapter1;
-    private LinearProgressIndicator progressIndicator;
+    private ContractAdapter adapter1;
 
     private RecyclerView propertyView;
     private ArrayList<Property> propertyList;
-    private PropertyPartialCardAdapter adapter;
+    private PropertyCardAdapter adapter;
 
     private View historyTitle, historyWrapper, propertyTitle, propertyWrapper;
 
@@ -304,7 +303,8 @@ public class AccountFragment extends Fragment {
         historyView.setHasFixedSize(true);
         historyView.setLayoutManager(linearLayoutManager);
 
-        adapter1 = new ContractPartialAdapter(getContext(), contractList);
+        //limits max 5 items
+        adapter1 = new ContractAdapter(getContext(), contractList, 5);
         historyView.setAdapter(adapter1);
         historyView.setHasFixedSize(true);
 
@@ -347,7 +347,7 @@ public class AccountFragment extends Fragment {
         linearLayoutManager.setReverseLayout(false);
         propertyView.setHasFixedSize(true);
         propertyView.setLayoutManager(linearLayoutManager2);
-        adapter = new PropertyPartialCardAdapter(getContext(), propertyList);
+        adapter = new PropertyCardAdapter(getContext(), propertyList, 5);
         propertyView.setAdapter(adapter);
         historyView.setHasFixedSize(true);
 

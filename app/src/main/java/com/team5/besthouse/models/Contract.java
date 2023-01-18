@@ -8,10 +8,12 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.Exclude;
 
 import java.io.Serializable;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.TimeZone;
 
@@ -74,45 +76,48 @@ public class Contract implements Parcelable {
         return Objects.hash(id);
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public String getId() {
         return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public ContractStatus getContractStatus() {
         return contractStatus;
     }
 
+    public void setContractStatus(ContractStatus contractStatus) {
+        this.contractStatus = contractStatus;
+    }
+
     public String getLandlordEmail() {
         return landlordEmail;
+    }
+
+    public void setLandlordEmail(String landlordEmail) {
+        this.landlordEmail = landlordEmail;
     }
 
     public String getTenantEmail() {
         return tenantEmail;
     }
 
+    public void setTenantEmail(String tenantEmail) {
+        this.tenantEmail = tenantEmail;
+    }
+
     public String getPropertyId() {
         return propertyId;
     }
 
-    public Timestamp getStartDate() {
-        return startDate;
+    public void setPropertyId(String propertyId) {
+        this.propertyId = propertyId;
     }
 
-    public Date convertStartDay(){
-        if(startDate == null) {
-            return null;
-        }
-        return startDate.toDate();
-    }
-    public Date convertEndDay(){
-        if(endDate == null) {
-            return null;
-        }
-        return endDate.toDate();
+    public Timestamp getStartDate() {
+        return startDate;
     }
 
     public void setStartDate(Timestamp startDate) {
@@ -125,6 +130,20 @@ public class Contract implements Parcelable {
 
     public void setEndDate(Timestamp endDate) {
         this.endDate = endDate;
+    }
+
+    @Exclude
+    public String getFormattedStartDate(){
+        Locale locale = new Locale.Builder().setLanguage("en").setRegion("US").build();
+        DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.DEFAULT, locale);
+        return dateFormat.format(getStartDate().toDate());
+    }
+
+    @Exclude
+    public String getFormattedEndDate(){
+        Locale locale = new Locale.Builder().setLanguage("en").setRegion("US").build();
+        DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.DEFAULT, locale);
+        return dateFormat.format(getEndDate().toDate());
     }
 
     @Override

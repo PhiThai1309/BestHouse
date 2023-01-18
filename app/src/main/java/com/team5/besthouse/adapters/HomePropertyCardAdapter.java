@@ -8,6 +8,8 @@ import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,15 +28,18 @@ import com.team5.besthouse.activities.PropertyContractsActivity;
 import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.interfaces.GetBitMapCallBack;
 import com.team5.besthouse.models.Property;
+import com.team5.besthouse.models.PropertyDAO;
 import com.team5.besthouse.models.User;
 import com.team5.besthouse.models.UserRole;
 import com.team5.besthouse.services.StoreService;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
-public class PropertyCardAdapter extends RecyclerView.Adapter<PropertyCardAdapter.TaskViewHolder> {
+public class HomePropertyCardAdapter extends RecyclerView.Adapter<HomePropertyCardAdapter.TaskViewHolder> implements Filterable{
     private final LayoutInflater mInflater;
-    private final ArrayList<Property> propertyList;
+    private ArrayList<PropertyDAO> propertyDAOList;
+    private ArrayList<PropertyDAO> propertyDAOListFiltered;
     private boolean toProperty = true;
     private int maxItemCount = 1000;
 
@@ -43,21 +48,24 @@ public class PropertyCardAdapter extends RecyclerView.Adapter<PropertyCardAdapte
     private String key = "";
 
     // Constructor
-    public PropertyCardAdapter(Context context, ArrayList<Property> tasks) {
+    public HomePropertyCardAdapter(Context context, ArrayList<PropertyDAO> tasks) {
         mInflater = LayoutInflater.from(context);
-        propertyList = tasks;
+        propertyDAOList = tasks;
+        propertyDAOListFiltered = tasks;
     }
 
-    public PropertyCardAdapter(Context context, ArrayList<Property> propertyList, int maxItemCount) {
+    public HomePropertyCardAdapter(Context context, ArrayList<PropertyDAO> propertyDAOList, int maxItemCount) {
         mInflater = LayoutInflater.from(context);
-        this.propertyList = propertyList;
+        this.propertyDAOList = propertyDAOList;
+        this.propertyDAOListFiltered = propertyDAOList;
         this.maxItemCount = maxItemCount;
     }
 
-    public PropertyCardAdapter(Context context, ArrayList<Property> propertyList, boolean toProperty) {
+    public HomePropertyCardAdapter(Context context, ArrayList<PropertyDAO> propertyDAOList, boolean toPropertyDAO) {
         mInflater = LayoutInflater.from(context);
-        this.propertyList = propertyList;
-        this.toProperty = toProperty;
+        this.propertyDAOList = propertyDAOList;
+        this.propertyDAOListFiltered = propertyDAOList;
+        this.toProperty = toPropertyDAO;
     }
 
     // Create the view holder
@@ -73,23 +81,26 @@ public class PropertyCardAdapter extends RecyclerView.Adapter<PropertyCardAdapte
     @Override
     public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
         //if task is not null
-        if (propertyList != null) {
+        if (propertyDAOList != null) {
             // Get the task at the position
-            Property current = propertyList.get(position);
+            PropertyDAO propertyDAO = propertyDAOListFiltered.get(position);
+            Property current = propertyDAO.getProperty();
             // Set the name of the view holder
             holder.name.setText(current.getPropertyName());
             // Set the address of the view holder
-            holder.address.setText(current.getAddress(this.mInflater.getContext()).toString());
+            holder.address.setText(current.getAddress(this.mInflater.getContext()));
             //Set the prize of the view holder
-            holder.price.setText(String.valueOf(current.getMonthlyPrice()));
-            if (current.getImageURLList() != null && current.getImageURLList().size() > 0) {
-                loadImageFromFSUrl(current.getImageURLList().get(0), new GetBitMapCallBack() {
-                    @Override
-                    public void getBitMap(Bitmap bitmap) {
-                        holder.imageView.setImageBitmap(bitmap);
-                    }
-                });
-            }
+            int numContracts = propertyDAO.getNumOfContracts();
+            String res = numContracts + " pending contract" + (numContracts > 1 ? "s" : "");
+            holder.numOfContracts.setText(res);
+
+            loadImageFromFSUrl(current.getImageURLList().get(0), new GetBitMapCallBack() {
+                @Override
+                public void getBitMap(Bitmap bitmap) {
+                    holder.imageView.setImageBitmap(bitmap);
+                }
+            }) ;
+
 
             holder.cardView.setOnClickListener(new View.OnClickListener() {
                 @SuppressLint("NotifyDataSetChanged")
@@ -102,12 +113,11 @@ public class PropertyCardAdapter extends RecyclerView.Adapter<PropertyCardAdapte
                     }
                 }
             });
-
         } else {
             // Covers the case of data not being ready yet.
             holder.name.setText("Error");
             holder.address.setText("Error");
-            holder.price.setText(0);
+            holder.numOfContracts.setText(0);
         }
         // Set the click listener
 //        holder.cardView.setOnClickListener(new View.OnClickListener() {
@@ -147,13 +157,42 @@ public class PropertyCardAdapter extends RecyclerView.Adapter<PropertyCardAdapte
     // Return the size of the data set
     @Override
     public int getItemCount() {
-        return Math.min(propertyList.size(), maxItemCount);
+        return Math.min(propertyDAOListFiltered.size(), maxItemCount);
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                if (constraint.toString().isEmpty()) {
+                    propertyDAOListFiltered = propertyDAOList;
+                } else {
+                    ArrayList<PropertyDAO> filteredList = new ArrayList<>();
+                    for (PropertyDAO propertyDAO : propertyDAOList) {
+                        if (propertyDAO.getProperty().getPropertyName().toLowerCase().contains(constraint.toString().toLowerCase())) {
+                            filteredList.add(propertyDAO);
+                        }
+                    }
+                    propertyDAOListFiltered = filteredList;
+                }
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = propertyDAOListFiltered;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                propertyDAOListFiltered= ((ArrayList<PropertyDAO>) results.values);
+                notifyDataSetChanged();
+            }
+        };
     }
 
     //TaskViewHolder class to hold the views
     public static class TaskViewHolder extends RecyclerView.ViewHolder {
         TextView name;
-        TextView price;
+        TextView numOfContracts;
         TextView address;
         CardView cardView;
         ImageView imageView;
@@ -161,7 +200,7 @@ public class PropertyCardAdapter extends RecyclerView.Adapter<PropertyCardAdapte
         public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.property_name);
-            price = itemView.findViewById(R.id.last_chat_time);
+            numOfContracts = itemView.findViewById(R.id.last_chat_time);
             address = itemView.findViewById(R.id.property_address);
             cardView = itemView.findViewById(R.id.cardView);
             imageView = itemView.findViewById(R.id.property_image);

@@ -202,7 +202,7 @@ public class TenantHomeFragment extends Fragment {
         helper.attachToRecyclerView(featureView);
 
         list = new ArrayList<>();
-        adapter1 = new PropertyAdapter((MainActivity) getContext(), list);
+        adapter1 = new PropertyAdapter((MainActivity) getContext(), list, 5);
         featureView.setAdapter(adapter1);
 
         //add 5 static properties to list

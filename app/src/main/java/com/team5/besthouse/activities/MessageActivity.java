@@ -76,6 +76,7 @@ public class MessageActivity extends AppCompatActivity {
         chat = (Chat) intent.getExtras().get("chat");
         property = (Property) intent.getExtras().get("property");
         contract = (Contract) intent.getExtras().get("contract");
+        String name = intent.getExtras().getString("name");
 
         //Set color to the navigation bar to match with the bottom navigation view
         getWindow().setNavigationBarColor(Color.TRANSPARENT);
@@ -84,7 +85,7 @@ public class MessageActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.chat_toolbar);
         this.setSupportActionBar(toolbar);
-        setTitle(property.getPropertyName());
+        setTitle(name);
 
 //        linearLayoutManager.setStackFromEnd(true);
 
@@ -113,10 +114,10 @@ public class MessageActivity extends AppCompatActivity {
         msgSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String content = msgInputText.getText().toString();
-                if(!TextUtils.isEmpty(content))
-                {
-                    // Add a new sent message to the list.
+                //remove all consecutive whitespace and endlines
+                String content = msgInputText.getText().toString().trim().replaceAll("(\\r?\\n){2,}", "$1");
+                if(!TextUtils.isEmpty(content)){
+
                     TextMessage message = new TextMessage(chat.getId(), user.getEmail(), content, Timestamp.now());
 
                     DocumentReference dr = db.collection("messages").document();
@@ -151,7 +152,7 @@ public class MessageActivity extends AppCompatActivity {
                             TextMessage message = doc.getDocument().toObject(TextMessage.class);
                             Log.i("Message", message.toString());
                             messageList.add(message);
-                            messageAdapter.notifyItemInserted(messageList.size() - 1);
+                            messageAdapter.notifyItemInserted(messageList.indexOf(message));
                         }
                         if (messageList.size() > 0) {
                             msgRecyclerView.smoothScrollToPosition(messageList.size() - 1);
@@ -181,6 +182,7 @@ public class MessageActivity extends AppCompatActivity {
                 intent.putExtra("property", property);
                 //Already click reserve button for the chat to appear, disable the reserve button
                 intent.putExtra("history", true);
+                intent.putExtra("chat", true);
                 startActivity(intent);
                 return true;
             default:

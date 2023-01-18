@@ -39,6 +39,10 @@ public class Property implements Parcelable {
         // Do not delete
     }
 
+    public Property(String id){
+            this.id = id;
+    }
+
     public Property(String id, String propertyName, String landlordEmail, LatLng coordinates, PropertyType propertyType, int bedrooms, int bathrooms, List<Utilities> utilities, float monthlyPrice, float area) {
         this.id = id;
         this.propertyName = propertyName;
@@ -84,6 +88,8 @@ public class Property implements Parcelable {
         area = in.readFloat();
         utilities = new ArrayList<>();
         utilities = in.readArrayList(Utilities.class.getClassLoader());
+        status = PropertyStatus.valueOf(in.readString());
+        propertyType = PropertyType.valueOf(in.readString());
 
     }
 
@@ -303,5 +309,7 @@ public class Property implements Parcelable {
         parcel.writeFloat(monthlyPrice);
         parcel.writeFloat(area);
         parcel.writeList(utilities);
+        parcel.writeString(status.toString());
+        parcel.writeString(propertyType.toString());
     }
 }

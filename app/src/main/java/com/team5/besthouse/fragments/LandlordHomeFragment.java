@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
+import androidx.appcompat.widget.SearchView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -28,13 +29,11 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.elevation.SurfaceColors;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
-import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -42,20 +41,18 @@ import com.google.gson.Gson;
 import com.team5.besthouse.R;
 import com.team5.besthouse.activities.AddPropertyActivity;
 import com.team5.besthouse.activities.LandlordActivity;
+import com.team5.besthouse.adapters.HomePropertyCardAdapter;
 import com.team5.besthouse.adapters.LandlordPropertyAdapter;
-import com.team5.besthouse.adapters.PropertyAdapter;
-import com.team5.besthouse.adapters.PropertyCardAdapter;
 import com.team5.besthouse.constants.UnchangedValues;
 
-import com.team5.besthouse.models.Contract;
 import com.team5.besthouse.models.ContractStatus;
 import com.team5.besthouse.models.Property;
+import com.team5.besthouse.models.PropertyDAO;
 import com.team5.besthouse.models.Tenant;
 import com.team5.besthouse.models.User;
 import com.team5.besthouse.services.StoreService;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -64,15 +61,14 @@ import java.util.List;
  */
 public class LandlordHomeFragment extends Fragment {
     private RecyclerView postedPropertyView;
-    private List<Property> list;
+    private ArrayList<PropertyDAO> list;
     private LandlordPropertyAdapter landlordAdapter;
     private ImageView uerImageView;
     private Context context;
     private RecyclerView listingView;
-    private RecyclerView propertyView;
-    private PropertyAdapter adapter1;
-    private PropertyCardAdapter adapter2;
+    private HomePropertyCardAdapter adapter;
     private StoreService storeService;
+    private SearchView searchView;
     private FirebaseAuth firebaseAuth;
     private View progressIndicator;
 
@@ -136,6 +132,8 @@ public class LandlordHomeFragment extends Fragment {
         progressIndicator = view.findViewById(R.id.home_progressBar);
         progressIndicator.setVisibility(View.VISIBLE);
 
+        searchView = view.findViewById(R.id.search_view);
+
         homeAccount = view.findViewById(R.id.landlord_account);
         homeAccount.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -174,21 +172,19 @@ public class LandlordHomeFragment extends Fragment {
 
 
         //Get the recycler view and
-        listingView = (RecyclerView) view.findViewById(R.id.posted_property);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false);
+        listingView = view.findViewById(R.id.posted_property);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(inflater.getContext(), LinearLayoutManager.VERTICAL, false);
         //Set the layout manager
         linearLayoutManager.setStackFromEnd(false);
         linearLayoutManager.setReverseLayout(false);
-        listingView.setHasFixedSize(true);
         listingView.setLayoutManager(linearLayoutManager);
 
         SnapHelper helper = new LinearSnapHelper();
         helper.attachToRecyclerView(listingView);
 
         list = new ArrayList<>();
-        adapter2 = new PropertyCardAdapter((LandlordActivity) getContext(), list);
-        listingView.setAdapter(adapter2);
-        listingView.setHasFixedSize(true);
+        adapter = new HomePropertyCardAdapter(inflater.getContext(), list, false);
+        listingView.setAdapter(adapter);
 
         //Floating action button configure
         ExtendedFloatingActionButton floatBtn = view.findViewById(R.id.float_button);
@@ -211,6 +207,19 @@ public class LandlordHomeFragment extends Fragment {
             }
         });
 
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                adapter.getFilter().filter(s);
+                return false;
+            }
+        });
+
         // Inflate the layout for this fragment
         return view;
     }
@@ -219,29 +228,9 @@ public class LandlordHomeFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        //code for landlords to get list of contracts
-//    void getContracts(){
-//        Gson gson = new Gson();
-//        User user = gson.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), Landlord.class);
-//
-//        db.collection(UnchangedValues.CONTRACTS_TABLE)
-//                .whereEqualTo("contractStatus", ContractStatus.PENDING)
-//                .whereEqualTo("landlordEmail", user.getEmail())
-//                .get().addOnCompleteListener(task -> {
-//                    if (task.isSuccessful()) {
-//                        for (QueryDocumentSnapshot document : task.getResult()) {
-//                            Contract contract = document.toObject(Contract.class);
-//
-//                           //add to list and notify adapter
-//                        }
-//                    }
-//                });
-//    }
-
-
-        //filter for all rents such that its end date is after today on the db side
         FirebaseFirestore database = FirebaseFirestore.getInstance();
         database.collection(UnchangedValues.PROPERTIES_TABLE)
+                .whereEqualTo(UnchangedValues.LANDLORD_EMAIL_COL, user.getEmail())
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @SuppressLint("NotifyDataSetChanged")
                     @Override
@@ -249,56 +238,52 @@ public class LandlordHomeFragment extends Fragment {
                         progressIndicator.setVisibility(View.VISIBLE);
                         if(error != null)
                         {
-                            Log.w("ERROR ERROR ", error);
+                            Log.w("ERROR", error);
                             return;
                         }
-//                        Log.w("ERROR ERROR ", value.getDocumentChanges().get(0).getDocument().getData().toString());
-
-                        //filter for rents that begins before today on the client side
                         assert value != null;
+
+                        adapter.notifyDataSetChanged();
+
                         for(DocumentChange newDoc : value.getDocumentChanges()){
                             Property p = newDoc.getDocument().toObject(Property.class);
-//                            Log.i("Property", p.getId() == null ? "null address!" : p.getId());
-//                            Log.i("Property", newDoc.getType().toString());
-                            if(newDoc.getType() == DocumentChange.Type.ADDED){
-                                list.remove(p);
-                                try {
-                                    //get all contracts that have its end date after today and is from this property
 
-//                                    Log.i(TAG, "onEvent: " + p);
-                                    database.collection(UnchangedValues.CONTRACTS_TABLE)
-                                            .whereEqualTo("landlordEmail", p.getLandlordEmail())
-                                            .get()
-                                            .addOnCompleteListener(v -> {
-                                                if (v.isSuccessful()){
-                                                    boolean ok = true;
-//                                                    Log.i("TAG", "onEvent: " + v.getResult().getDocuments().size());
-                                                    for (QueryDocumentSnapshot document : v.getResult()) {
-                                                        Contract contract = document.toObject(Contract.class);
-                                                        if(contract.getStartDate().compareTo(Timestamp.now()) <= 0 && (contract.getContractStatus().equals(ContractStatus.ACTIVE) || (user.getEmail().equals(contract.getTenantEmail()) && contract.getContractStatus().equals(ContractStatus.PENDING)))){
-                                                            ok = false;
-                                                            break;
-                                                        }
-                                                    }
-                                                    if (ok) {
-                                                        list.add(p);
-//                                                        Log.i("ADDED" , p.toString());
-//                                                        adapter1.notifyDataSetChanged();
-                                                        adapter2.notifyDataSetChanged();
+                            Log.i("Property", newDoc.getType().toString());
+
+                            if(newDoc.getType() != DocumentChange.Type.REMOVED) {
+                                database.collection(UnchangedValues.CONTRACTS_TABLE)
+                                        .whereEqualTo(UnchangedValues.LANDLORD_EMAIL_COL, user.getEmail())
+                                        .whereEqualTo(UnchangedValues.PROPERTY_ID_COL, p.getId())
+                                        .whereEqualTo(UnchangedValues.CONTRACT_STATUS_COL, ContractStatus.PENDING)
+                                        .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                                                if(error != null || value == null)
+                                                {
+                                                    Log.w("ERROR", error);
+                                                    return;
+                                                }
+
+                                                adapter.notifyDataSetChanged();
+
+                                                PropertyDAO propertyDAO = new PropertyDAO(p, value.size());
+                                                int i = list.indexOf(propertyDAO);
+
+                                                if (value.size() > 0) {
+                                                    if (i >= 0) {
+                                                        list.set(i, propertyDAO);
+                                                        adapter.notifyItemChanged(i);
+                                                    } else {
+                                                        list.add(propertyDAO);
+                                                        adapter.notifyItemInserted(list.indexOf(propertyDAO));
                                                     }
                                                 }
-                                            });
-                                } catch (Exception e) {
-                                    Log.d("ERROR 2", "Error adding object : " + newDoc.toString() + ", Exception " + e.getMessage());
-                                }
-                            }
-                            else {
-                                list.remove(p);
-                                if (newDoc.getType().equals(DocumentChange.Type.MODIFIED)) {
-                                    list.add(p);
-                                }
-//                                adapter1.notifyDataSetChanged();
-                                adapter2.notifyDataSetChanged();
+                                                else if (i >= 0){
+                                                    list.remove(propertyDAO);
+                                                    adapter.notifyItemRemoved(i);
+                                                }
+                                            }
+                                        });
                             }
                         }
                         progressIndicator.setVisibility(View.GONE);
