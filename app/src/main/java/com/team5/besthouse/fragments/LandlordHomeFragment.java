@@ -46,7 +46,7 @@ import com.team5.besthouse.adapters.LandlordPropertyAdapter;
 import com.team5.besthouse.adapters.PropertyAdapter;
 import com.team5.besthouse.adapters.PropertyCardAdapter;
 import com.team5.besthouse.constants.UnchangedValues;
-import com.team5.besthouse.databinding.FragmentLandlordHomeBinding;
+
 import com.team5.besthouse.models.Contract;
 import com.team5.besthouse.models.ContractStatus;
 import com.team5.besthouse.models.Property;
@@ -75,7 +75,7 @@ public class LandlordHomeFragment extends Fragment {
     private StoreService storeService;
     private FirebaseAuth firebaseAuth;
     private View progressIndicator;
-    private FragmentLandlordHomeBinding binding;
+
     FirebaseFirestore db;
     User user;
 
@@ -125,7 +125,7 @@ public class LandlordHomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_landlord_home, container, false);
-        binding = FragmentLandlordHomeBinding.inflate(inflater, container, false);
+
         //Set color to the navigation bar to match with the bottom navigation view
         getActivity().getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(getActivity()));
         Window window = getActivity().getWindow();
@@ -155,7 +155,7 @@ public class LandlordHomeFragment extends Fragment {
 
         //get login user image and name
         firebaseAuth = FirebaseAuth.getInstance();
-        binding.landlordName.setText(firebaseAuth.getCurrentUser().getDisplayName());
+
         // set up store service
         storeService = new StoreService(context);
 

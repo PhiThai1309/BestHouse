@@ -154,7 +154,7 @@ public class SignupActivity extends BaseActivity {
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
             byte[] data = baos.toByteArray();
             if(bitmap != null) {
-                StorageReference storageRef =  storage.getReference("users/").child(System.currentTimeMillis()+"_"+FirebaseAuth.getInstance().getCurrentUser().getUid()+ ".JPEG");
+                StorageReference storageRef =  storage.getReference("users/").child(System.currentTimeMillis()+ ".JPEG");
                 storageRef.putBytes(data).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {

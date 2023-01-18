@@ -4,6 +4,8 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.location.Address;
 import static android.content.ContentValues.TAG;
@@ -38,6 +40,8 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
 import com.google.android.gms.tasks.CancellationToken;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.OnTokenCanceledListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.elevation.SurfaceColors;
@@ -48,13 +52,17 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
 import com.team5.besthouse.R;
 import com.team5.besthouse.activities.MainActivity;
+import com.team5.besthouse.adapters.PropertyCardAdapter;
 import com.team5.besthouse.fragments.Inflate.MorePropertyFragment;
 import com.team5.besthouse.adapters.PropertyAdapter;
-import com.team5.besthouse.adapters.PropertyPartialCardAdapter;
 import com.team5.besthouse.constants.UnchangedValues;
+import com.team5.besthouse.interfaces.GetBitMapCallBack;
+import com.team5.besthouse.interfaces.SetReceiveImageURLCallBack;
 import com.team5.besthouse.models.Contract;
 import com.team5.besthouse.models.ContractStatus;
 import com.team5.besthouse.models.Property;
@@ -81,7 +89,7 @@ public class TenantHomeFragment extends Fragment {
     private RecyclerView propertyView;
     private ArrayList<Property> list;
     private PropertyAdapter adapter1;
-    private PropertyPartialCardAdapter adapter2;
+    private PropertyCardAdapter adapter2;
     private StoreService storeService;
     private View progressIndicator;
 
@@ -146,11 +154,21 @@ public class TenantHomeFragment extends Fragment {
         window.setStatusBarColor(Color.TRANSPARENT);
 
         context = inflater.getContext();
+        // set up store service
+        storeService = new StoreService(context);
 
         progressIndicator = view.findViewById(R.id.home_progressBar);
         progressIndicator.setVisibility(View.VISIBLE);
 
         ImageView homeAccount = view.findViewById(R.id.home_account);
+        String imageUrl = storeService.getStringValue(UnchangedValues.USER_IMAGE_URL_COL);
+        loadImageFromFSUrl(imageUrl, new GetBitMapCallBack() {
+            @Override
+            public void getBitMap(Bitmap bitmap) {
+                    homeAccount.setImageBitmap(bitmap);
+            }
+        });
+
         homeAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -169,8 +187,7 @@ public class TenantHomeFragment extends Fragment {
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(view.getContext());
 
-        // set up store service
-        storeService = new StoreService(context);
+
 
         //Get the recycler view and
         featureView = (RecyclerView) view.findViewById(R.id.feature_property);
@@ -204,7 +221,7 @@ public class TenantHomeFragment extends Fragment {
         propertyView.setLayoutManager(linearLayoutManager2);
 
         propertyView.setNestedScrollingEnabled(false);
-        adapter2 = new PropertyPartialCardAdapter((MainActivity) getContext(), list);
+        adapter2 = new PropertyCardAdapter(getContext(), list, 5);
         propertyView.setAdapter(adapter2);
 
         featureView.setHasFixedSize(true);
@@ -217,7 +234,6 @@ public class TenantHomeFragment extends Fragment {
         View topView = view.findViewById(R.id.home_top);
         TextView topTitle = topView.findViewById(R.id.see_more_title);
         topTitle.setText("Top near you");
-
 //        ImageView seeMore = topView.findViewById(R.id.see_more);
         topView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -417,5 +433,30 @@ public class TenantHomeFragment extends Fragment {
                     new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                     PERMISSIONS_FINE_LOCATION);
         }
+    }
+
+    private void loadImageFromFSUrl(String imageURL, final GetBitMapCallBack getBitMapCallBack)
+    {
+        FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+
+        try {
+            StorageReference httpsReference = firebaseStorage.getReferenceFromUrl(imageURL);
+            final long ONE_MEGABYTE = 1024 * 1024;
+            httpsReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                @Override
+                public void onSuccess(byte[] bytes) {
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0 , bytes.length);
+                    getBitMapCallBack.getBitMap(bitmap);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle any errors
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }
