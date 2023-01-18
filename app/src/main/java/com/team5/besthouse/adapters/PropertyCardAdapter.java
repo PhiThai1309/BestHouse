@@ -75,12 +75,15 @@ public class PropertyCardAdapter extends RecyclerView.Adapter<PropertyCardAdapte
             holder.address.setText(current.getAddress(this.mInflater.getContext()).toString());
             //Set the prize of the view holder
             holder.price.setText(String.valueOf(current.getMonthlyPrice()));
-            loadImageFromFSUrl(current.getImageURLList().get(0), new GetBitMapCallBack() {
-                @Override
-                public void getBitMap(Bitmap bitmap) {
-                    holder.imageView.setImageBitmap(bitmap);
-                }
-            }) ;
+            if(current.getImageURLList() != null )
+            {
+                loadImageFromFSUrl(current.getImageURLList().get(0), new GetBitMapCallBack() {
+                    @Override
+                    public void getBitMap(Bitmap bitmap) {
+                        holder.imageView.setImageBitmap(bitmap);
+                    }
+                }) ;
+            }
 
 
             holder.cardView.setOnClickListener(new View.OnClickListener() {

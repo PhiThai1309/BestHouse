@@ -240,8 +240,9 @@ public class DetailActivity extends BaseActivity {
     {
 
         sliderView = findViewById(R.id.imageSlider);
-        if(property.getImageURLList().size() > 0)
+        if(property.getImageURLList() != null)
         {
+            
             ImageSliderAdapter sliderAdapter = new ImageSliderAdapter(this, property.getImageURLList()) ;
             sliderView.setSliderAdapter(sliderAdapter);
             sliderView.startAutoCycle();
