@@ -162,6 +162,12 @@ public class EditActivity extends AppCompatActivity {
         checkBoxInternet = findViewById(R.id.internet_option_checkbox);
         checkBoxGas = findViewById(R.id.gas_option_checkbox);
 
+        View deleteBtnView = findViewById(R.id.delete_button);
+        Button deleteBtn = deleteBtnView.findViewById(R.id.button);
+        deleteBtn.setBackgroundColor(Color.TRANSPARENT);
+        deleteBtn.setTextColor(getResources().getColor(R.color.md_theme_error));
+        deleteBtn.setText("DELETE");
+
         initUtilities();
         setAddAddressAction();
         initializeSpinner();
