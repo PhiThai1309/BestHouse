@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.team5.besthouse.R;
 import com.team5.besthouse.activities.ContractActivity;
+import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.models.Contract;
 
 import java.util.List;
@@ -55,12 +56,17 @@ public class ContractAdapter extends RecyclerView.Adapter<ContractAdapter.TaskVi
         if (contractList != null) {
             // Get the task at the position
             Contract current = contractList.get(position);
-            // Set the name of the view holder
+
+            // Set the status of the view holder
             holder.status.setText(current.getContractStatus().toString());
-            // Set the address of the view holder
-            holder.name.setText(current.getStartDate().toDate().toString());
+
+            database.collection(UnchangedValues.PROPERTIES_TABLE).document(current.getPropertyId()).get().addOnSuccessListener(documentSnapshot -> {
+                holder.name.setText(documentSnapshot.getString(UnchangedValues.PROPERTY_NAME_COL));
+            });
+
             //Set the prize of the view holder
-            holder.startDate.setText(current.getId());
+            String res = current.getFormattedStartDate() + " to " + current.getFormattedEndDate();
+            holder.date.setText(res);
 
             // Set the click listener
             holder.cardView.setOnClickListener(new View.OnClickListener() {
@@ -77,7 +83,7 @@ public class ContractAdapter extends RecyclerView.Adapter<ContractAdapter.TaskVi
             // Covers the case of data not being ready yet.
             holder.status.setText("Error");
             holder.name.setText("Error");
-            holder.startDate.setText(0);
+            holder.date.setText(0);
         }
     }
 
@@ -90,17 +96,16 @@ public class ContractAdapter extends RecyclerView.Adapter<ContractAdapter.TaskVi
     //TaskViewHolder class to hold the views
     public static class TaskViewHolder extends RecyclerView.ViewHolder {
         TextView status;
-        TextView startDate;
-        TextView endDate;
+        TextView date;
         TextView name;
         CardView cardView;
 
         public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
             status = itemView.findViewById(R.id.property_name);
-            startDate = itemView.findViewById(R.id.property_price);
+            name = itemView.findViewById(R.id.property_price);
 //            endDate = itemView.findViewById(R.id.end_date);
-            name = itemView.findViewById(R.id.property_address);
+            date = itemView.findViewById(R.id.property_address);
             cardView = itemView.findViewById(R.id.cardView);
         }
     }

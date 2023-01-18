@@ -28,6 +28,7 @@ public class UnchangedValues {
     public static final String LANDLORD_EMAIL_COL = "landlordEmail";
     public static final String PROPERTY_ID_COL = "propertyId";
     public static final String CONTRACT_STATUS_COL = "contractStatus";
+    public static final String PROPERTY_NAME_COL = "propertyName";
 
     public static final String IS_LOGIN_TENANT = "tenantLoginSession";
     public static final String IS_LOGIN_LANDLORD = "landlordLoginSession";
