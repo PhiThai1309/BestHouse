@@ -249,25 +249,39 @@ public class LandlordHomeFragment extends Fragment {
                             Property p = newDoc.getDocument().toObject(Property.class);
 
                             Log.i("Property", newDoc.getType().toString());
-                            int i = list.indexOf(p);
-                            if (i >= 0) {
-                                Log.i("Property", "Property already exists, removing");
-                                list.remove(p);
-                                adapter.notifyItemRemoved(list.indexOf(p));
-                            }
 
                             if(newDoc.getType() != DocumentChange.Type.REMOVED) {
                                 database.collection(UnchangedValues.CONTRACTS_TABLE)
                                         .whereEqualTo(UnchangedValues.LANDLORD_EMAIL_COL, user.getEmail())
                                         .whereEqualTo(UnchangedValues.PROPERTY_ID_COL, p.getId())
                                         .whereEqualTo(UnchangedValues.CONTRACT_STATUS_COL, ContractStatus.PENDING)
-                                        .get()
-                                        .addOnCompleteListener(task -> {
-                                            adapter.notifyDataSetChanged();
-                                            if (task.isSuccessful() && task.getResult().getDocuments().size() > 0) {
-                                                list.add(new PropertyDAO(p, task.getResult().getDocuments().size()));
-                                                Log.i("Property", p.toString());
-                                                adapter.notifyItemInserted(list.indexOf(p));
+                                        .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                                                if(error != null || value == null)
+                                                {
+                                                    Log.w("ERROR", error);
+                                                    return;
+                                                }
+
+                                                adapter.notifyDataSetChanged();
+
+                                                PropertyDAO propertyDAO = new PropertyDAO(p, value.size());
+                                                int i = list.indexOf(propertyDAO);
+
+                                                if (value.size() > 0) {
+                                                    if (i >= 0) {
+                                                        list.set(i, propertyDAO);
+                                                        adapter.notifyItemChanged(i);
+                                                    } else {
+                                                        list.add(propertyDAO);
+                                                        adapter.notifyItemInserted(list.indexOf(propertyDAO));
+                                                    }
+                                                }
+                                                else if (i >= 0){
+                                                    list.remove(propertyDAO);
+                                                    adapter.notifyItemRemoved(i);
+                                                }
                                             }
                                         });
                             }

@@ -10,13 +10,16 @@ public class PropertyDAO {
         this.property = property;
         this.numOfContracts = numOfContracts;
     }
+    public PropertyDAO(Property property) {
+        this.property = property;
+    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PropertyDAO that = (PropertyDAO) o;
-        return Objects.equals(property, that.property);
+        return Objects.equals(property.getId(), that.property.getId());
     }
 
     @Override
