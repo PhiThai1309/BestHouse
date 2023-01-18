@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
+import androidx.appcompat.widget.SearchView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -67,6 +68,7 @@ public class LandlordHomeFragment extends Fragment {
     private RecyclerView listingView;
     private HomePropertyCardAdapter adapter;
     private StoreService storeService;
+    private SearchView searchView;
     private FirebaseAuth firebaseAuth;
     private View progressIndicator;
 
@@ -129,6 +131,8 @@ public class LandlordHomeFragment extends Fragment {
 
         progressIndicator = view.findViewById(R.id.home_progressBar);
         progressIndicator.setVisibility(View.VISIBLE);
+
+        searchView = view.findViewById(R.id.search_view);
 
         homeAccount = view.findViewById(R.id.landlord_account);
         homeAccount.setOnClickListener(new View.OnClickListener() {
@@ -200,6 +204,19 @@ public class LandlordHomeFragment extends Fragment {
                 Intent intent = new Intent(getContext(), AddPropertyActivity.class);
 //               intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
+            }
+        });
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                adapter.getFilter().filter(s);
+                return false;
             }
         });
 

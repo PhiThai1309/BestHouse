@@ -8,6 +8,8 @@ import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,10 +34,12 @@ import com.team5.besthouse.models.UserRole;
 import com.team5.besthouse.services.StoreService;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
-public class HomePropertyCardAdapter extends RecyclerView.Adapter<HomePropertyCardAdapter.TaskViewHolder> {
+public class HomePropertyCardAdapter extends RecyclerView.Adapter<HomePropertyCardAdapter.TaskViewHolder> implements Filterable{
     private final LayoutInflater mInflater;
-    private final ArrayList<PropertyDAO> propertyDAOList;
+    private ArrayList<PropertyDAO> propertyDAOList;
+    private ArrayList<PropertyDAO> propertyDAOListFiltered;
     private boolean toProperty = true;
     private int maxItemCount = 1000;
 
@@ -47,17 +51,20 @@ public class HomePropertyCardAdapter extends RecyclerView.Adapter<HomePropertyCa
     public HomePropertyCardAdapter(Context context, ArrayList<PropertyDAO> tasks) {
         mInflater = LayoutInflater.from(context);
         propertyDAOList = tasks;
+        propertyDAOListFiltered = tasks;
     }
 
     public HomePropertyCardAdapter(Context context, ArrayList<PropertyDAO> propertyDAOList, int maxItemCount) {
         mInflater = LayoutInflater.from(context);
         this.propertyDAOList = propertyDAOList;
+        this.propertyDAOListFiltered = propertyDAOList;
         this.maxItemCount = maxItemCount;
     }
 
     public HomePropertyCardAdapter(Context context, ArrayList<PropertyDAO> propertyDAOList, boolean toPropertyDAO) {
         mInflater = LayoutInflater.from(context);
         this.propertyDAOList = propertyDAOList;
+        this.propertyDAOListFiltered = propertyDAOList;
         this.toProperty = toPropertyDAO;
     }
 
@@ -76,14 +83,15 @@ public class HomePropertyCardAdapter extends RecyclerView.Adapter<HomePropertyCa
         //if task is not null
         if (propertyDAOList != null) {
             // Get the task at the position
-            Property current = propertyDAOList.get(position).getProperty();
+            PropertyDAO propertyDAO = propertyDAOListFiltered.get(position);
+            Property current = propertyDAO.getProperty();
             // Set the name of the view holder
             holder.name.setText(current.getPropertyName());
             // Set the address of the view holder
             holder.address.setText(current.getAddress(this.mInflater.getContext()));
             //Set the prize of the view holder
-            int numContracts = propertyDAOList.get(position).getNumOfContracts();
-            String res = propertyDAOList.get(position).getNumOfContracts() + " pending contract" + (numContracts > 1 ? "s" : "");
+            int numContracts = propertyDAO.getNumOfContracts();
+            String res = numContracts + " pending contract" + (numContracts > 1 ? "s" : "");
             holder.numOfContracts.setText(res);
 
             loadImageFromFSUrl(current.getImageURLList().get(0), new GetBitMapCallBack() {
@@ -149,7 +157,36 @@ public class HomePropertyCardAdapter extends RecyclerView.Adapter<HomePropertyCa
     // Return the size of the data set
     @Override
     public int getItemCount() {
-        return Math.min(propertyDAOList.size(), maxItemCount);
+        return Math.min(propertyDAOListFiltered.size(), maxItemCount);
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                if (constraint.toString().isEmpty()) {
+                    propertyDAOListFiltered = propertyDAOList;
+                } else {
+                    ArrayList<PropertyDAO> filteredList = new ArrayList<>();
+                    for (PropertyDAO propertyDAO : propertyDAOList) {
+                        if (propertyDAO.getProperty().getPropertyName().toLowerCase().contains(constraint.toString().toLowerCase())) {
+                            filteredList.add(propertyDAO);
+                        }
+                    }
+                    propertyDAOListFiltered = filteredList;
+                }
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = propertyDAOListFiltered;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                propertyDAOListFiltered= ((ArrayList<PropertyDAO>) results.values);
+                notifyDataSetChanged();
+            }
+        };
     }
 
     //TaskViewHolder class to hold the views
