@@ -127,7 +127,13 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.TaskViewHolder
                                 TextMessage message = dc.toObject(TextMessage.class);
                                 if (message != null) {
                                     holder.lastMessage.setText(message.getContent());
-                                    holder.lastChatTime.setText(message.getTime().toDate().toString());
+                                    //show time if it is today, else show date
+                                    if (message.getTime().toDate().getDate() == java.util.Calendar.getInstance().get(java.util.Calendar.DAY_OF_MONTH)) {
+                                        holder.lastChatTime.setText(message.getFormattedTime());
+                                    } else {
+                                        holder.lastChatTime.setText(message.getFormattedDate());
+                                    }
+
                                 }
                                 else {
                                     // Covers the case of data not being ready yet.

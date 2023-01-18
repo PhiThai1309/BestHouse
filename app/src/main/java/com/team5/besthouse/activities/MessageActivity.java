@@ -114,10 +114,10 @@ public class MessageActivity extends AppCompatActivity {
         msgSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String content = msgInputText.getText().toString();
-                if(!TextUtils.isEmpty(content))
-                {
-                    // Add a new sent message to the list.
+                //remove all consecutive whitespace and endlines
+                String content = msgInputText.getText().toString().trim().replaceAll("(\\r?\\n){2,}", "$1");
+                if(!TextUtils.isEmpty(content)){
+
                     TextMessage message = new TextMessage(chat.getId(), user.getEmail(), content, Timestamp.now());
 
                     DocumentReference dr = db.collection("messages").document();
