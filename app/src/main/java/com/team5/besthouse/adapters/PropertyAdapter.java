@@ -26,6 +26,7 @@ import java.util.List;
 public class PropertyAdapter extends RecyclerView.Adapter<PropertyAdapter.TaskViewHolder> {
     private final LayoutInflater mInflater;
     private List<Property> propertyList;
+    private int maxItemCount = 1000;
 
     StoreService storeService;
 
@@ -35,6 +36,12 @@ public class PropertyAdapter extends RecyclerView.Adapter<PropertyAdapter.TaskVi
     public PropertyAdapter(MainActivity context, List<Property> tasks) {
         mInflater = LayoutInflater.from(context);
         propertyList = tasks;
+    }
+
+    public PropertyAdapter(MainActivity context, List<Property> tasks, int maxItemCount) {
+        mInflater = LayoutInflater.from(context);
+        propertyList = tasks;
+        this.maxItemCount = maxItemCount;
     }
 
     // Create the view holder
@@ -91,7 +98,7 @@ public class PropertyAdapter extends RecyclerView.Adapter<PropertyAdapter.TaskVi
     // Return the size of the data set
     @Override
     public int getItemCount() {
-        return Math.min(propertyList.size(), 5);
+        return Math.min(propertyList.size(), maxItemCount);
     }
 
     //TaskViewHolder class to hold the views

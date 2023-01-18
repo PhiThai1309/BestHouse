@@ -145,7 +145,7 @@ public class PropertyCardAdapter extends RecyclerView.Adapter<PropertyCardAdapte
     // Return the size of the data set
     @Override
     public int getItemCount() {
-        return Math.min(propertyList.size(), 5);
+        return Math.min(propertyList.size(), maxItemCount);
     }
 
     //TaskViewHolder class to hold the views
