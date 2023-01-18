@@ -182,6 +182,7 @@ public class MessageActivity extends AppCompatActivity {
                 intent.putExtra("property", property);
                 //Already click reserve button for the chat to appear, disable the reserve button
                 intent.putExtra("history", true);
+                intent.putExtra("chat", true);
                 startActivity(intent);
                 return true;
             default:

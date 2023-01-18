@@ -63,6 +63,7 @@ public class DetailActivity extends BaseActivity {
     Gson gson;
     User user;
 
+    boolean disableEdit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,16 +89,20 @@ public class DetailActivity extends BaseActivity {
             makeContractButton.setEnabled(false);
         }
 
+        disableEdit = getIntent().getBooleanExtra("chat", false);
+
         if (property == null) property = Property.STATICPROPERTY;
 
         Window window = getWindow();
         window.setStatusBarColor(Color.TRANSPARENT);
-
         //Set color to the navigation bar to match with the bottom navigation view
         getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(this));
 
         Toolbar toolbar = findViewById(R.id.homeToolbar);
         this.setSupportActionBar(toolbar);
+
+        TextView type = findViewById(R.id.details_type);
+        type.setText(String.valueOf(property.getPropertyType()));
 
         //first feature
         LinearLayout bedroom = findViewById(R.id.details_bedroom);
@@ -264,7 +269,7 @@ public class DetailActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        if(user.getRole() != UserRole.TENANT){
+        if(user.getRole() != UserRole.TENANT && !disableEdit){
             getMenuInflater().inflate(R.menu.edit_app_bar, menu);
         }
         return true;

@@ -129,12 +129,12 @@ public class AddPropertyActivity extends BaseActivity implements RecyclerViewInt
         priceWrapper.setHint("Monthly Price:");
 
         //Set hint for add property description text box
-       View description = findViewById(R.id.property_description);
-       pdescEditText = description.findViewById(R.id.box);
-       TextInputLayout desWrapper = findViewById(R.id.descInput_wrapper);
-       desWrapper.setHint("Describe the Property in Detail");
+        View description = findViewById(R.id.property_description);
+        pdescEditText = description.findViewById(R.id.box);
+        TextInputLayout desWrapper = findViewById(R.id.descInput_wrapper);
+        desWrapper.setHint("Describe the Property in Detail");
 
-       // set the submit button
+        // set the submit button
         View submitButtonHolder = findViewById(R.id.progress_button);
         submitButton = submitButtonHolder.findViewById(R.id.button);
 
