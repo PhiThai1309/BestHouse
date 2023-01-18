@@ -14,6 +14,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -22,10 +23,12 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -63,6 +66,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 public class AddPropertyActivity extends BaseActivity implements RecyclerViewInterface{
 
@@ -73,7 +77,7 @@ public class AddPropertyActivity extends BaseActivity implements RecyclerViewInt
     private Button submitButton;
     private ProgressBar progressBar;
 
-    private Spinner ptypeSpinner;
+    private AutoCompleteTextView ptypeSpinner;
     private PropertyType selectPropertyType = PropertyType.HOUSE;
     private int currentPropertyImagePosition = -1;
     private PropertyImageInsertAdapter piiAdapter;
@@ -104,8 +108,8 @@ public class AddPropertyActivity extends BaseActivity implements RecyclerViewInt
         pnameWrapper.setHint("Property Name:");
 
         //Set hint for adding property type textbox
-        View ptype = findViewById(R.id.property_type);
-        ptypeSpinner = (Spinner) ptype.findViewById(R.id.box);
+//        View ptype = findViewById(R.id.property_type);
+        ptypeSpinner = findViewById(R.id.spinner);
 
         //Set hint for adding property address textbox
         View pAddress = findViewById(R.id.property_address);
@@ -150,6 +154,9 @@ public class AddPropertyActivity extends BaseActivity implements RecyclerViewInt
 
         //config the return button
         returnButton = findViewById(R.id.returnBar).findViewById(R.id.returnButton);
+        ImageView editBtn = findViewById(R.id.returnBar).findViewById(R.id.editButton);
+        editBtn.setVisibility(View.GONE);
+
         setReturnButtonAction();
         setAddAddressAction();
         initializeSpinner();
@@ -192,17 +199,12 @@ public class AddPropertyActivity extends BaseActivity implements RecyclerViewInt
 
     }
 
-        private void setSpinSelectAction()
+    private void setSpinSelectAction()
     {
-        ptypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        ptypeSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                selectPropertyType = (PropertyType) parent.getItemAtPosition(position);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                selectPropertyType = null;
             }
         });
     }
@@ -455,10 +457,10 @@ public class AddPropertyActivity extends BaseActivity implements RecyclerViewInt
 
             Property property = new Property(null, pnameEditText.getText().toString(),loginLandlord.getEmail()
                     , coord, selectPropertyType,  Integer.parseInt(pBedRoomEditText.getText().toString()),
-                    Integer.parseInt(pBathRoomEditText.getText().toString()), listU,
+                    Integer.parseInt(pBathRoomEditText.getText().toString()), getSelectUtilities(),
                     Float.parseFloat(priceEditText.getText().toString()), Float.parseFloat(pAreaEditText.getText().toString()));
             property.setPropertyDescription(pdescEditText.getText().toString());
-            property.setImageURLList(imageURLList) ;
+            property.setImageURLList(imageURLList);
             return property;
         } catch (IOException e) {
             Log.e("ERROR", "createNewProperty: " + e.getMessage() );
@@ -483,11 +485,11 @@ public class AddPropertyActivity extends BaseActivity implements RecyclerViewInt
         {
             showTextLong("Please Select property address");
         }
-        else if(getSelectUtilities().isEmpty())
-        {
-            showTextLong("Please select property's utilities");
-            return false;
-        }
+//        else if(getSelectUtilities().isEmpty())
+//        {
+//            showTextLong("Please select property's utilities");
+//            return false;
+//        }
         else if(pBedRoomEditText.getText().toString().isEmpty())
         {
             showTextLong("Please enter valid bedroom number");
@@ -502,7 +504,7 @@ public class AddPropertyActivity extends BaseActivity implements RecyclerViewInt
         {
             showTextLong("Please enter valid property area");
         }
-        else if(priceEditText.getText().toString().isEmpty())
+        else if(Objects.requireNonNull(priceEditText.getText()).toString().isEmpty())
         {
             showTextLong("Please enter valid property price");
             return false;
@@ -512,12 +514,11 @@ public class AddPropertyActivity extends BaseActivity implements RecyclerViewInt
             showTextLong("Please upload 3 images");
             return false;
         }
-        else if(pdescEditText.getText().toString().isEmpty())
+        else if(Objects.requireNonNull(pdescEditText.getText()).toString().isEmpty())
         {
             showTextLong("Please enter property description");
             return false;
         }
-
         else
         {
             return true;

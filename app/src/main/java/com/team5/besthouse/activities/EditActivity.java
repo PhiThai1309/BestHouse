@@ -26,6 +26,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -63,6 +65,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class EditActivity extends AppCompatActivity {
     private FirebaseFirestore db;
@@ -72,7 +75,7 @@ public class EditActivity extends AppCompatActivity {
     private EditText pAddressEditText;
     private TextInputEditText pnameEditText, priceEditText, pdescEditText;
     private EditText pBedRoomEditText, pBathRoomEditText, pAreaEditText;
-    private Spinner ptypeSpinner;
+    AutoCompleteTextView ptypeSpinner;
     private PropertyType selectPropertyType = PropertyType.HOUSE;
 
     private CheckBox checkBoxElectric, checkBoxWater, checkBoxInternet, checkBoxGas;
@@ -112,8 +115,8 @@ public class EditActivity extends AppCompatActivity {
         pnameEditText.setText(property.getPropertyName());
 
         //Set hint for adding property type textbox
-        View ptype = findViewById(R.id.property_type);
-        ptypeSpinner = (Spinner) ptype.findViewById(R.id.box);
+//        View ptype = findViewById(R.id.property_type);
+        ptypeSpinner = findViewById(R.id.spinner);
 
         //Set hint for adding property address textbox
         View pAddress = findViewById(R.id.property_address);
@@ -159,6 +162,7 @@ public class EditActivity extends AppCompatActivity {
         checkBoxInternet = findViewById(R.id.internet_option_checkbox);
         checkBoxGas = findViewById(R.id.gas_option_checkbox);
 
+        initUtilities();
         setAddAddressAction();
         initializeSpinner();
         setSpinSelectAction();
@@ -180,19 +184,15 @@ public class EditActivity extends AppCompatActivity {
         pList.add(PropertyType.FLOOR);
         pList.add(PropertyType.ROOM);
         ptypeSpinner.setAdapter(new PropertyTypeSelectAdapter(this, pList));
+        ptypeSpinner.setText(ptypeSpinner.getAdapter().getItem(pList.indexOf(property.getPropertyType())).toString(), false);
     }
 
     private void setSpinSelectAction()
     {
-        ptypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        ptypeSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 selectPropertyType = (PropertyType) parent.getItemAtPosition(position);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                selectPropertyType = null;
             }
         });
     }
@@ -232,16 +232,42 @@ public class EditActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (!validateInputs()) {
                     return;
-                } else {
-
                 }
+                FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+                try {
+                    DocumentReference dc = firestore.collection(UnchangedValues.PROPERTY_TABLE).document(property.getId());
+                    dc.set(Objects.requireNonNull(createNewProperty()))
+                            .addOnSuccessListener(
+                                    documentReference -> {
+                                        // display successful message
+//                                            progressBar.setVisibility(View.GONE);
+//                                            submitButton.setText("SUBMIT");
+
+                                        // display successful message
+                                        showTextLong("Property change successfully");
+                                        finish();
+                                    }
+                            )
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+//                                        progressBar.setVisibility(View.GONE);
+//                                        submitButton.setText("SUBMIT");
+                                    showTextLong(e.getMessage());
+                                }
+                            });
+                }
+                catch (Exception e)
+                {
+                    showTextLong(e.getMessage());
+                }
+                createNewProperty();
             }
         });
     }
 
     private List<Utilities> getSelectUtilities()
     {
-
         List<Utilities> utilities = new ArrayList<>();
         if(checkBoxElectric.isChecked())
         {
@@ -262,23 +288,40 @@ public class EditActivity extends AppCompatActivity {
         return utilities;
     }
 
-    private Property createNewProperty(ArrayList<String> imageURLList, List<Utilities> utilityList)
+    private void initUtilities()
+    {
+        List<Utilities> utilities = property.getUtilities();
+        for(Utilities ulti : utilities) {
+            if(ulti == Utilities.ELECTRIC){
+                checkBoxElectric.setChecked(true);
+            } else if (ulti == Utilities.GAS){
+                checkBoxGas.setChecked(true);
+            } else if (ulti == Utilities.INTERNET){
+                checkBoxInternet.setChecked(true);
+            } else if (ulti == Utilities.WATER){
+                checkBoxWater.setChecked(true);
+            }
+        }
+    }
+
+    private Property createNewProperty()
     {
         Geocoder geocoder = new Geocoder(this) ;
         try {
             List<Address> alist = geocoder.getFromLocationName(pAddressEditText.getText().toString(), 1);
-            List<Utilities> listU = new ArrayList<>();
-            listU.add(Utilities.ELECTRIC);
-            listU.add(Utilities.INTERNET);
+//            List<Utilities> listU = new ArrayList<>();
+//            listU.add(Utilities.ELECTRIC);
+//            listU.add(Utilities.INTERNET);
             LatLng coord = new LatLng(alist.get(0).getLatitude(), alist.get(0).getLongitude());
 
-            Property property = new Property(null, pnameEditText.getText().toString(),loginLandlord.getEmail()
+            Property editProperty = new Property(property.getId(), pnameEditText.getText().toString(),loginLandlord.getEmail()
                     , coord, selectPropertyType,  Integer.parseInt(pBedRoomEditText.getText().toString()),
-                    Integer.parseInt(pBathRoomEditText.getText().toString()), listU,
+                    Integer.parseInt(pBathRoomEditText.getText().toString()), getSelectUtilities(),
                     Float.parseFloat(priceEditText.getText().toString()), Float.parseFloat(pAreaEditText.getText().toString()));
-            property.setPropertyDescription(pdescEditText.getText().toString());
-            property.setImageURLList(imageURLList) ;
-            return property;
+            editProperty.setPropertyDescription(pdescEditText.getText().toString());
+            editProperty.setImageURLList(property.getImageURLList());
+            editProperty.setStatus(property.getStatus());
+            return editProperty;
         } catch (IOException e) {
             Log.e("ERROR", "createNewProperty: " + e.getMessage() );
         }
@@ -288,7 +331,7 @@ public class EditActivity extends AppCompatActivity {
 
     private boolean validateInputs()
     {
-        if(pnameEditText.getText().toString().trim().isEmpty())
+        if(Objects.requireNonNull(pnameEditText.getText()).toString().trim().isEmpty())
         {
             showTextLong("Please Enter a valid property Name");
             return false;
@@ -302,11 +345,11 @@ public class EditActivity extends AppCompatActivity {
         {
             showTextLong("Please Select property address");
         }
-        else if(getSelectUtilities().isEmpty())
-        {
-            showTextLong("Please select property's utilities");
-            return false;
-        }
+//        else if(getSelectUtilities().isEmpty())
+//        {
+//            showTextLong("Please select property's utilities");
+//            return false;
+//        }
         else if(pBedRoomEditText.getText().toString().isEmpty())
         {
             showTextLong("Please enter valid bedroom number");
@@ -321,12 +364,12 @@ public class EditActivity extends AppCompatActivity {
         {
             showTextLong("Please enter valid property area");
         }
-        else if(priceEditText.getText().toString().isEmpty())
+        else if(Objects.requireNonNull(priceEditText.getText()).toString().isEmpty())
         {
             showTextLong("Please enter valid property price");
             return false;
         }
-        else if(pdescEditText.getText().toString().isEmpty())
+        else if(Objects.requireNonNull(pdescEditText.getText()).toString().isEmpty())
         {
             showTextLong("Please enter property description");
             return false;
