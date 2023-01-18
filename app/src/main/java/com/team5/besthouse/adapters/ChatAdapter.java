@@ -115,8 +115,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.TaskViewHolder
                 });
             });
 
-            holder.lastMessage.setText("No Chats Yet");
-            holder.lastChatTime.setText("No Chats Yet");
+            holder.lastMessage.setText("");
+            holder.lastChatTime.setText("");
 
             database.collection(UnchangedValues.MESSAGES_TABLE)
                     .whereEqualTo("chatId", current.getId())
@@ -138,7 +138,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.TaskViewHolder
                                 else {
                                     // Covers the case of data not being ready yet.
                                     holder.lastMessage.setText("");
-                                    holder.lastChatTime.setText("Error");
+                                    holder.lastChatTime.setText("");
                                 }
                             }
                         }
@@ -147,7 +147,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.TaskViewHolder
             // Covers the case of data not being ready yet.
             holder.name.setText("Error");
             holder.lastMessage.setText("");
-            holder.lastChatTime.setText("Error");
+            holder.lastChatTime.setText("");
         }
     }
 
