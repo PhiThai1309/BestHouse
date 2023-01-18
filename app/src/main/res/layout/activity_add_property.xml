@@ -37,9 +37,29 @@
                 android:id="@+id/add_property_name"
                 layout="@layout/layout_input"/>
 
-            <include
-                android:id="@+id/property_type"
-                layout="@layout/layout_spinner_property_select"/>
+<!--            <include-->
+<!--                android:id="@+id/property_type"-->
+<!--                layout="@layout/layout_spinner_property_select"/>-->
+
+            <com.google.android.material.textfield.TextInputLayout
+                app:boxCornerRadiusTopStart="14dp"
+                app:boxCornerRadiusTopEnd="14dp"
+                app:boxCornerRadiusBottomStart="14dp"
+                app:boxCornerRadiusBottomEnd="14dp"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="26dp"
+                android:hint="Property Type">
+
+                <AutoCompleteTextView
+                    android:id="@+id/spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <include
                 android:id="@+id/property_address"
