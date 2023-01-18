@@ -212,16 +212,17 @@ public class LoginActivity extends BaseActivity {
                             String userName = documentSnapshot.getString(UnchangedValues.USER_NAME_COL);
                             String userEmail = documentSnapshot.getString(UnchangedValues.USER_EMAIL_COL);
                             String userPhone = documentSnapshot.getString(UnchangedValues.USER_PHONE_COL);
+                            String userImageUrl = documentSnapshot.getString(UnchangedValues.USER_IMAGE_URL_COL);
                             String userId = documentSnapshot.getId();
                             User loginUser = null;
                             UserRole userRole = null;
                             try {
                                 if (documentSnapshot.getString(UnchangedValues.USER_ROLE).compareTo("TENANT") == 0) {
-                                    loginUser = new Tenant(userEmail, userName, userPhone, new ArrayList<>());
+                                    loginUser = new Tenant(userEmail, userName, userPhone, new ArrayList<>(),userImageUrl);
                                     userRole = UserRole.TENANT;
                                 }
                                 if (documentSnapshot.getString(UnchangedValues.USER_ROLE).compareTo("LANDLORD") == 0) {
-                                    loginUser = new Landlord(userEmail, userName, userPhone, new ArrayList<>(), new ArrayList<>());
+                                    loginUser = new Landlord(userEmail, userName, userPhone, new ArrayList<>(), new ArrayList<>(),userImageUrl);
                                     userRole = UserRole.LANDLORD;
                                 }
                             } catch (Exception e) {
@@ -232,6 +233,7 @@ public class LoginActivity extends BaseActivity {
                                     Gson gson = new Gson();
                                     storeService.storeStringValue(UnchangedValues.LOGIN_USER, gson.toJson(loginUser).toString());
                                     storeService.storeStringValue(UnchangedValues.USER_ID_COL, userId);
+                                    storeService.storeStringValue(UnchangedValues.USER_IMAGE_URL_COL, userImageUrl);
                                     direct.direct(true, userRole);
                                 } catch (Exception e) {
                                     showTextLong(e.getMessage());
@@ -445,6 +447,7 @@ public class LoginActivity extends BaseActivity {
             Log.d("FACEBOOK_USER", ""+authResult.getUser().getPhoneNumber());
             Log.d("FACEBOOK_USER", ""+authResult.getUser().getUid());
             Log.d("FACEBOOK_USER", ""+authResult.getUser().getPhotoUrl());
+
             onDirect(authResult.getUser());
         }
         else

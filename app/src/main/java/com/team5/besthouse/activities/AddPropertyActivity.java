@@ -36,6 +36,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.elevation.SurfaceColors;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -303,15 +304,22 @@ public class AddPropertyActivity extends BaseActivity implements RecyclerViewInt
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
             byte[] data = baos.toByteArray();
             if(bitmap != null && count > 0) {
-                StorageReference storageRef =  storage.getReference("images/").child(System.currentTimeMillis()+"_"+"currentuserid"+".JPEG");
+                StorageReference storageRef =  storage.getReference("images/").child(System.currentTimeMillis()+"_"+ FirebaseAuth.getInstance().getCurrentUser().getUid() +".JPEG");
                 storageRef.putBytes(data).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        imageURL.add(taskSnapshot.getStorage().getDownloadUrl().toString());
-                        if(imageURL.size() >= 3)
-                        {
-                           callBack.onCallback(imageURL); ;
-                        }
+
+                        taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                    imageURL.add(uri.toString());
+                                    if(imageURL.size() >= 3)
+                                    {
+                                        callBack.onCallback(imageURL); ;
+                                    }
+                            }
+                        });
+
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -354,8 +362,6 @@ public class AddPropertyActivity extends BaseActivity implements RecyclerViewInt
                             {
                                 FirebaseFirestore firestore = FirebaseFirestore.getInstance();
                                 try {
-                                    HashMap<String,String> hash = new HashMap<>();
-                                    hash.put("aaa", "bbbjhjA");
                                     DocumentReference dc = firestore.collection(UnchangedValues.PROPERTY_TABLE).document();
                                     newProperty.setId(dc.getId());
                                     dc.set(newProperty)
@@ -455,7 +461,7 @@ public class AddPropertyActivity extends BaseActivity implements RecyclerViewInt
             property.setImageURLList(imageURLList) ;
             return property;
         } catch (IOException e) {
-            Log.e("ERRRROORRR", "createNewProperty: " + e.getMessage() );
+            Log.e("ERROR", "createNewProperty: " + e.getMessage() );
         }
 
    return null;
