@@ -82,13 +82,14 @@ public class PropertyCardAdapter extends RecyclerView.Adapter<PropertyCardAdapte
             holder.address.setText(current.getAddress(this.mInflater.getContext()).toString());
             //Set the prize of the view holder
             holder.price.setText(String.valueOf(current.getMonthlyPrice()));
-            loadImageFromFSUrl(current.getImageURLList().get(0), new GetBitMapCallBack() {
-                @Override
-                public void getBitMap(Bitmap bitmap) {
-                    holder.imageView.setImageBitmap(bitmap);
-                }
-            }) ;
-
+            if (current.getImageURLList() != null && current.getImageURLList().size() > 0) {
+                loadImageFromFSUrl(current.getImageURLList().get(0), new GetBitMapCallBack() {
+                    @Override
+                    public void getBitMap(Bitmap bitmap) {
+                        holder.imageView.setImageBitmap(bitmap);
+                    }
+                });
+            }
 
             holder.cardView.setOnClickListener(new View.OnClickListener() {
                 @SuppressLint("NotifyDataSetChanged")
@@ -101,6 +102,7 @@ public class PropertyCardAdapter extends RecyclerView.Adapter<PropertyCardAdapte
                     }
                 }
             });
+
         } else {
             // Covers the case of data not being ready yet.
             holder.name.setText("Error");

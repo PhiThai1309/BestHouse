@@ -392,7 +392,7 @@ public class MapsFragment extends Fragment implements RecyclerViewInterface, Goo
             else {
                 coord = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
                 Log.i(TAG, "onSearchViewChange: no address found. Hiding places");
-                rv.setVisibility(View.GONE);
+//                rv.setVisibility(View.GONE);
                 return;
             }
             lsAdapter.sortProperties(coord);

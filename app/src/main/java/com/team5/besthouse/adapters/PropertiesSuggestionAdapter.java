@@ -47,11 +47,10 @@ public class PropertiesSuggestionAdapter extends RecyclerView.Adapter<Properties
     }
 
     public void sortProperties(LatLng currentLocation){
-        if (currentLocation == null) currentLocation = this.currentLocation;
-        LatLng finalCurrentLocation = currentLocation;
+        this.currentLocation = currentLocation;
         properties.sort((t1, t2) -> {
-            double distance1 = t1.getNonSqrtDistance(finalCurrentLocation.latitude, finalCurrentLocation.longitude);
-            double distance2 = t2.getNonSqrtDistance(finalCurrentLocation.latitude, finalCurrentLocation.longitude);
+            double distance1 = t1.getNonSqrtDistance(currentLocation.latitude, currentLocation.longitude);
+            double distance2 = t2.getNonSqrtDistance(currentLocation.latitude, currentLocation.longitude);
             return (int) Double.compare(distance1, distance2);
         });
         notifyDataSetChanged();
@@ -86,7 +85,7 @@ public class PropertiesSuggestionAdapter extends RecyclerView.Adapter<Properties
         double disLat = Math.abs(properties.get(position).getLatitude() - currentLocation.latitude);
         double disLng = Math.abs(properties.get(position).getLongitude() - currentLocation.longitude);
         double distance = disLat*110.574;
-        distance += disLng*111.320*Math.cos(currentLocation.latitude);
+        distance += Math.abs(disLng*111.320*Math.cos(currentLocation.latitude));
         if (distance >= 1) {
             holder.lsDistanceTextView.setText(String.format("%.1f", distance) + " km");
         }
