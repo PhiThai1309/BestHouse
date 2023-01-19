@@ -75,43 +75,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
 //        Intent intentBackgroundService = new Intent (getApplicationContext(), FirebaseNotification.class);
 //        startService(intentBackgroundService);
 
-//        Contract contract = new Contract();
-//        Timestamp compareDate = Timestamp.now();
-//        Timestamp contractTime = contract.getEndDate();
-//        if (contractTime != null) {
-//            if(compareDate.equals(contractTime)) {
-//                Log.d("Tag", "equal");
-//
-//            }
-//        }
-//        else {
-//            Log.d("Tag2", "null");
-//        }
-        //Contract contract = new Contract();
-        //String tenantEmail = contract.getTenantEmail();
         firebaseAuth = FirebaseAuth.getInstance();
-//        firebaseAuth.fetchSignInMethodsForEmail(tenantEmail)
-//                .addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<SignInMethodQueryResult> task) {
-//                        if (task.isSuccessful()) {
-//                            SignInMethodQueryResult result = task.getResult();
-//                                FirebaseUser user = firebaseAuth.getCurrentUser();
-//                                if (user != null) {
-//                                    user.getIdToken(true)
-//                                        .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
-//                                            @Override
-//                                            public void onComplete(@NonNull Task<GetTokenResult> task) {
-//                                                if (task.isSuccessful()) {
-//                                                    String idToken = task.getResult().getToken();
-//                                                    sendNotification(idToken);
-//                                                }
-//                                            }
-//                                        });
-//                                }
-//                        }
-//                    }
-//                });
 
         //Notification
         notificationManager = getSystemService(NotificationManager.class);
@@ -137,51 +101,23 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
                                 try {
                                     if(currentUser.getEmail().equals(contract.getTenantEmail()) || currentUser.getEmail().equals(contract.getLandlordEmail())) {
                                         if(contract.getContractStatus().equals(ContractStatus.ACTIVE)) {
-                                            //Log.d("tag", contract.getContractStatus().toString());
                                             Timestamp contractEndDate = contract.getEndDate();
                                             Date toEndDate = contractEndDate.toDate();
                                             String endDate = toDateFormat.format(toEndDate);
                                             if (endDate != null) {
-                                                Log.d("tag", currentTime + " " + endDate);
                                                 if (!endDate.equals(currentTime)) {
                                                     Log.d("tag", "Not equal");
                                                 }
                                                 else if (endDate.equals(currentTime)) {
-                                                    Log.d("tag1", "show notification");
                                                     Toast.makeText(getApplicationContext(), "show noti", Toast.LENGTH_LONG).show();
                                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                                                         showNotification();
                                                     }
-    //                                            firebaseAuth.fetchSignInMethodsForEmail(contract.getTenantEmail())
-    //                                                .addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
-    //                                                    @Override
-    //                                                    public void onComplete(@NonNull Task<SignInMethodQueryResult> task) {
-    //                                                        if (task.isSuccessful()) {
-    //                                                            //SignInMethodQueryResult result = task.getResult();
-    //                                                            if (currentUser != null) {
-    //                                                                Log.d("tag1", "not null");
-    //                                                                currentUser.getIdToken(true)
-    //                                                                    .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
-    //                                                                        @Override
-    //                                                                        public void onComplete(@NonNull Task<GetTokenResult> task) {
-    //                                                                            if (task.isSuccessful()) {
-    //                                                                                Log.d("tag1", "show noti now");
-    //                                                                                String idToken = task.getResult().getToken();
-    //                                                                                //sendNotification(idToken);
-    //                                                                            }
-    //                                                                        }
-    //                                                                    });
-    //                                                            }
-    //                                                        }
-    //                                                    }
-    //                                                });
-                                                    }
                                                 }
                                             }
-
+                                        }
                                     }
                                 } catch (Exception e) {Log.d("tag", "error showing noti");}
-
                             }
                         }
                     }
@@ -191,37 +127,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
         };
         handler.post(runnable);
     }
-
-//    private void sendNotification(String idToken) {
-//        JSONObject notification = new JSONObject();
-//        JSONObject notificationBody = new JSONObject();
-//        try {
-//            notificationBody.put("title", "Contract Expired");
-//            notificationBody.put("message", "Your contract has expired, please renew it.");
-//            notification.put("to", idToken);
-//            notification.put("data", notificationBody);
-//        } catch (JSONException e) {
-//            Log.e("tag", "onCreate: " + e.getMessage());
-//        }
-//        sendNoti(notification);
-//    }
-//
-//    private void sendNoti(JSONObject notification) {
-//        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(FCM_API, notification,
-//                new Response.Listener<JSONObject>() {
-//                    @Override
-//                    public void onResponse(JSONObject response) {
-//                        Log.i("tag", "onResponse: " + response.toString());
-//                    }
-//                },
-//                new Response.ErrorListener() {
-//                    @Override
-//                    public void onErrorResponse(VolleyError error) {
-//                        Toast.makeText(getApplicationContext(), "Request error", Toast.LENGTH_LONG).show();
-//                        Log.i("TAG", "onErrorResponse: Didn't work");
-//                    }
-//                });
-//    }
 
     @RequiresApi(api = Build.VERSION_CODES.S)
     public void showNotification() {
