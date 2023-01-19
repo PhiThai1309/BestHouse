@@ -58,6 +58,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
     private ConnectionReceiver connectionReceiver;
     public long lastInteractionTime;
     public static final String CHANNEL_1_ID = "channel1";
+    public static final String CHANNEL_2_ID = "channel2";
+    public static final String CHANNEL_3_ID = "channel3";
     private NotificationManager notificationManager;
     private Handler handler;
     private Runnable runnable;
@@ -78,7 +80,11 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
 
         //Notification
         notificationManager = getSystemService(NotificationManager.class);
-        createNotificationChannels();
+        createNotificationChannels1();
+        notificationManager = getSystemService(NotificationManager.class);
+        createNotificationChannels2();
+        notificationManager = getSystemService(NotificationManager.class);
+        createNotificationChannels3();
 
         StoreService storeService = new StoreService(getApplicationContext());
         Gson json = new Gson();
@@ -99,14 +105,14 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
                                 Contract contract = document.toObject(Contract.class);
                                 try {
                                     if(currentUser.getEmail().equals(contract.getTenantEmail()) || currentUser.getEmail().equals(contract.getLandlordEmail())) {
-                                        if(contract.getContractStatus() == ContractStatus.ACTIVE) {
+                                        if(contract.getContractStatus().equals(ContractStatus.ACTIVE)) {
                                             Timestamp contractEndDate = contract.getEndDate();
                                             Date toEndDate = contractEndDate.toDate();
                                             String endDate = toDateFormat.format(toEndDate);
                                             Timestamp contractStartDate = contract.getStartDate();
                                             Date toStartDate = contractStartDate.toDate();
                                             String startDate = toDateFormat.format(toStartDate);
-                                            if (endDate != null) {
+                                            if (endDate != null && startDate != null) {
                                                  if (endDate.equals(currentTime)) {
                                                      Log.d("tag1", contract.getContractStatus().toString());
                                                     Toast.makeText(getApplicationContext(), "show end noti", Toast.LENGTH_LONG).show();
@@ -114,9 +120,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
                                                         showContractEndNotification();
                                                     }
                                                 }
-                                            }
-                                            else if (startDate != null) {
-                                                if(startDate.equals(currentTime)) {
+                                                else if(startDate.equals(currentTime)) {
+                                                    Log.d("tag1", contract.getContractStatus().toString());
                                                     Toast.makeText(getApplicationContext(), "show active noti", Toast.LENGTH_LONG).show();
                                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                                                         showContractAcceptedNotification();
@@ -124,9 +129,16 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
                                                 }
                                             }
                                         }
-                                        else if(contract.getContractStatus() == ContractStatus.PENDING) {
-                                            Log.d("tag2", contract.getContractStatus().toString());
+                                        else if(contract.getContractStatus().equals(ContractStatus.PENDING)) {
+                                            Timestamp contractStartDate = contract.getStartDate();
+                                            Date toStartDate = contractStartDate.toDate();
+                                            String startDate = toDateFormat.format(toStartDate);
                                             Toast.makeText(getApplicationContext(), "show pending noti", Toast.LENGTH_LONG).show();
+                                            if (startDate.equals(currentTime)) {
+                                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                                                    showContractPendingNotification();
+                                                }
+                                            }
                                         }
                                     }
                                 } catch (Exception e) {Log.d("tag", "error showing notification");}
@@ -158,6 +170,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
                 //.setContentIntent(notificationPendingIntent)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setAutoCancel(true)
+                .setOnlyAlertOnce(true)
                 .build();
         notificationManager.notify(1, notification);
     }
@@ -171,7 +184,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
         //notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         //PendingIntent notificationPendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, notificationIntent, PendingIntent.FLAG_MUTABLE);
         Notification notification = new NotificationCompat.Builder(getApplicationContext(),
-                CHANNEL_1_ID)
+                CHANNEL_2_ID)
                 .setSmallIcon(R.drawable.ic_launcher_background)
                 .setContentTitle(title)
                 .setContentText(message)
@@ -179,11 +192,36 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
                 //.setContentIntent(notificationPendingIntent)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setAutoCancel(true)
+                .setOnlyAlertOnce(true)
                 .build();
-        notificationManager.notify(1, notification);
+        notificationManager.notify(2, notification);
     }
 
-    private void createNotificationChannels() {
+    @RequiresApi(api = Build.VERSION_CODES.S)
+    public void showContractPendingNotification() {
+        //Save notification
+        String title = "BESTHOUSE NOTIFICATION";
+        String message = "Your Have A Pending Contract";
+        //Intent notificationIntent = new Intent(getApplicationContext(), ContractActivity.class);
+        //notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        //PendingIntent notificationPendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, notificationIntent, PendingIntent.FLAG_MUTABLE);
+        Notification notification = new NotificationCompat.Builder(getApplicationContext(),
+                CHANNEL_3_ID)
+                .setSmallIcon(R.drawable.ic_launcher_background)
+                .setContentTitle(title)
+                .setContentText(message)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                //.setContentIntent(notificationPendingIntent)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setAutoCancel(true)
+                .setOnlyAlertOnce(true)
+                .build();
+        notificationManager.notify(3, notification);
+    }
+
+    private void createNotificationChannels1() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel1 = new NotificationChannel(
                     CHANNEL_1_ID,
@@ -193,6 +231,32 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
             channel1.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
             channel1.setDescription("This is Channel 1");
             notificationManager.createNotificationChannel(channel1);
+        }
+    }
+
+    private void createNotificationChannels2() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel2 = new NotificationChannel(
+                    CHANNEL_2_ID,
+                    "Channel 2",
+                    NotificationManager.IMPORTANCE_HIGH
+            );
+            channel2.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+            channel2.setDescription("This is Channel 2");
+            notificationManager.createNotificationChannel(channel2);
+        }
+    }
+
+    private void createNotificationChannels3() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel3 = new NotificationChannel(
+                    CHANNEL_3_ID,
+                    "Channel 3",
+                    NotificationManager.IMPORTANCE_HIGH
+            );
+            channel3.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+            channel3.setDescription("This is Channel 3");
+            notificationManager.createNotificationChannel(channel3);
         }
     }
 
