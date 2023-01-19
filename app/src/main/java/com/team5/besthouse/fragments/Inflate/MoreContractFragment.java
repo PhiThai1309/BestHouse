@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.android.material.chip.Chip;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
@@ -75,9 +76,55 @@ public class MoreContractFragment extends BottomSheetDialogFragment {
 
         propertyView.setNestedScrollingEnabled(false);
         adapter2 = new ContractAdapter(getActivity(), list);
+
         propertyView.setAdapter(adapter2);
 
         propertyView.setHasFixedSize(true);
+
+        Chip activeChip = view.findViewById(R.id.active_chip);
+        Chip pendingChip = view.findViewById(R.id.pending_chip);
+        Chip rejectChip = view.findViewById(R.id.reject_chip);
+        Chip expiredChip = view.findViewById(R.id.expired_chip);
+
+        activeChip.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (!isChecked){
+                adapter2.filterList.remove(ContractStatus.ACTIVE);
+            }
+            else if (!adapter2.filterList.contains(ContractStatus.ACTIVE)) {
+                adapter2.filterList.add(ContractStatus.ACTIVE);
+            }
+            adapter2.filterList();
+        });
+
+        pendingChip.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (!isChecked){
+                adapter2.filterList.remove(ContractStatus.PENDING);
+            }
+            else if (!adapter2.filterList.contains(ContractStatus.PENDING)) {
+                adapter2.filterList.add(ContractStatus.PENDING);
+            }
+            adapter2.filterList();
+        });
+
+        rejectChip.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (!isChecked){
+                adapter2.filterList.remove(ContractStatus.REJECT);
+            }
+            else if (!adapter2.filterList.contains(ContractStatus.REJECT)) {
+                adapter2.filterList.add(ContractStatus.REJECT);
+            }
+            adapter2.filterList();
+        });
+
+        expiredChip.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (!isChecked){
+                adapter2.filterList.remove(ContractStatus.EXPIRED);
+            }
+            else if (!adapter2.filterList.contains(ContractStatus.EXPIRED)) {
+                adapter2.filterList.add(ContractStatus.EXPIRED);
+            }
+            adapter2.filterList();
+        });
 
         return bottomSheetDialog;
     }

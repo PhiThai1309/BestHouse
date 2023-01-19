@@ -8,6 +8,8 @@ import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -25,12 +27,17 @@ import com.team5.besthouse.activities.ContractActivity;
 import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.interfaces.GetBitMapCallBack;
 import com.team5.besthouse.models.Contract;
+import com.team5.besthouse.models.ContractStatus;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ContractAdapter extends RecyclerView.Adapter<ContractAdapter.TaskViewHolder> {
     private final LayoutInflater mInflater;
     private List<Contract> contractList;
+    private List<Contract> contractListFiltered;
+    public List<ContractStatus> filterList = new ArrayList<>(Arrays.asList(ContractStatus.PENDING, ContractStatus.ACTIVE, ContractStatus.REJECT, ContractStatus.EXPIRED));
     FirebaseFirestore database = FirebaseFirestore.getInstance();
 
     private String key = "";
@@ -40,12 +47,14 @@ public class ContractAdapter extends RecyclerView.Adapter<ContractAdapter.TaskVi
     public ContractAdapter(Context context, List<Contract> contracts, int maxItemCount) {
         mInflater = LayoutInflater.from(context);
         contractList = contracts;
+        contractListFiltered = contracts;
         this.maxItemCount = maxItemCount;
     }
 
     public ContractAdapter(Context context, List<Contract> contracts) {
         mInflater = LayoutInflater.from(context);
         contractList = contracts;
+        contractListFiltered = contracts;
     }
 
     // Create the view holder
@@ -61,9 +70,9 @@ public class ContractAdapter extends RecyclerView.Adapter<ContractAdapter.TaskVi
     @Override
     public void onBindViewHolder(@NonNull ContractAdapter.TaskViewHolder holder, int position) {
         //if task is not null
-        if (contractList != null) {
+        if (contractListFiltered != null) {
             // Get the task at the position
-            Contract current = contractList.get(position);
+            Contract current = contractListFiltered.get(position);
 
             // Set the status of the view holder
             holder.status.setText(current.getContractStatus().toString());
@@ -98,9 +107,23 @@ public class ContractAdapter extends RecyclerView.Adapter<ContractAdapter.TaskVi
     // Return the size of the data set
     @Override
     public int getItemCount() {
-        return Math.min(contractList.size(), maxItemCount);
+        return Math.min(contractListFiltered.size(), maxItemCount);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    public void filterList(){
+        notifyDataSetChanged();
+
+        ArrayList<Contract> filteredList = new ArrayList<>();
+        for (Contract contract : contractList) {
+            if (filterList.contains(contract.getContractStatus())) {
+                filteredList.add(contract);
+            }
+        }
+
+        contractListFiltered = filteredList;
+        notifyDataSetChanged();
+    }
 
 
     //TaskViewHolder class to hold the views

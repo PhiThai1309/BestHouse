@@ -224,6 +224,7 @@ public class AddPropertyActivity extends BaseActivity implements RecyclerViewInt
         pAddressEditText.setOnClickListener(v ->{
             Intent i = new Intent(getApplicationContext(), LandLordMapsFragment.class);
             i.putExtra(UnchangedValues.ACTIVITY_REQUEST_CODE, 100);
+            i.putExtra("address", pAddressEditText.getText().toString());
             startActivityForResult(i, 100);
         });
     }
