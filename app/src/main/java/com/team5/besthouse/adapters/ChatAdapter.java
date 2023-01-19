@@ -3,6 +3,8 @@ package com.team5.besthouse.adapters;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,12 +15,18 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
 import com.team5.besthouse.R;
 import com.team5.besthouse.activities.MessageActivity;
 import com.team5.besthouse.constants.UnchangedValues;
+import com.team5.besthouse.interfaces.GetBitMapCallBack;
 import com.team5.besthouse.models.Chat;
 import com.team5.besthouse.models.Contract;
 import com.team5.besthouse.models.Property;
@@ -84,7 +92,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.TaskViewHolder
                                 for (DocumentSnapshot document : task.getResult()) {
                                     User user = document.toObject(User.class);
                                     if (user == null) return;
-                                    holder.name.setText(user.getFullName());
+
+
                                     intent.putExtra("name", user.getFullName());
                                 }
                             }
@@ -95,7 +104,13 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.TaskViewHolder
                         if (task.isSuccessful()) {
                             Property property = task.getResult().toObject(Property.class);
                             if (property != null) {
-
+                                loadImageFromFSUrl(property.getImageURLList().get(0), new GetBitMapCallBack() {
+                                    @Override
+                                    public void getBitMap(Bitmap bitmap) {
+                                        holder.imageView.setImageBitmap(bitmap);
+                                    }
+                                });
+                                holder.name.setText(property.getPropertyName());
                                 // Set on click listener
                                 holder.cardView.setOnClickListener(new View.OnClickListener() {
                                     @SuppressLint("NotifyDataSetChanged")
@@ -160,12 +175,38 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.TaskViewHolder
         return ChatList.size();
     }
 
+    private void loadImageFromFSUrl(String imageURL, final GetBitMapCallBack callBack)
+    {
+        FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+
+        try {
+            StorageReference httpsReference = firebaseStorage.getReferenceFromUrl(imageURL);
+            final long ONE_MEGABYTE = 1024 * 1024;
+            httpsReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                @Override
+                public void onSuccess(byte[] bytes) {
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0 , bytes.length);
+                    callBack.getBitMap(bitmap);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle any errors
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
     //TaskViewHolder class to hold the views
     public static class TaskViewHolder extends RecyclerView.ViewHolder {
         TextView name;
         TextView lastMessage;
         TextView lastChatTime;
         LinearLayout cardView;
+        ShapeableImageView imageView;
 
         public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -173,6 +214,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.TaskViewHolder
             lastMessage = itemView.findViewById(R.id.property_price);
             lastChatTime = itemView.findViewById(R.id.last_chat_time);
             cardView = itemView.findViewById(R.id.cardView);
+            imageView = itemView.findViewById(R.id.image_shape_contract);
         }
     }
 }

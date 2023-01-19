@@ -1,5 +1,12 @@
 package com.team5.besthouse.activities;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -7,6 +14,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -22,14 +30,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -62,6 +64,7 @@ import com.team5.besthouse.services.StoreService;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -105,6 +108,7 @@ public class AddPropertyActivity extends BaseActivity implements RecyclerViewInt
         pnameWrapper.setHint("Property Name:");
 
         //Set hint for adding property type textbox
+//        View ptype = findViewById(R.id.property_type);
         ptypeSpinner = findViewById(R.id.spinner);
 
         //Set hint for adding property address textbox
@@ -139,7 +143,7 @@ public class AddPropertyActivity extends BaseActivity implements RecyclerViewInt
         submitButton = submitButtonHolder.findViewById(R.id.button);
 
         //progress bar
-        progressBar = submitButtonHolder.findViewById(R.id.progress_bar);
+        progressBar = findViewById(R.id.progress_button).findViewById(R.id.progress_bar);
 
         // set checkbox config
         checkBoxElectric = findViewById(R.id.electric_option_checkbox);
@@ -149,9 +153,8 @@ public class AddPropertyActivity extends BaseActivity implements RecyclerViewInt
 
 
         //config the return button
-        View returnBar = findViewById(R.id.returnBar);
-        returnButton = returnBar.findViewById(R.id.returnButton);
-        ImageView editBtn = returnBar.findViewById(R.id.editButton);
+        returnButton = findViewById(R.id.returnBar).findViewById(R.id.returnButton);
+        ImageView editBtn = findViewById(R.id.returnBar).findViewById(R.id.editButton);
         editBtn.setVisibility(View.GONE);
 
         setReturnButtonAction();
@@ -160,6 +163,8 @@ public class AddPropertyActivity extends BaseActivity implements RecyclerViewInt
         setSpinSelectAction();
         settleRecyclerView();
         setSubmitButton();
+
+
     }
 
 
@@ -229,8 +234,7 @@ public class AddPropertyActivity extends BaseActivity implements RecyclerViewInt
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == 100 && resultCode == RESULT_OK)
         {
-            assert data != null;
-            if(data.getExtras().get(UnchangedValues.LOCATION_ADDRESS) != null)
+           if(data.getExtras().get(UnchangedValues.LOCATION_ADDRESS) != null)
            {
                 String pAddress = data.getExtras().get(UnchangedValues.LOCATION_ADDRESS).toString();
                 pAddressEditText.setText(pAddress);
@@ -238,7 +242,6 @@ public class AddPropertyActivity extends BaseActivity implements RecyclerViewInt
         }
         else if(requestCode == 200 && resultCode == RESULT_OK)
         {
-            assert data != null;
             final Uri imageUri = data.getData();
 
             Bitmap bitmap = convertUriToBitmap(imageUri);
@@ -249,7 +252,6 @@ public class AddPropertyActivity extends BaseActivity implements RecyclerViewInt
         }
         else if(requestCode == 201 && resultCode == RESULT_OK)
         {
-            assert data != null;
             final Uri imageUri = data.getData();
             Bitmap bitmap = convertUriToBitmap(imageUri);
             if(this.currentPropertyImagePosition != -1)
@@ -280,19 +282,20 @@ public class AddPropertyActivity extends BaseActivity implements RecyclerViewInt
 
     /**
      * learn from https://www.geeksforgeeks.org/how-to-convert-a-vector-to-bitmap-in-android/
+     * @param id
+     * @return
      */
     private Bitmap convertVectorDrawableToBitmap(int id)
     {
         Drawable drawable = ContextCompat.getDrawable(this, id);
         Bitmap bitmap = Bitmap.createBitmap(200,200, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
-        assert drawable != null;
         drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
         drawable.draw(canvas);
         return bitmap;
     }
 
-    private void uploadImageToFireStorage(final SetReceiveImageURLCallBack callBack)
+    private ArrayList<String> uploadImageToFireStorage(final SetReceiveImageURLCallBack callBack)
     {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         ArrayList<String> imageURL = new ArrayList<>();
@@ -302,8 +305,8 @@ public class AddPropertyActivity extends BaseActivity implements RecyclerViewInt
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
             byte[] data = baos.toByteArray();
-            if(count > 0) {
-                StorageReference storageRef =  storage.getReference("images/").child(System.currentTimeMillis()+"_"+ Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid() +".JPEG");
+            if(bitmap != null && count > 0) {
+                StorageReference storageRef =  storage.getReference("images/").child(System.currentTimeMillis()+"_"+ FirebaseAuth.getInstance().getCurrentUser().getUid() +".JPEG");
                 storageRef.putBytes(data).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -314,7 +317,7 @@ public class AddPropertyActivity extends BaseActivity implements RecyclerViewInt
                                     imageURL.add(uri.toString());
                                     if(imageURL.size() >= 3)
                                     {
-                                        callBack.onCallback(imageURL);
+                                        callBack.onCallback(imageURL); ;
                                     }
                             }
                         });
@@ -337,6 +340,7 @@ public class AddPropertyActivity extends BaseActivity implements RecyclerViewInt
                 count++;
             }
         }
+        return imageURL;
     }
 
 
@@ -354,38 +358,41 @@ public class AddPropertyActivity extends BaseActivity implements RecyclerViewInt
                     public void onCallback(List<String> imageURLs) {
                         if(imageURLs.size() > 0)
                         {
-                            Property newProperty = createNewProperty((ArrayList<String>) imageURLs);
-                            assert newProperty != null;
+                            Property newProperty = createNewProperty((ArrayList<String>) imageURLs, getSelectUtilities());
                             newProperty.setStatus(PropertyStatus.AVAILABLE);
-                            FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-                            try {
-                                DocumentReference dc = firestore.collection(UnchangedValues.PROPERTY_TABLE).document();
-                                newProperty.setId(dc.getId());
-                                dc.set(newProperty)
-                                    .addOnSuccessListener(
-                                            documentReference -> {
-                                                // display successful message
+                            if(newProperty != null)
+                            {
+                                FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+                                try {
+                                    DocumentReference dc = firestore.collection(UnchangedValues.PROPERTY_TABLE).document();
+                                    newProperty.setId(dc.getId());
+                                    dc.set(newProperty)
+                                        .addOnSuccessListener(
+                                                documentReference -> {
+                                                    // display successful message
+                                                    progressBar.setVisibility(View.GONE);
+                                                    submitButton.setText("SUBMIT");
+
+                                                    // display successful message
+                                                    clearInput();
+                                                    showTextLong("New Property is Added");
+                                                }
+                                        )
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
                                                 progressBar.setVisibility(View.GONE);
                                                 submitButton.setText("SUBMIT");
-
-                                                // display successful message
-                                                showTextLong("New Property is Added");
+                                                showTextLong(e.getMessage());
                                             }
-                                    )
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            progressBar.setVisibility(View.GONE);
-                                            submitButton.setText("SUBMIT");
-                                            showTextLong(e.getMessage());
-                                        }
-                                    });
-                            }
-                            catch (Exception e)
-                            {
-                               showTextLong(e.getMessage());
-                            }
+                                        });
+                                }
+                                catch (Exception e)
+                                {
+                                   showTextLong(e.getMessage());
+                                }
 
+                            }
                         }
                         else
                         {
@@ -401,18 +408,23 @@ public class AddPropertyActivity extends BaseActivity implements RecyclerViewInt
 
     private void clearInput()
     {
-       pnameEditText.setText("");
-       pAddressEditText.setText("");
-       pBathRoomEditText.setText("");
-       pBedRoomEditText.setText("");
-       pdescEditText.setText("");
-       priceEditText.setText("");
-       pAreaEditText.setText("");
-       checkBoxInternet.setChecked(false);
-       checkBoxGas.setChecked(false);
-       checkBoxWater.setChecked(false);
-       checkBoxElectric.setChecked(false);
-       piiAdapter.clearALLItem();
+        try {
+            pnameEditText.setText("");
+            pAddressEditText.setText("");
+            pBathRoomEditText.setText("");
+            pBedRoomEditText.setText("");
+            pdescEditText.setText("");
+            priceEditText.setText("");
+            pAreaEditText.setText("");
+            checkBoxInternet.setChecked(false);
+            checkBoxGas.setChecked(false);
+            checkBoxWater.setChecked(false);
+            checkBoxElectric.setChecked(false);
+            piiAdapter.clearALLItem( convertVectorDrawableToBitmap (R.drawable.ic_baseline_add_35));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -439,18 +451,21 @@ public class AddPropertyActivity extends BaseActivity implements RecyclerViewInt
         return utilities;
     }
 
-    private Property createNewProperty(ArrayList<String> imageURLList)
+    private Property createNewProperty(ArrayList<String> imageURLList, List<Utilities> utilityList)
     {
        Geocoder geocoder = new Geocoder(this) ;
         try {
             List<Address> alist = geocoder.getFromLocationName(pAddressEditText.getText().toString(), 1);
+            List<Utilities> listU = new ArrayList<>();
+            listU.add(Utilities.ELECTRIC);
+            listU.add(Utilities.INTERNET);
             LatLng coord = new LatLng(alist.get(0).getLatitude(), alist.get(0).getLongitude());
 
-            Property property = new Property(null, Objects.requireNonNull(pnameEditText.getText()).toString(),loginLandlord.getEmail()
+            Property property = new Property(null, pnameEditText.getText().toString(),loginLandlord.getEmail()
                     , coord, selectPropertyType,  Integer.parseInt(pBedRoomEditText.getText().toString()),
                     Integer.parseInt(pBathRoomEditText.getText().toString()), getSelectUtilities(),
-                    Float.parseFloat(Objects.requireNonNull(priceEditText.getText()).toString()), Float.parseFloat(pAreaEditText.getText().toString()));
-            property.setPropertyDescription(Objects.requireNonNull(pdescEditText.getText()).toString());
+                    Float.parseFloat(priceEditText.getText().toString()), Float.parseFloat(pAreaEditText.getText().toString()));
+            property.setPropertyDescription(pdescEditText.getText().toString());
             property.setImageURLList(imageURLList);
             return property;
         } catch (IOException e) {
@@ -462,7 +477,7 @@ public class AddPropertyActivity extends BaseActivity implements RecyclerViewInt
 
     private boolean validateInputs()
     {
-        if(Objects.requireNonNull(pnameEditText.getText()).toString().trim().isEmpty())
+        if(pnameEditText.getText().toString().trim().isEmpty())
         {
             showTextLong("Please Enter a valid property Name");
             return false;
@@ -475,11 +490,6 @@ public class AddPropertyActivity extends BaseActivity implements RecyclerViewInt
         else if (pAddressEditText.getText().toString().trim().isEmpty())
         {
             showTextLong("Please Select property address");
-        }
-        else if(getSelectUtilities().isEmpty())
-        {
-            showTextLong("Please select property's utilities");
-            return false;
         }
 
         else if(pBedRoomEditText.getText().toString().isEmpty())
@@ -513,6 +523,39 @@ public class AddPropertyActivity extends BaseActivity implements RecyclerViewInt
         }
         else
         {
+            try {
+                int bedroomNumber = Integer.parseInt(pBedRoomEditText.getText().toString());
+                if(bedroomNumber <= 0)
+                {
+                    throw new Exception();
+                }
+            }catch (Exception e)
+            {
+                showTextLong("Please enter valid bedroom number.");
+                return false;
+            }
+            try {
+                int bathroomNumber = Integer.parseInt(pBathRoomEditText.getText().toString());
+                if(bathroomNumber <= 0)
+                {
+                    throw new Exception();
+                }
+            }catch (Exception e)
+            {
+                showTextLong("Please enter valid bathroom number.");
+                return false;
+            }
+            try {
+                float area = Float.parseFloat(pAreaEditText.getText().toString());
+                if(area <= 0)
+                {
+                    throw new Exception();
+                }
+            }catch (Exception e)
+            {
+                showTextLong("Please enter valid property area.");
+                return false;
+            }
             return true;
         }
        return false;
