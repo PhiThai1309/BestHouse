@@ -46,29 +46,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!--            <LinearLayout-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="50dp"-->
-            <!--                android:orientation="horizontal"-->
-            <!--                android:layout_marginStart="5dp"-->
-            <!--                android:layout_marginEnd="14dp"-->
-            <!--                android:layout_marginBottom="20dp">-->
-
-            <!--                <ImageView-->
-            <!--                    android:id="@+id/details_backBtn"-->
-            <!--                    android:layout_width="50dp"-->
-            <!--                    android:layout_height="match_parent"-->
-            <!--                    android:padding="10dp"-->
-            <!--                    android:src="@drawable/ic_round_arrow_back_24"/>-->
-            <!--        </LinearLayout>-->
-            <!--                <include-->
-            <!--                    android:id="@+id/details_returnBar"-->
-            <!--                    android:layout_marginStart="5dp"-->
-            <!--                    android:layout_marginEnd="14dp"-->
-            <!--                    layout="@layout/layout_returnbar"-->
-            <!--                    android:layout_height="60dp"-->
-            <!--                    android:layout_width="match_parent"/>-->
-
             <TextView
                 android:id="@+id/details_type"
                 style="@style/Bold_SubHeading2"
@@ -89,13 +66,12 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
                 android:orientation="horizontal"
                 android:paddingTop="40dp"
                 android:weightSum="2.5">
 
                 <LinearLayout
-                    android:layout_width="73dp"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
@@ -116,24 +92,24 @@
 
 
 
-                    <com.smarteist.autoimageslider.SliderView
-                        android:id="@+id/imageSlider"
-                        android:layout_width="@dimen/_240sdp"
-                        android:layout_height="@dimen/_300sdp"
-                        android:layout_marginStart="@dimen/_20sdp"
-                        app:sliderAnimationDuration="600"
-                        app:sliderAutoCycleDirection="back_and_forth"
-                        app:sliderAutoCycleEnabled="true"
-                        app:sliderIndicatorAnimationDuration="600"
-                        app:sliderIndicatorGravity="center_horizontal|bottom"
-                        app:sliderIndicatorMargin="15dp"
-                        app:sliderIndicatorOrientation="horizontal"
-                        app:sliderIndicatorPadding="3dp"
-                        app:sliderIndicatorRadius="2dp"
-                        app:sliderIndicatorSelectedColor="#5A5A5A"
-                        app:sliderIndicatorUnselectedColor="#FFF"
-                        app:sliderScrollTimeInSec="4"
-                        app:sliderStartAutoCycle="true" />
+                <com.smarteist.autoimageslider.SliderView
+                    android:id="@+id/imageSlider"
+                    android:layout_weight="1.5"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/_300sdp"
+                    app:sliderAnimationDuration="600"
+                    app:sliderAutoCycleDirection="back_and_forth"
+                    app:sliderAutoCycleEnabled="true"
+                    app:sliderIndicatorAnimationDuration="600"
+                    app:sliderIndicatorGravity="center_horizontal|bottom"
+                    app:sliderIndicatorMargin="15dp"
+                    app:sliderIndicatorOrientation="horizontal"
+                    app:sliderIndicatorPadding="3dp"
+                    app:sliderIndicatorRadius="2dp"
+                    app:sliderIndicatorSelectedColor="#5A5A5A"
+                    app:sliderIndicatorUnselectedColor="#FFF"
+                    app:sliderScrollTimeInSec="4"
+                    app:sliderStartAutoCycle="true" />
  
             </LinearLayout>
 
@@ -148,7 +124,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="20dp"
-                    android:text="Property details" />
+                    android:text="@string/property_details" />
 
                 <TextView
                     android:id="@+id/details_desc"
@@ -212,63 +188,11 @@
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
-                <!--                <LinearLayout-->
-                <!--                    android:layout_width="match_parent"-->
-                <!--                    android:layout_height="wrap_content"-->
-                <!--                    android:layout_gravity="left"-->
-                <!--                    android:orientation="horizontal">-->
-                <!--                    <ImageView-->
-                <!--                        android:layout_width="wrap_content"-->
-                <!--                        android:layout_height="wrap_content"-->
-                <!--                        android:src="@drawable/ic_round_home_work_24"/>-->
-                <!--                    <TextView-->
-                <!--                        android:id="@+id/property_type"-->
-                <!--                        style="@style/NormalText"-->
-                <!--                        android:layout_width="match_parent"-->
-                <!--                        android:layout_height="wrap_content"-->
-                <!--                        android:text="@string/place_holder" />-->
-                <!--                </LinearLayout>-->
-
-                <!--                <LinearLayout-->
-                <!--                    android:layout_width="match_parent"-->
-                <!--                    android:layout_height="wrap_content"-->
-                <!--                    android:layout_gravity="left"-->
-                <!--                    android:orientation="horizontal">-->
-                <!--                    <ImageView-->
-                <!--                        android:layout_width="wrap_content"-->
-                <!--                        android:layout_height="wrap_content"-->
-                <!--                        android:src="@drawable/ic_round_map_24"/>-->
-                <!--                    <TextView-->
-                <!--                        android:id="@+id/Utilities"-->
-                <!--                        style="@style/NormalText"-->
-                <!--                        android:layout_width="match_parent"-->
-                <!--                        android:layout_height="wrap_content"-->
-                <!--                        android:text="@string/place_holder" />-->
-                <!--                </LinearLayout>-->
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_round_map_24" />
-
-                    <TextView
-                        style="@style/NormalText"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Image here" />
-                </LinearLayout>
-
                 <TextView
                     style="@style/Heading_Details"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Landlord information" />
+                    android:text="@string/landlord_information" />
 
                 <include
                     android:id="@+id/details_user"
@@ -282,6 +206,7 @@
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
+
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -311,7 +236,7 @@
                 android:id="@+id/createPropertyBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
-                android:text="Place reservation"
+                android:text="@string/place_reservation"
                 android:layout_weight="1"/>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>

@@ -50,7 +50,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/md_theme_surface"
-                android:hint="Input message"
+                android:hint="@string/input_message"
                 android:importantForAutofill="no"
                 android:maxLines="2" />
         </com.google.android.material.card.MaterialCardView>

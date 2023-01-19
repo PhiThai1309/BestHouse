@@ -53,14 +53,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
                     style="@style/Bold_Heading"
-                    android:text="Contract details"/>
+                    android:text="@string/contract_details"/>
 
                 <TextView
                     android:id="@+id/contract_start"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     style="@style/Bold_SubHeading2"
-                    android:text="Start date"/>
+                    android:text="@string/start_date"/>
 
                 <TextView
                     android:id="@+id/contract_start_date"
@@ -75,7 +75,7 @@
                     android:layout_height="wrap_content"
                     style="@style/Bold_SubHeading2"
                     android:layout_marginTop="12dp"
-                    android:text="End date"/>
+                    android:text="@string/end_date"/>
 
                 <TextView
                     android:id="@+id/contract_end_date"
@@ -105,7 +105,7 @@
                         android:layout_height="wrap_content"
                         style="@style/Bold_SubHeading2"
                         android:layout_marginTop="12dp"
-                        android:text="Property name"/>
+                        android:text="@string/property_name"/>
 
                     <TextView
                         android:id="@+id/contract_property_name"
@@ -120,7 +120,7 @@
                         android:layout_height="wrap_content"
                         style="@style/Bold_SubHeading2"
                         android:layout_marginTop="12dp"
-                        android:text="Property address"/>
+                        android:text="@string/property_address"/>
 
                     <TextView
                         android:id="@+id/contract_address_name"
@@ -160,7 +160,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
                     style="@style/Bold_Heading"
-                    android:text="Tenant details"/>
+                    android:text="@string/tenant_details"/>
 
                 <include
                     android:id="@+id/contract_tenant_details"

@@ -132,7 +132,7 @@
                     android:adjustViewBounds="true"
                     android:src="@drawable/google_logo"
                     android:layout_marginHorizontal="20dp"
-                    />
+                    android:contentDescription="@string/google_login_button" />
                 <ImageButton
                     app:tint="@null"
                     android:layout_marginHorizontal="20dp"
@@ -145,7 +145,7 @@
                     android:scaleType="fitCenter"
                     android:adjustViewBounds="true"
                     android:src="@drawable/facebook_logo"
-                    />
+                    android:contentDescription="@string/facebook_login_button" />
             </LinearLayout>
 
         </LinearLayout>

@@ -11,7 +11,6 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
         
@@ -19,6 +18,9 @@
             android:id="@+id/linearSignup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingTop="20dp"
+            android:paddingHorizontal="20dp"
+            android:paddingBottom="120dp"
             android:orientation="vertical">
 
             <TextView
@@ -33,8 +35,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_80sdp"
-                style="@style/CardStyle"
-                xmlns:android="http://schemas.android.com/apk/res/android">
+                style="@style/CardStyle">
                 <FrameLayout
                     android:id="@+id/selectImageLayout"
                     android:layout_width="wrap_content"
@@ -136,7 +137,7 @@
                     android:id="@+id/radio_landlord"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Landlord"
+                    android:text="@string/landlord"
                     android:textColor="@color/md_theme_onPrimaryContainer"
                     android:textSize="@dimen/_15ssp" />
 
@@ -145,7 +146,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_100sdp"
-                    android:text="Tenant"
+                    android:text="@string/tenant"
                     android:textColor="@color/md_theme_onPrimaryContainer"
                     android:textSize="@dimen/_15ssp" />
             </RadioGroup>

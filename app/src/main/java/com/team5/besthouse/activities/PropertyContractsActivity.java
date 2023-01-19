@@ -1,15 +1,20 @@
 package com.team5.besthouse.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 
+import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.elevation.SurfaceColors;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.Gson;
@@ -44,7 +49,15 @@ public class PropertyContractsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_property_contracts);
 
+        //Set color to the navigation bar to match with the bottom navigation view
+        getWindow().setNavigationBarColor(Color.TRANSPARENT);
+        Window window = getWindow();
+        window.setStatusBarColor(Color.TRANSPARENT);
+
         Intent intent = getIntent();
+
+        Toolbar toolbar = findViewById(R.id.homeToolbar);
+        this.setSupportActionBar(toolbar);
 
         property = (Property) intent.getExtras().get("property");
 
@@ -67,8 +80,6 @@ public class PropertyContractsActivity extends AppCompatActivity {
 
         adapter = new ContractReviewAdapter(context, list);
         recyclerView.setAdapter(adapter);
-
-
     }
 
     @Override
@@ -92,8 +103,15 @@ public class PropertyContractsActivity extends AppCompatActivity {
                         }
                         adapter.notifyItemRangeChanged(0, list.size());
                     }
+                    CollapsingToolbarLayout toolbarLayout = findViewById(R.id.toolbar_layout);
+                    toolbarLayout.setTitle(list.size() + " pending request");
                     progressIndicator.setVisibility(View.GONE);
                 });
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
 }

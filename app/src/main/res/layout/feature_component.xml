@@ -11,13 +11,14 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginBottom="10dp"
-        android:src="@drawable/ic_outline_location_on_24"/>
+        android:src="@drawable/ic_outline_location_on_24"
+        android:contentDescription="Feature icon" />
     <TextView
         android:id="@+id/feature_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textSize="12dp"
+        android:textSize="12sp"
         android:text="@string/place_holder"/>
 
 </LinearLayout>

@@ -1,12 +1,10 @@
 package com.team5.besthouse.activities;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.media.Image;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
@@ -19,23 +17,18 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.elevation.SurfaceColors;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 import com.team5.besthouse.R;
 import com.team5.besthouse.constants.UnchangedValues;
-import com.team5.besthouse.fragments.Inflate.MoreLanlordFragment;
-import com.team5.besthouse.fragments.Inflate.MorePropertyFragment;
 import com.team5.besthouse.models.Contract;
 import com.team5.besthouse.models.Property;
 import com.team5.besthouse.models.Tenant;
 import com.team5.besthouse.models.User;
 import com.team5.besthouse.models.UserRole;
 import com.team5.besthouse.services.StoreService;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;

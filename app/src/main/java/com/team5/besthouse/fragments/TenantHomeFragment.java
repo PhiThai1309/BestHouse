@@ -73,6 +73,7 @@ import com.team5.besthouse.services.StoreService;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -88,6 +89,7 @@ public class TenantHomeFragment extends Fragment {
     private RecyclerView featureView;
     private RecyclerView propertyView;
     private ArrayList<Property> list;
+    private ArrayList<Property> featureList;
     private PropertyAdapter adapter1;
     private PropertyCardAdapter adapter2;
     private StoreService storeService;
@@ -202,15 +204,12 @@ public class TenantHomeFragment extends Fragment {
         helper.attachToRecyclerView(featureView);
 
         list = new ArrayList<>();
-        adapter1 = new PropertyAdapter((MainActivity) getContext(), list, 5);
+
+        featureList = list;
+        Collections.reverse(featureList);
+
+        adapter1 = new PropertyAdapter((MainActivity) getContext(), featureList, 5);
         featureView.setAdapter(adapter1);
-
-        //add 5 static properties to list
-//        list.addAll(Collections.nCopies(5, Property.STATICPROPERTY));
-
-        //add properties from db to list
-        //this does not update the recycler view
-        Address address = new Address(Locale.US);
 
         propertyView = (RecyclerView) view.findViewById(R.id.main_property);
         LinearLayoutManager linearLayoutManager2 = new LinearLayoutManager(getContext());
@@ -234,40 +233,17 @@ public class TenantHomeFragment extends Fragment {
         View topView = view.findViewById(R.id.home_top);
         TextView topTitle = topView.findViewById(R.id.see_more_title);
         topTitle.setText("Top near you");
-//        ImageView seeMore = topView.findViewById(R.id.see_more);
         topView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent intent = new Intent(getContext(), MoreActivity.class);
-//                startActivity(intent);
-//                getActivity().overridePendingTransition(0, R.anim.slide_in_bottom);
-
-//                CoordinatorLayout linearLayout = view.findViewById(R.id.bottom_sheet);
-//                BottomSheetDialog bottomSheet = new BottomSheetDialog(getContext());
-//                View bottomSheetView = LayoutInflater.from(getContext())
-//                        .inflate(R.layout.activity_more, (LinearLayout) getActivity().findViewById(R.id.bottom_sheet));
-//
-//                bottomSheet.setContentView(bottomSheetView);
-//
-//                bottomSheet.findViewById(R.id.more_property);
-//                bottomSheet.show();
-
                 Bundle bundle = new Bundle();
                 bundle.putParcelableArrayList("list",  list);
 
                 MorePropertyFragment bottomDialogFragment = new MorePropertyFragment();
                 bottomDialogFragment.setArguments(bundle);
                 bottomDialogFragment.show(((MainActivity) getContext()).getSupportFragmentManager(), "ActionBottomDialogFragment.TAG");
-//                addPhotoBottomDialogFragment.setCancelable(false);
             }
         });
-
-//        CoordinatorLayout linearLayout = view.findViewById(R.id.bottom_sheet);
-//        BottomSheetDialog bottomSheet = new BottomSheetDialog(getContext());
-//        bottomSheet.setContentView(R.layout.activity_more);
-//
-//        bottomSheet.show();
-
 
         // Inflate the layout for this fragment
         return view;

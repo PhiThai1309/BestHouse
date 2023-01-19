@@ -61,4 +61,27 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="upload_avatar">Upload Avatar</string>
     <string name="send_message">Send Message</string>
+    <string name="add_property">Add Property</string>
+    <string name="property_type">Property Type</string>
+    <string name="contract_details">Contract details</string>
+    <string name="start_date">Start date</string>
+    <string name="end_date">End date</string>
+    <string name="property_name">Property name</string>
+    <string name="property_address">Property address</string>
+    <string name="tenant_details">Tenant details</string>
+    <string name="landlord_information">Landlord information</string>
+    <string name="place_reservation">Place reservation</string>
+    <string name="property_details">Property details</string>
+    <string name="select_location">Select location</string>
+    <string name="facebook_login_button">Facebook login button</string>
+    <string name="google_login_button">Google login button</string>
+    <string name="input_message">Input message</string>
+    <string name="slider">slider</string>
+    <string name="all_contract">All Contract</string>
+    <string name="top_near_you">Top Near You</string>
+    <string name="accept">Accept</string>
+    <string name="landlord">Landlord</string>
+    <string name="tenant">Tenant</string>
+    <string name="loyalty_point">Loyalty point:</string>
+    <string name="_0_points">0 points</string>
 </resources>
