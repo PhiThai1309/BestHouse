@@ -188,14 +188,14 @@ public class DetailActivity extends BaseActivity {
             builder.setTitle("Confirm your reservation");
             builder.setMessage("If you confirm, this request will be sent to the landlord for further reviewed and the outcome will be sent to you later.");
             //Set the positive button
-            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     makeContract();
                 }
             });
             //Set the negative button
-            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            builder.setNegativeButton("Not yet", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     dialogInterface.cancel();
