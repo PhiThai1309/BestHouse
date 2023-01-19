@@ -46,7 +46,7 @@
                     style="@style/Bold_SubHeading2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Full Name"
+                    android:text="@string/full_name"
                     android:layout_gravity="bottom"/>
 
                 <TextView
@@ -81,7 +81,7 @@
                     style="@style/Bold_SubHeading2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Email"
+                    android:text="@string/email"
                     android:layout_gravity="bottom"/>
 
                 <TextView
@@ -117,7 +117,7 @@
                     style="@style/Bold_SubHeading2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Phone"
+                    android:text="@string/phone"
                     android:layout_gravity="bottom"/>
 
 

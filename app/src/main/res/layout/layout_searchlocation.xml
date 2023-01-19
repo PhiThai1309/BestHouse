@@ -20,7 +20,7 @@
             android:layout_height="match_parent"
             android:background="@color/md_theme_background"
             android:src="@drawable/ic_round_arrow_back_24"
-            />
+            android:contentDescription="Return icon" />
 
         <EditText
             style="@style/Widget.Material3.AutoCompleteTextView.OutlinedBox"

@@ -10,7 +10,7 @@
         android:id="@+id/spinItemName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Appartment"
+        android:text="@string/apartment"
         android:gravity="center"
         android:layout_margin="8dp"
         style="@style/Bold_SubHeading"

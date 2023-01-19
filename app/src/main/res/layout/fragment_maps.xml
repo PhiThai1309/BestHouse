@@ -5,10 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!--    <SearchView-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="match_parent" />-->
-
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/Googlemap"
         android:name="com.google.android.gms.maps.SupportMapFragment"
@@ -45,17 +41,5 @@
         app:queryHint="Search">
 
     </androidx.appcompat.widget.SearchView>
-
-    <!--    <SearchView-->
-    <!--        android:id="@+id/searchView"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:queryHint="Search Here"-->
-    <!--        android:iconifiedByDefault="false"-->
-    <!--        android:layout_alignParentTop="true"-->
-    <!--        />-->
-
-    <!--    <include-->
-    <!--        layout="@layout/search_layout"/>-->
 
 </FrameLayout>

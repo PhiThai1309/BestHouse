@@ -224,8 +224,6 @@ public class AccountFragment extends Fragment {
             TextView noData = propertyWrapper.findViewById(R.id.display_none);
 
             if(propertyList.isEmpty()) {
-//                contractList.add(Contract.STATICCONTRACT);
-//                adapter1.notifyDataSetChanged();
                 seeMoreButton.setVisibility(View.GONE);
                 propertyView.setVisibility(View.GONE);
             } else if(propertyList.size() <= 5) {
@@ -267,6 +265,7 @@ public class AccountFragment extends Fragment {
         });
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

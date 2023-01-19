@@ -38,21 +38,37 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
+                        android:layout_marginBottom="12dp"
                         android:orientation="horizontal">
-                        
-                    <com.google.android.material.imageview.ShapeableImageView
-                        android:id="@+id/account_image"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:src="@drawable/besthouse_logo"/>
 
-                        <TextView
-                            android:layout_marginStart="20dp"
-                            android:id="@+id/account_name"
-                            style="@style/Bold_Heading_Reverse"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/place_holder" />
+                        <com.google.android.material.imageview.ShapeableImageView
+                            app:shapeAppearanceOverlay="@style/roundedCorners"
+                            android:id="@+id/account_image"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:src="@drawable/besthouse_logo"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_marginStart="20dp"
+                                android:id="@+id/account_name"
+                                style="@style/Bold_Heading_Reverse"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/place_holder" />
+                            <TextView
+                                android:layout_marginStart="20dp"
+                                android:id="@+id/account_type"
+                                android:paddingTop="12dp"
+                                style="@style/SubHeading_Reverse"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/tenant" />
+                        </LinearLayout>
                     </LinearLayout>
 
                     <View
@@ -62,8 +78,9 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="50dp"
+                        android:layout_height="wrap_content"
                         android:gravity="center"
+                        android:layout_marginTop="20dp"
                         android:orientation="horizontal">
                         <TextView
                             android:layout_width="wrap_content"

@@ -21,5 +21,6 @@
         android:paddingTop="14dp"
         android:paddingBottom="2dp"
         style="@style/SeeMore"
-        android:src="@drawable/ic_round_arrow_forward_24"/>
+        android:src="@drawable/ic_round_arrow_forward_24"
+        android:contentDescription="More icon" />
 </LinearLayout>

@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         style="@style/Bold_Heading"
         android:layout_weight="1"
-        android:text="Property details"/>
+        android:text="@string/property_details"/>
     <ImageView
         android:id="@+id/more"
         android:layout_width="40dp"

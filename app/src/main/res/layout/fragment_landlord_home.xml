@@ -45,17 +45,18 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
-                        android:text="WELCOME!" />
+                        android:text="@string/welcome" />
 
                     <TextView
                         android:id="@+id/landlord_name"
                         style="@style/Heading"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="landlord's name" />
+                        android:text="@string/landlord_s_name" />
                 </LinearLayout>
 
-                <ImageView
+                <com.google.android.material.imageview.ShapeableImageView
+                    app:shapeAppearanceOverlay="@style/roundedCorners"
                     android:id="@+id/landlord_account"
                     android:layout_width="@dimen/_50sdp"
                     android:layout_height="@dimen/_50sdp"
@@ -81,7 +82,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
                 android:paddingTop="12dp"
-                android:text="Pending Request" />
+                android:text="@string/pending_request" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/posted_property"

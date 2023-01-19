@@ -84,4 +84,15 @@
     <string name="tenant">Tenant</string>
     <string name="loyalty_point">Loyalty point:</string>
     <string name="_0_points">0 points</string>
+    <string name="landlord_s_name">landlord\'s name</string>
+    <string name="pending_request">Pending Request</string>
+    <string name="_0_km">0 KM</string>
+    <string name="apartment">Apartment</string>
+    <string name="full_name">Full Name</string>
+    <string name="email">Email</string>
+    <string name="phone">Phone</string>
+    <string name="no_contract_history_at_the_moment">No contract history at the moment</string>
+    <string name="no_internet_connection">NO INTERNET CONNECTION!</string>
+    <string name="please_check_your_internet_connection">Please Check Your Internet Connection</string>
+    <string name="retry">RETRY</string>
 </resources>

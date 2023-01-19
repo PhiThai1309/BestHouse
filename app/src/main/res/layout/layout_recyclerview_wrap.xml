@@ -18,7 +18,7 @@
         android:id="@+id/display_none"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="No contract history at the moment"
+        android:text="@string/no_contract_history_at_the_moment"
         android:layout_margin="20dp"
         android:layout_gravity="center"
         android:gravity="center"

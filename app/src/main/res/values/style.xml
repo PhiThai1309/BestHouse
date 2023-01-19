@@ -102,6 +102,12 @@
         <item name="android:fontFamily">sans-serif-thin</item>
     </style>
 
+    <style name="SubHeading_Reverse" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">sans-serif-thin</item>
+        <item name="android:textColor">@color/md_theme_inverseOnSurface</item>
+    </style>
+
     <style name="SeeMore" parent="@android:style/Widget.TextView">
         <item name="android:textSize">14sp</item>
         <item name="android:fontFamily">sans-serif-thin</item>
@@ -190,6 +196,15 @@
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/md_theme_onPrimaryContainer</item>
         <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="roundedCorners" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">12dp</item>
+    </style>
+
+    <style name="MyDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:background">#00050505</item>
     </style>
 
 </resources>
