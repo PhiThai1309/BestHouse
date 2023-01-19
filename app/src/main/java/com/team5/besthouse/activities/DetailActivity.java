@@ -24,6 +24,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.elevation.SurfaceColors;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentChange;
@@ -40,6 +41,7 @@ import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.fragments.MapsFragment;
 import com.team5.besthouse.models.Chat;
 import com.team5.besthouse.models.Property;
+import com.team5.besthouse.models.PropertyStatus;
 import com.team5.besthouse.models.Tenant;
 import com.team5.besthouse.models.User;
 import com.team5.besthouse.models.UserRole;
@@ -75,6 +77,7 @@ public class DetailActivity extends BaseActivity {
 
     boolean disableEdit;
     private Toolbar toolbar;
+    private CollapsingToolbarLayout toolbarCL;
     private Button makeContractButton;
     private TextView type;
     private LinearLayout bedroom;
@@ -148,12 +151,11 @@ public class DetailActivity extends BaseActivity {
         desc = findViewById(R.id.details_desc);
         locationText = findViewById(R.id.details_address);
         price = findViewById(R.id.details_price);
+        toolbarCL = findViewById(R.id.toolbar_layout);
     }
     private void displayPropertyInfo(@NonNull Property property)
     {
-
         type.setText(String.valueOf(property.getPropertyType()));
-
         //first feature
         featureBedroom.setImageResource(R.drawable.ic_outline_single_bed_24);
         bedroomText.setText(property.getBedrooms() + " Bedrooms");
@@ -172,7 +174,7 @@ public class DetailActivity extends BaseActivity {
         //End of id get
 
         toolbar.setTitle(property.getPropertyName());
-
+        toolbarCL.setTitle(property.getPropertyName());
         String location = property.getAddress(getApplicationContext());
         locationText.setText(location);
 
@@ -209,7 +211,6 @@ public class DetailActivity extends BaseActivity {
         sliderView = findViewById(R.id.imageSlider);
         if(property.getImageURLList() != null)
         {
-            
             ImageSliderAdapter sliderAdapter = new ImageSliderAdapter(this, property.getImageURLList()) ;
             sliderView.setSliderAdapter(sliderAdapter);
             sliderView.startAutoCycle();
@@ -350,10 +351,16 @@ public class DetailActivity extends BaseActivity {
                 {
 
                     try {
-                        Property property = value.toObject(Property.class);
-                        displayPropertyInfo(property);
-
-                        Log.d("EDIT", property.getPropertyName());
+                        Property propertyChange = value.toObject(Property.class);
+                        if(propertyChange.getStatus() == PropertyStatus.DELETE)
+                        {
+                            finish();
+                        }
+                        else
+                        {
+                            property = propertyChange;
+                            displayPropertyInfo(propertyChange);
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
