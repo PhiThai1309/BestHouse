@@ -51,6 +51,7 @@ import com.team5.besthouse.models.Tenant;
 import com.team5.besthouse.models.User;
 import com.team5.besthouse.models.UserRole;
 import com.team5.besthouse.services.StoreService;
+import com.team5.besthouse.utilities.UpdateTenantLoyal;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -209,16 +210,24 @@ public class LoginActivity extends BaseActivity {
                     .document(userId).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                         @Override
                         public void onSuccess(DocumentSnapshot documentSnapshot) {
-                            String userName = documentSnapshot.getString(UnchangedValues.USER_NAME_COL);
-                            String userEmail = documentSnapshot.getString(UnchangedValues.USER_EMAIL_COL);
-                            String userPhone = documentSnapshot.getString(UnchangedValues.USER_PHONE_COL);
-                            String userImageUrl = documentSnapshot.getString(UnchangedValues.USER_IMAGE_URL_COL);
-                            String userId = documentSnapshot.getId();
+                           String userId = "", userName = "", userEmail = "", userPhone = "", userImageUrl = "";
+                           int userLoyalPoint = -1;
+                            try {
+                                userId = documentSnapshot.getId();
+                                userName = documentSnapshot.getString(UnchangedValues.USER_NAME_COL);
+                                userEmail = documentSnapshot.getString(UnchangedValues.USER_EMAIL_COL);
+                                userPhone = documentSnapshot.getString(UnchangedValues.USER_PHONE_COL);
+                                userImageUrl = documentSnapshot.getString(UnchangedValues.USER_IMAGE_URL_COL);
+                                userLoyalPoint = documentSnapshot.get(UnchangedValues.USER_LOYAL_COL, Integer.class);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
                             User loginUser = null;
                             UserRole userRole = null;
                             try {
                                 if (documentSnapshot.getString(UnchangedValues.USER_ROLE).compareTo("TENANT") == 0) {
-                                    loginUser = new Tenant(userEmail, userName, userPhone, new ArrayList<>(),userImageUrl);
+                                    loginUser = new Tenant(userEmail, userName, userPhone, new ArrayList<>(),userImageUrl, userLoyalPoint);
                                     userRole = UserRole.TENANT;
                                 }
                                 if (documentSnapshot.getString(UnchangedValues.USER_ROLE).compareTo("LANDLORD") == 0) {
