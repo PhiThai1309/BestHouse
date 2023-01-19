@@ -3,6 +3,8 @@ package com.team5.besthouse.adapters;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +14,16 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.team5.besthouse.R;
 import com.team5.besthouse.activities.ContractActivity;
 import com.team5.besthouse.constants.UnchangedValues;
+import com.team5.besthouse.interfaces.GetBitMapCallBack;
 import com.team5.besthouse.models.Contract;
 
 import java.util.List;
@@ -93,12 +101,15 @@ public class ContractAdapter extends RecyclerView.Adapter<ContractAdapter.TaskVi
         return Math.min(contractList.size(), maxItemCount);
     }
 
+
+
     //TaskViewHolder class to hold the views
     public static class TaskViewHolder extends RecyclerView.ViewHolder {
         TextView status;
         TextView date;
         TextView name;
         CardView cardView;
+
 
         public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -107,6 +118,7 @@ public class ContractAdapter extends RecyclerView.Adapter<ContractAdapter.TaskVi
 //            endDate = itemView.findViewById(R.id.end_date);
             date = itemView.findViewById(R.id.property_address);
             cardView = itemView.findViewById(R.id.cardView);
+
         }
     }
 

@@ -2,6 +2,8 @@ package com.team5.besthouse.adapters;
 
 
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +11,7 @@ import android.widget.ImageView;
 
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.team5.besthouse.R;
@@ -40,10 +43,11 @@ public class PropertyImageInsertAdapter extends RecyclerView.Adapter<PropertyIma
         return true;
     }
 
-    public void clearALLItem()
+    public void clearALLItem(Bitmap firstBitMap)
     {
         imageList.clear();
-        notifyItemRangeRemoved(1, 2);
+        imageList.add(firstBitMap);
+        notifyDataSetChanged();
     }
 
     public boolean replaceItem(Bitmap newItem, int pos)
@@ -95,4 +99,6 @@ public class PropertyImageInsertAdapter extends RecyclerView.Adapter<PropertyIma
 
         }
     }
+
+
 }
