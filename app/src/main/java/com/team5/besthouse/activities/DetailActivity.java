@@ -1,6 +1,7 @@
 package com.team5.besthouse.activities;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -25,8 +26,11 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.elevation.SurfaceColors;
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 import com.smarteist.autoimageslider.SliderView;
@@ -70,6 +74,21 @@ public class DetailActivity extends BaseActivity {
     User user;
 
     boolean disableEdit;
+    private Toolbar toolbar;
+    private Button makeContractButton;
+    private TextView type;
+    private LinearLayout bedroom;
+    private ImageView featureBedroom;
+    private TextView bedroomText;
+    private LinearLayout bathroom;
+    private ImageView featureBathroom;
+    private TextView bathroomText;
+    private LinearLayout other;
+    private ImageView featureOther;
+    private TextView otherText;
+    private TextView desc;
+    private TextView locationText;
+    private TextView price;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +106,7 @@ public class DetailActivity extends BaseActivity {
         gson = new Gson();
         user = gson.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), Tenant.class);
 
-        Button makeContractButton = findViewById(R.id.createPropertyBtn);
+         makeContractButton = findViewById(R.id.createPropertyBtn);
 
         property = (Property) getIntent().getParcelableExtra("property");
         boolean disableReservation = getIntent().getBooleanExtra("history", false);
@@ -104,42 +123,52 @@ public class DetailActivity extends BaseActivity {
         //Set color to the navigation bar to match with the bottom navigation view
         getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(this));
 
-        Toolbar toolbar = findViewById(R.id.homeToolbar);
+        toolbar = findViewById(R.id.homeToolbar);
         this.setSupportActionBar(toolbar);
+        retrieveDataFromUI();
+        displayPropertyInfo(property);
+        fetchUser();
+        listenToCollection(property.getId());
 
-        TextView type = findViewById(R.id.details_type);
+
+    }
+
+    private void retrieveDataFromUI()
+    {
+        type = findViewById(R.id.details_type);
+        bedroom = findViewById(R.id.details_bedroom);
+        featureBedroom = bedroom.findViewById(R.id.feature_image);
+        bedroomText = bedroom.findViewById(R.id.feature_text);
+        bathroom = findViewById(R.id.details_bathroom);
+        featureBathroom = bathroom.findViewById(R.id.feature_image);
+        bathroomText = bathroom.findViewById(R.id.feature_text);
+        other = findViewById(R.id.details_other);
+        featureOther = other.findViewById(R.id.feature_image);
+        otherText = other.findViewById(R.id.feature_text);
+        desc = findViewById(R.id.details_desc);
+        locationText = findViewById(R.id.details_address);
+        price = findViewById(R.id.details_price);
+    }
+    private void displayPropertyInfo(@NonNull Property property)
+    {
+
         type.setText(String.valueOf(property.getPropertyType()));
 
         //first feature
-        LinearLayout bedroom = findViewById(R.id.details_bedroom);
-        ImageView featureBedroom = bedroom.findViewById(R.id.feature_image);
         featureBedroom.setImageResource(R.drawable.ic_outline_single_bed_24);
-        TextView bedroomText = bedroom.findViewById(R.id.feature_text);
         bedroomText.setText(property.getBedrooms() + " Bedrooms");
-
         sliderViewConfig();
 
         //Second feature
-        LinearLayout bathroom = findViewById(R.id.details_bathroom);
-        ImageView featureBathroom = bathroom.findViewById(R.id.feature_image);
         featureBathroom.setImageResource(R.drawable.ic_outline_bathtub_24);
-        TextView bathroomText = bathroom.findViewById(R.id.feature_text);
         bathroomText.setText(property.getBathrooms() + " Bathrooms");
-
         //Last feature
-        LinearLayout other = findViewById(R.id.details_other);
-        ImageView featureOther = other.findViewById(R.id.feature_image);
+
+
         featureOther.setImageResource(R.drawable.ic_outline_done_outline_24);
-
         featureOther.setImageResource(R.drawable.ic_outline_square_foot_24);
-        TextView otherText = other.findViewById(R.id.feature_text);
         otherText.setText((int) property.getArea() + " Square foot");
-
-        TextView desc = findViewById(R.id.details_desc);
         desc.setText(property.getPropertyDescription());
-
-        TextView locationText = findViewById(R.id.details_address);
-
         //End of id get
 
         toolbar.setTitle(property.getPropertyName());
@@ -172,15 +201,11 @@ public class DetailActivity extends BaseActivity {
             imageView.setImageResource(drawable);
         }
 
-        fetchUser();
-
-        TextView price = findViewById(R.id.details_price);
         price.setText((int) property.getMonthlyPrice() + ".000 VND / Month");
     }
 
     private void sliderViewConfig()
     {
-
         sliderView = findViewById(R.id.imageSlider);
         if(property.getImageURLList() != null)
         {
@@ -189,8 +214,6 @@ public class DetailActivity extends BaseActivity {
             sliderView.setSliderAdapter(sliderAdapter);
             sliderView.startAutoCycle();
         }
-
-
     }
 
     public void makeContract() {
@@ -310,6 +333,33 @@ public class DetailActivity extends BaseActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    /**
+     * learned from https://firebase.google.com/docs/firestore/query-data/listen
+     */
+    private void listenToCollection(String propertyId) {
+        FirebaseFirestore database =  FirebaseFirestore.getInstance();
+
+        database.collection(UnchangedValues.PROPERTIES_TABLE).document(propertyId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                if(error != null) return;
+
+                if(value != null && value.exists() && value.getId().compareTo(propertyId) == 0 )
+                {
+
+                    try {
+                        Property property = value.toObject(Property.class);
+                        displayPropertyInfo(property);
+
+                        Log.d("EDIT", property.getPropertyName());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
     }
 
     @Override
