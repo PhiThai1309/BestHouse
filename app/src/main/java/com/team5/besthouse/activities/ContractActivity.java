@@ -38,7 +38,6 @@ public class ContractActivity extends BaseActivity {
     private Contract contract;
     private View progressIndicator;
     private TextView propertyAddress, propertyPrice;
-    ImageView seeMore;
 
     FirebaseFirestore database;
     StoreService storeService;
@@ -103,7 +102,6 @@ public class ContractActivity extends BaseActivity {
                                 View userDetails = findViewById(R.id.contract_tenant_details);
                                 TextView landlordName = userDetails.findViewById(R.id.details_landlordName);
                                 landlordName.setText(ds.getString("fullName"));
-//                                   Log.d("TESSSSS", ds.getString("email"));
 
                                 TextView landlordEmail = userDetails.findViewById(R.id.details_landlordEmail);
                                 landlordEmail.setText(ds.getString("email"));
@@ -147,8 +145,8 @@ public class ContractActivity extends BaseActivity {
                                 assert property != null;
                                 propertyName.setText(property.getPropertyName());
 
-                                propertyAddress.setText(property.getAddress(getApplicationContext()).toString());
-                                propertyPrice.setText(String.valueOf(property.getMonthlyPrice()) + " /Month");
+                                propertyAddress.setText(property.getAddress(getApplicationContext()));
+                                propertyPrice.setText(property.getMonthlyPrice() + " /Month");
 
                                 View propertyDetails = findViewById(R.id.property_details);
 //                                seeMore = propertyDetails.findViewById(R.id.more);
