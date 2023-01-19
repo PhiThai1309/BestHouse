@@ -41,4 +41,6 @@
     <color name="light_blue_A400">#FF00B0FF</color>
     <color name="black_overlay">#66000000</color>
     <color name="radio_bg_btn">#86E4B78A</color>
+    <color name="Purple">#694919</color>
+    <color name="Yellow">#FFC107</color>
 </resources>
