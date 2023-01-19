@@ -3,6 +3,7 @@ package com.team5.besthouse.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.graphics.Color;
 import android.nfc.Tag;
@@ -68,7 +69,6 @@ public class DetailActivity extends BaseActivity {
 
         // set up store service
         storeService = new StoreService(getApplicationContext());
-
 
         Button makeContractButton = findViewById(R.id.createPropertyBtn);
 
@@ -140,6 +140,11 @@ public class DetailActivity extends BaseActivity {
 //            Toast.makeText(this, "New property added!", Toast.LENGTH_SHORT).show();
             makeContract();
         });
+
+//        if(contract == now) {
+//            Toast.makeText(getApplicationContext(), "equal", Toast.LENGTH_LONG).show();
+////            showNotification();
+//        }
 
 //        Log.d(TAG, property.getLandlordEmail());
 //        database1.collection(UnchangedValues.USERS_TABLE)
@@ -236,19 +241,12 @@ public class DetailActivity extends BaseActivity {
         //crate timestamp that is 12 months from now
         Timestamp endDate = new Timestamp(Date.from(Instant.now().plusSeconds(86400 * 30 * 12)));
 
-        Timestamp compareDate = new Timestamp(Date.from(Instant.now()));
         //12 month contract
         Contract contract = new Contract(ContractStatus.PENDING, property.getLandlordEmail(), user.getEmail(), property.getId(), Timestamp.now(), endDate);
-
-        if(compareDate == contract.getEndDate()) {
-
-            showNotification();
-        }
 
         DocumentReference dc = db.collection(UnchangedValues.CONTRACTS_TABLE).document();
 
         contract.setId(dc.getId());
-
 
         dc.set(contract)
                 .addOnCompleteListener(task -> {

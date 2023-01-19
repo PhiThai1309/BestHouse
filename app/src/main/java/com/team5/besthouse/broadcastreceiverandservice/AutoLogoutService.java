@@ -14,7 +14,7 @@ import com.team5.besthouse.services.StoreService;
 
 public class AutoLogoutService extends Service {
     private static final long LOGOUT_TIMEOUT = 10 * 1000000; // 10 seconds
-    private static final String TAG = "UserInteractionService";
+    private static final String TAG = "AutoLogoutService";
 
     private FirebaseAuth firebaseAuth;
     private StoreService storeService;
