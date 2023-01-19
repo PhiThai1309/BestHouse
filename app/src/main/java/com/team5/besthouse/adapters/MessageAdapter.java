@@ -45,6 +45,8 @@ public class MessageAdapter extends RecyclerView.Adapter<ChatViewHolder> {
         }
     }
 
+
+
     @Override
     public ChatViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
