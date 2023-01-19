@@ -48,14 +48,14 @@ public class LocationSuggestionAdapter extends RecyclerView.Adapter<LocationSugg
     @Override
     public LocationSuggestionAdapter.LocationSuggestionHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.item_location_suggestion, parent, false);
+        View view = inflater.inflate(R.layout.item_location_suggest, parent, false);
         LocationSuggestionAdapter.LocationSuggestionHolder holder = new LocationSuggestionAdapter.LocationSuggestionHolder(view, recyclerViewInterface);
         return holder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull LocationSuggestionAdapter.LocationSuggestionHolder holder, int position) {
-        holder.lsTextView.setText(locationTextList.get(position));
+        holder.lsTextView.setText(String.valueOf(locationTextList.get(position)));
     }
 
     @Override
@@ -67,7 +67,7 @@ public class LocationSuggestionAdapter extends RecyclerView.Adapter<LocationSugg
         TextView lsTextView;
         public LocationSuggestionHolder(@NonNull View itemView, RecyclerViewInterface recyclerViewInterface) {
             super(itemView);
-            lsTextView = itemView.findViewById(R.id.lsTextView);
+            lsTextView = itemView.findViewById(R.id.nameTextView);
 
             itemView.setOnClickListener(v->{
                 if(recyclerViewInterface != null)
