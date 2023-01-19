@@ -1,7 +1,5 @@
 package com.team5.besthouse.activities;
 
-import static com.team5.besthouse.constants.UnchangedValues.FCM_API;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -100,24 +98,37 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
                                 Contract contract = document.toObject(Contract.class);
                                 try {
                                     if(currentUser.getEmail().equals(contract.getTenantEmail()) || currentUser.getEmail().equals(contract.getLandlordEmail())) {
-                                        if(contract.getContractStatus().equals(ContractStatus.ACTIVE)) {
+                                        if(contract.getContractStatus() == ContractStatus.ACTIVE) {
                                             Timestamp contractEndDate = contract.getEndDate();
                                             Date toEndDate = contractEndDate.toDate();
                                             String endDate = toDateFormat.format(toEndDate);
+                                            Timestamp contractStartDate = contract.getStartDate();
+                                            Date toStartDate = contractStartDate.toDate();
+                                            String startDate = toDateFormat.format(toStartDate);
                                             if (endDate != null) {
-                                                if (!endDate.equals(currentTime)) {
-                                                    Log.d("tag", "Not equal");
-                                                }
-                                                else if (endDate.equals(currentTime)) {
-                                                    Toast.makeText(getApplicationContext(), "show noti", Toast.LENGTH_LONG).show();
+                                                 if (endDate.equals(currentTime)) {
+                                                     Log.d("tag1", contract.getContractStatus().toString());
+                                                    Toast.makeText(getApplicationContext(), "show end noti", Toast.LENGTH_LONG).show();
                                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                                                        showNotification();
+                                                        showContractEndNotification();
+                                                    }
+                                                }
+                                            }
+                                            else if (startDate != null) {
+                                                if(startDate.equals(currentTime)) {
+                                                    Toast.makeText(getApplicationContext(), "show active noti", Toast.LENGTH_LONG).show();
+                                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                                                        showContractAcceptedNotification();
                                                     }
                                                 }
                                             }
                                         }
+                                        else if(contract.getContractStatus() == ContractStatus.PENDING) {
+                                            Log.d("tag2", contract.getContractStatus().toString());
+                                            Toast.makeText(getApplicationContext(), "show pending noti", Toast.LENGTH_LONG).show();
+                                        }
                                     }
-                                } catch (Exception e) {Log.d("tag", "error showing noti");}
+                                } catch (Exception e) {Log.d("tag", "error showing notification");}
                             }
                         }
                     }
@@ -129,10 +140,32 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
     }
 
     @RequiresApi(api = Build.VERSION_CODES.S)
-    public void showNotification() {
+    public void showContractEndNotification() {
         //Save notification
         String title = "BESTHOUSE NOTIFICATION";
         String message = "Your Contract Ends Today!";
+        //Intent notificationIntent = new Intent(getApplicationContext(), ContractActivity.class);
+        //notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        //PendingIntent notificationPendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, notificationIntent, PendingIntent.FLAG_MUTABLE);
+        Notification notification = new NotificationCompat.Builder(getApplicationContext(),
+                CHANNEL_1_ID)
+                .setSmallIcon(R.drawable.ic_launcher_background)
+                .setContentTitle(title)
+                .setContentText(message)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                //.setContentIntent(notificationPendingIntent)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setAutoCancel(true)
+                .build();
+        notificationManager.notify(1, notification);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.S)
+    public void showContractAcceptedNotification() {
+        //Save notification
+        String title = "BESTHOUSE NOTIFICATION";
+        String message = "Your Pending Contract Is Now Active!";
         //Intent notificationIntent = new Intent(getApplicationContext(), ContractActivity.class);
         //notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         //PendingIntent notificationPendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, notificationIntent, PendingIntent.FLAG_MUTABLE);
