@@ -90,9 +90,9 @@ public class ContractReviewAdapter extends RecyclerView.Adapter<ContractReviewAd
                 //Create a dialog
                 MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context);
                 builder.setTitle("Accept confirmation");
-                builder.setMessage("Do you want to accept this contract? If yes, all other contracts will automatically be rejected");
+                builder.setMessage("Do you want to accept this contract? If yes, all other contracts will automatically rejected");
                 //Set the positive button
-                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         current.setContractStatus(ContractStatus.ACTIVE);
@@ -113,7 +113,7 @@ public class ContractReviewAdapter extends RecyclerView.Adapter<ContractReviewAd
                     }
                 });
                 //Set the negative button
-                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton("Not yet", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.cancel();
