@@ -2,6 +2,7 @@ package com.team5.besthouse.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,10 +15,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.team5.besthouse.R;
 import com.team5.besthouse.activities.ContractActivity;
+import com.team5.besthouse.activities.PropertyContractsActivity;
 import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.models.Contract;
 import com.team5.besthouse.models.ContractStatus;
@@ -29,6 +32,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class ContractReviewAdapter extends RecyclerView.Adapter<ContractReviewAdapter.TaskViewHolder> {
+    private Context context;
     private final LayoutInflater mInflater;
     private List<Contract> contractList;
     FirebaseFirestore database = FirebaseFirestore.getInstance();
@@ -37,6 +41,7 @@ public class ContractReviewAdapter extends RecyclerView.Adapter<ContractReviewAd
     public ContractReviewAdapter(Context context, List<Contract> Chats) {
         mInflater = LayoutInflater.from(context);
         contractList = Chats;
+        this.context = context;
     }
 
     // Create the view holder
@@ -82,20 +87,39 @@ public class ContractReviewAdapter extends RecyclerView.Adapter<ContractReviewAd
             });
 
             holder.accept.setOnClickListener(v -> {
-                current.setContractStatus(ContractStatus.ACTIVE);
-                database.collection(UnchangedValues.CONTRACTS_TABLE).document(current.getId()).set(current)
-                        .addOnCompleteListener(task -> {
-                            if (task.isSuccessful()) {
-                                contractList.remove(current);
-                                for (Contract contract : contractList) {
-                                    contract.setContractStatus(ContractStatus.REJECT);
-                                    database.collection(UnchangedValues.CONTRACTS_TABLE).document(contract.getId()).set(contract);
-                                }
-                                contractList.clear();
-                                notifyDataSetChanged();
-                            }
-                            Toast.makeText(mInflater.getContext(), "Contract Accepted!", Toast.LENGTH_LONG).show();
-                        });
+                //Create a dialog
+                MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context);
+                builder.setTitle("Accept confirmation");
+                builder.setMessage("Do you want to accept this contract? If yes, all other contracts will automatically be rejected");
+                //Set the positive button
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        current.setContractStatus(ContractStatus.ACTIVE);
+                        database.collection(UnchangedValues.CONTRACTS_TABLE).document(current.getId()).set(current)
+                                .addOnCompleteListener(task -> {
+                                    if (task.isSuccessful()) {
+                                        contractList.remove(current);
+                                        for (Contract contract : contractList) {
+                                            contract.setContractStatus(ContractStatus.REJECT);
+                                            database.collection(UnchangedValues.CONTRACTS_TABLE).document(contract.getId()).set(contract);
+                                        }
+                                        contractList.clear();
+                                        notifyDataSetChanged();
+                                    }
+                                    Toast.makeText(mInflater.getContext(), "Contract Accepted!", Toast.LENGTH_LONG).show();
+                                    ((PropertyContractsActivity)context).finish();
+                                });
+                    }
+                });
+                //Set the negative button
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                });
+                builder.show();
             });
         }
     }

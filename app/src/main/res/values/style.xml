@@ -149,6 +149,11 @@
         <item name="android:layout_marginStart">4dp</item>
     </style>
 
+    <style name="Card_SubHeading_None" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">13sp</item>
+        <item name="android:fontFamily">sans-serif-thin</item>
+    </style>
+
     <style name="Rec_SubHeading" parent="@android:style/Widget.TextView">
         <item name="android:textSize">13sp</item>
         <item name="android:textColor">@color/md_theme_onPrimary</item>

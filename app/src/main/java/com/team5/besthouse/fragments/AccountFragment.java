@@ -88,7 +88,7 @@ public class AccountFragment extends Fragment {
     private ArrayList<Property> propertyList;
     private PropertyCardAdapter adapter;
 
-    private View historyTitle, historyWrapper, propertyTitle, propertyWrapper;
+    private View historyTitle, historyWrapper, propertyTitle, propertyWrapper, propertyLayout;
 
     Gson gson;
     User user;
@@ -182,9 +182,11 @@ public class AccountFragment extends Fragment {
             TextView noneData = historyWrapper.findViewById(R.id.display_none);
 
             if(contractList.isEmpty()) {
+                historyTitle.setOnClickListener(null);
                 seeMoreBtn.setVisibility(View.GONE);
                 historyView.setVisibility(View.GONE);
             } else if(contractList.size() <= 5) {
+                historyTitle.setOnClickListener(null);
                 seeMoreBtn.setVisibility(View.GONE);
                 noneData.setVisibility(View.GONE);
             } else {
@@ -216,9 +218,11 @@ public class AccountFragment extends Fragment {
             TextView noData = propertyWrapper.findViewById(R.id.display_none);
 
             if(propertyList.isEmpty()) {
+                propertyLayout.setOnClickListener(null);
                 seeMoreButton.setVisibility(View.GONE);
                 propertyView.setVisibility(View.GONE);
             } else if(propertyList.size() <= 5) {
+                propertyLayout.setOnClickListener(null);
                 seeMoreButton.setVisibility(View.GONE);
                 noData.setVisibility(View.GONE);
             } else {
@@ -326,7 +330,7 @@ public class AccountFragment extends Fragment {
         //Property setup here-------------------------------------------------------------
         View propertyWrapper = binding.getRoot().findViewById(R.id.property_list);
 
-        View propertyLayout = binding.getRoot().findViewById(R.id.property_list_title);
+        propertyLayout = binding.getRoot().findViewById(R.id.property_list_title);
         TextView propertyTitle = propertyLayout.findViewById(R.id.see_more_title);
 
         LinearLayout pointView = binding.getRoot().findViewById(R.id.point_section);
@@ -335,7 +339,7 @@ public class AccountFragment extends Fragment {
         if(user.getRole() == UserRole.TENANT) {
             propertyWrapper.setVisibility(View.GONE);
             propertyTitle.setVisibility(View.GONE);
-            point.setText(String.valueOf(storeService.getIntValue(UnchangedValues.USER_LOYAL_COL)) + " points");
+            point.setText(storeService.getIntValue(UnchangedValues.USER_LOYAL_COL) + " points");
         } else {
             View divider = binding.getRoot().findViewById(R.id.line);
             divider.setVisibility(View.GONE);

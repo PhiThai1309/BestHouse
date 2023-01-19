@@ -77,7 +77,7 @@ public class PropertyContractsActivity extends AppCompatActivity {
         linearLayoutManager.setReverseLayout(false);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        adapter = new ContractReviewAdapter(context, list);
+        adapter = new ContractReviewAdapter(this, list);
         recyclerView.setAdapter(adapter);
     }
 

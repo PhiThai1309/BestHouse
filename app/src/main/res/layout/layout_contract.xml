@@ -32,7 +32,7 @@
                 android:id="@+id/property_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/Card_SubHeading"
+                style="@style/Card_SubHeading_None"
                 android:text="@string/place_holder"
                 android:maxLines="1"/>
         </LinearLayout>
