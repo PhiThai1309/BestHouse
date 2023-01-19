@@ -60,10 +60,12 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
     public static final String CHANNEL_1_ID = "channel1";
     public static final String CHANNEL_2_ID = "channel2";
     public static final String CHANNEL_3_ID = "channel3";
+    public static final String CHANNEL_4_ID = "channel4";
     private NotificationManager notificationManager;
     private Handler handler;
     private Runnable runnable;
     private FirebaseAuth firebaseAuth;
+    private boolean isNotiShow = false;
     private static final SimpleDateFormat toDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +87,20 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
         createNotificationChannels2();
         notificationManager = getSystemService(NotificationManager.class);
         createNotificationChannels3();
+        notificationManager = getSystemService(NotificationManager.class);
+        createNotificationChannels4();
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if((this.getClass().getSimpleName().equals("MainActivity") || this.getClass().getSimpleName().equals("LandlordActivity")) && !isNotiShow) {
+            notifyFunction();
+            isNotiShow = true;
+        }
+    }
+
+    public void notifyFunction() {
         StoreService storeService = new StoreService(getApplicationContext());
         Gson json = new Gson();
         User currentUser = json.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), User.class );
@@ -112,20 +127,14 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
                                             Timestamp contractStartDate = contract.getStartDate();
                                             Date toStartDate = contractStartDate.toDate();
                                             String startDate = toDateFormat.format(toStartDate);
-                                            if (endDate != null && startDate != null) {
-                                                 if (endDate.equals(currentTime)) {
-                                                     Log.d("tag1", contract.getContractStatus().toString());
-                                                    Toast.makeText(getApplicationContext(), "show end noti", Toast.LENGTH_LONG).show();
-                                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                                                        showContractEndNotification();
-                                                    }
+                                            if (endDate.equals(currentTime)) {
+                                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                                                    showContractEndNotification();
                                                 }
-                                                else if(startDate.equals(currentTime)) {
-                                                    Log.d("tag1", contract.getContractStatus().toString());
-                                                    Toast.makeText(getApplicationContext(), "show active noti", Toast.LENGTH_LONG).show();
-                                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                                                        showContractAcceptedNotification();
-                                                    }
+                                            }
+                                            else if(startDate.equals(currentTime)) {
+                                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                                                    showContractAcceptedNotification();
                                                 }
                                             }
                                         }
@@ -133,10 +142,19 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
                                             Timestamp contractStartDate = contract.getStartDate();
                                             Date toStartDate = contractStartDate.toDate();
                                             String startDate = toDateFormat.format(toStartDate);
-                                            Toast.makeText(getApplicationContext(), "show pending noti", Toast.LENGTH_LONG).show();
                                             if (startDate.equals(currentTime)) {
                                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                                                     showContractPendingNotification();
+                                                }
+                                            }
+                                        }
+                                        else if(contract.getContractStatus().equals(ContractStatus.REJECT)) {
+                                            Timestamp contractStartDate = contract.getStartDate();
+                                            Date toStartDate = contractStartDate.toDate();
+                                            String startDate = toDateFormat.format(toStartDate);
+                                            if (startDate.equals(currentTime)) {
+                                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                                                    showContractRejectNotification();
                                                 }
                                             }
                                         }
@@ -151,6 +169,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
         };
         handler.post(runnable);
     }
+
 
     @RequiresApi(api = Build.VERSION_CODES.S)
     public void showContractEndNotification() {
@@ -169,7 +188,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
                 //.setContentIntent(notificationPendingIntent)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .setAutoCancel(true)
+                .setAutoCancel(false)
                 .setOnlyAlertOnce(true)
                 .build();
         notificationManager.notify(1, notification);
@@ -192,7 +211,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
                 //.setContentIntent(notificationPendingIntent)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .setAutoCancel(true)
+                .setAutoCancel(false)
                 .setOnlyAlertOnce(true)
                 .build();
         notificationManager.notify(2, notification);
@@ -215,10 +234,33 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
                 //.setContentIntent(notificationPendingIntent)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .setAutoCancel(true)
+                .setAutoCancel(false)
                 .setOnlyAlertOnce(true)
                 .build();
         notificationManager.notify(3, notification);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.S)
+    public void showContractRejectNotification() {
+        //Save notification
+        String title = "BESTHOUSE NOTIFICATION";
+        String message = "The Contract Has Been Rejected";
+        //Intent notificationIntent = new Intent(getApplicationContext(), ContractActivity.class);
+        //notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        //PendingIntent notificationPendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, notificationIntent, PendingIntent.FLAG_MUTABLE);
+        Notification notification = new NotificationCompat.Builder(getApplicationContext(),
+                CHANNEL_4_ID)
+                .setSmallIcon(R.drawable.ic_launcher_background)
+                .setContentTitle(title)
+                .setContentText(message)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                //.setContentIntent(notificationPendingIntent)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setAutoCancel(false)
+                .setOnlyAlertOnce(true)
+                .build();
+        notificationManager.notify(4, notification);
     }
 
     private void createNotificationChannels1() {
@@ -259,6 +301,20 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
             notificationManager.createNotificationChannel(channel3);
         }
     }
+
+    private void createNotificationChannels4() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel4 = new NotificationChannel(
+                    CHANNEL_4_ID,
+                    "Channel 4",
+                    NotificationManager.IMPORTANCE_HIGH
+            );
+            channel4.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+            channel4.setDescription("This is Channel 4");
+            notificationManager.createNotificationChannel(channel4);
+        }
+    }
+
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
