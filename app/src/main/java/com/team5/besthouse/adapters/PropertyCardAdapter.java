@@ -109,14 +109,6 @@ public class PropertyCardAdapter extends RecyclerView.Adapter<PropertyCardAdapte
             holder.address.setText("Error");
             holder.price.setText(0);
         }
-        // Set the click listener
-//        holder.cardView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                key = mTasks.get(position).getId();
-//                updateTask();
-//            }
-//        });
     }
 
     private void goToContracts(Property current) {
@@ -191,12 +183,4 @@ public class PropertyCardAdapter extends RecyclerView.Adapter<PropertyCardAdapte
         }
 
     }
-
-//    // Create an intent to update the task
-//    public void updateTask() {
-//        Intent intent = new Intent(mInflater.getContext(), DetailsActivity.class);
-//        intent.putExtra("key", key);
-//        mInflater.getContext().startActivity(intent);
-//        notifyDataSetChanged();
-//    }
 }

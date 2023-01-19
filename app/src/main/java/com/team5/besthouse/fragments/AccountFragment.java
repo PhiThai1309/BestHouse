@@ -161,7 +161,6 @@ public class AccountFragment extends Fragment {
         @SuppressLint("NotifyDataSetChanged")
         @Override
         public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-//            progressIndicator.setVisibility(View.VISIBLE);
             if(error != null)
             {
                 Log.w("ERROR: ", error);
@@ -170,8 +169,6 @@ public class AccountFragment extends Fragment {
             assert value != null;
             for(DocumentChange newDoc : value.getDocumentChanges()){
                 Contract p = newDoc.getDocument().toObject(Contract.class);
-//                            Log.i("Property", p.getId() == null ? "null address!" : p.getId());
-//                            Log.i("Property", newDoc.getType().toString());
                 contractList.remove(p);
                 if (newDoc.getType() != DocumentChange.Type.REMOVED){
                     contractList.add(p);
@@ -185,8 +182,6 @@ public class AccountFragment extends Fragment {
             TextView noneData = historyWrapper.findViewById(R.id.display_none);
 
             if(contractList.isEmpty()) {
-//                contractList.add(Contract.STATICCONTRACT);
-//                adapter1.notifyDataSetChanged();
                 seeMoreBtn.setVisibility(View.GONE);
                 historyView.setVisibility(View.GONE);
             } else if(contractList.size() <= 5) {
@@ -195,7 +190,6 @@ public class AccountFragment extends Fragment {
             } else {
                 noneData.setVisibility(View.GONE);
             }
-//            progressIndicator.setVisibility(View.GONE);
         }
     };
 
@@ -203,7 +197,6 @@ public class AccountFragment extends Fragment {
         @SuppressLint("NotifyDataSetChanged")
         @Override
         public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-//            progressIndicator.setVisibility(View.VISIBLE);
             if(error != null)
             {
                 Log.w("ERROR: ", error);
@@ -212,8 +205,6 @@ public class AccountFragment extends Fragment {
             assert value != null;
             for(DocumentChange newDoc : value.getDocumentChanges()){
                 Property p = newDoc.getDocument().toObject(Property.class);
-//                            Log.i("Property", p.getId() == null ? "null address!" : p.getId());
-//                            Log.i("Property", newDoc.getType().toString());
                 propertyList.remove(p);
                 propertyList.add(p);
                 adapter.notifyDataSetChanged();
@@ -233,7 +224,6 @@ public class AccountFragment extends Fragment {
             } else {
                 noData.setVisibility(View.GONE);
             }
-//            progressIndicator.setVisibility(View.GONE);
         }
     };
 
@@ -330,20 +320,30 @@ public class AccountFragment extends Fragment {
         TextView accountName = binding.getRoot().findViewById(R.id.account_name);
         accountName.setText(user.getFullName());
 
+        TextView accountType = binding.getRoot().findViewById(R.id.account_type);
+        accountType.setText(String.valueOf(user.getRole()));
+
         //Property setup here-------------------------------------------------------------
         View propertyWrapper = binding.getRoot().findViewById(R.id.property_list);
 
         View propertyLayout = binding.getRoot().findViewById(R.id.property_list_title);
         TextView propertyTitle = propertyLayout.findViewById(R.id.see_more_title);
 
+        LinearLayout pointView = binding.getRoot().findViewById(R.id.point_section);
+        TextView point = pointView.findViewById(R.id.point);
+
         if(user.getRole() == UserRole.TENANT) {
             propertyWrapper.setVisibility(View.GONE);
             propertyTitle.setVisibility(View.GONE);
+            point.setText(String.valueOf(storeService.getIntValue(UnchangedValues.USER_LOYAL_COL)) + " points");
+        } else {
+            View divider = binding.getRoot().findViewById(R.id.line);
+            divider.setVisibility(View.GONE);
+            pointView.setVisibility(View.GONE);
         }
 
         propertyTitle.setText("Your property");
 
-//        TextView moreProperty = propertyLayout.findViewById(R.id.see_more);
         propertyLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -372,31 +372,6 @@ public class AccountFragment extends Fragment {
         // Inflate the layout for this fragment
         return binding.getRoot();
     }
-
-//    private void setSignOutAction() {
-//        binding.signOutButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                // make sure to clear the store service
-//                if (storeService.clearTheStore()) {
-//                    try {
-//                        firebaseAuth = FirebaseAuth.getInstance();
-//                        firebaseAuth.signOut(); // sign out from firebase
-//                        Intent intent = new Intent(getActivity(), LoginActivity.class);
-//                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                        intent.putExtra(UnchangedValues.LOGOUT_PERFORMED, "logout");
-//                        startActivity(intent);
-//                    } catch (Exception e) {
-//                        Log.d("ErrorLogout", e.getMessage());
-//                        e.printStackTrace();
-//                        showTextLong("Error: Can't Logout");
-//                    }
-//                } else {
-//                    showTextLong("Error: Can't Logout");
-//                }
-//            }
-//        });
-//    }
     private void loadImageFromFSUrl(String imageURL, final GetBitMapCallBack getBitMapCallBack)
     {
          FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();

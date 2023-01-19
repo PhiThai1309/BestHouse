@@ -27,6 +27,7 @@ import androidx.recyclerview.widget.SnapHelper;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.elevation.SurfaceColors;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -53,6 +54,7 @@ import com.team5.besthouse.models.User;
 import com.team5.besthouse.services.StoreService;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -60,10 +62,7 @@ import java.util.ArrayList;
  * create an instance of this fragment.
  */
 public class LandlordHomeFragment extends Fragment {
-    private RecyclerView postedPropertyView;
     private ArrayList<PropertyDAO> list;
-    private LandlordPropertyAdapter landlordAdapter;
-    private ImageView uerImageView;
     private Context context;
     private RecyclerView listingView;
     private HomePropertyCardAdapter adapter;
@@ -72,8 +71,8 @@ public class LandlordHomeFragment extends Fragment {
     private FirebaseAuth firebaseAuth;
     private View progressIndicator;
 
-    FirebaseFirestore db;
-    User user;
+    private FirebaseFirestore db;
+    private User user;
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -123,7 +122,7 @@ public class LandlordHomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_landlord_home, container, false);
 
         //Set color to the navigation bar to match with the bottom navigation view
-        getActivity().getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(getActivity()));
+        Objects.requireNonNull(getActivity()).getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(getActivity()));
         Window window = getActivity().getWindow();
         window.setStatusBarColor(Color.TRANSPARENT);
 
@@ -132,13 +131,15 @@ public class LandlordHomeFragment extends Fragment {
         progressIndicator = view.findViewById(R.id.home_progressBar);
         progressIndicator.setVisibility(View.VISIBLE);
 
-        searchView = view.findViewById(R.id.search_view);
+        View search = view.findViewById(R.id.search_wrapper);
+        searchView = search.findViewById(R.id.search_view);
 
         homeAccount = view.findViewById(R.id.landlord_account);
         homeAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Fragment frag = new AccountFragment();
+                assert getFragmentManager() != null;
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 ft.replace(R.id.content, frag);
                 LandlordActivity.navigationView.setSelectedItemId(R.id.account);

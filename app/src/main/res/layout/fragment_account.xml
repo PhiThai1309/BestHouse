@@ -38,7 +38,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:layout_marginBottom="12dp"
                         android:orientation="horizontal">
 
                         <com.google.android.material.imageview.ShapeableImageView
@@ -72,15 +71,17 @@
                     </LinearLayout>
 
                     <View
+                        android:id="@+id/line"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
+                        android:layout_marginVertical="20dp"
                         android:background="@color/WHITE"/>
 
                     <LinearLayout
+                        android:id="@+id/point_section"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:layout_marginTop="20dp"
                         android:orientation="horizontal">
                         <TextView
                             android:layout_width="wrap_content"
@@ -90,11 +91,13 @@
                             android:text="@string/loyalty_point"/>
 
                         <TextView
+                            android:id="@+id/point"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:gravity="center_vertical"
                             android:textColor="@color/WHITE"
                             android:textStyle="bold"
+                            android:textSize="18sp"
                             android:paddingHorizontal="20dp"
                             android:text="@string/_0_points"/>
                     </LinearLayout>
@@ -104,7 +107,6 @@
             <include
                 android:id="@+id/contract_history_title"
                 layout="@layout/layout_see_more"/>
-
 
             <include
                 android:id="@+id/contract_history_wrapper"

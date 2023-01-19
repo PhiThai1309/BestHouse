@@ -8,6 +8,7 @@
     tools:context=".activities.DetailActivity">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true">
@@ -26,8 +27,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
-                app:navigationIcon="@drawable/ic_round_arrow_back_24"
                 app:menu="@menu/edit_app_bar"
+                app:navigationIcon="@drawable/ic_round_arrow_back_24"
                 app:title="Add property" />
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>

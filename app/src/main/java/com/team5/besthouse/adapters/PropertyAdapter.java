@@ -160,12 +160,4 @@ public class PropertyAdapter extends RecyclerView.Adapter<PropertyAdapter.TaskVi
         }
 
     }
-
-//    // Create an intent to update the task
-//    public void updateTask() {
-//        Intent intent = new Intent(mInflater.getContext(), DetailsActivity.class);
-//        intent.putExtra("key", key);
-//        mInflater.getContext().startActivity(intent);
-//        notifyDataSetChanged();
-//    }
 }

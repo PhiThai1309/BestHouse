@@ -125,6 +125,7 @@ public class DetailActivity extends BaseActivity {
 
         toolbar = findViewById(R.id.homeToolbar);
         this.setSupportActionBar(toolbar);
+
         retrieveDataFromUI();
         displayPropertyInfo(property);
         fetchUser();
