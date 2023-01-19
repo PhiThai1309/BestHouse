@@ -98,6 +98,10 @@ public class TenantHomeFragment extends Fragment {
 
     FirebaseFirestore db;
 
+    private View topView;
+    private TextView topTitle;
+    private ImageView topImage;
+
     private TextView tv;
 
     public boolean locationPermissionGranted;
@@ -231,8 +235,10 @@ public class TenantHomeFragment extends Fragment {
         getLocationPermission();
         getDeviceLocation(tv);
 
-        View topView = view.findViewById(R.id.home_top);
-        TextView topTitle = topView.findViewById(R.id.see_more_title);
+        topView = view.findViewById(R.id.home_top);
+        topTitle = topView.findViewById(R.id.see_more_title);
+        topImage = topView.findViewById(R.id.see_more);
+
         topTitle.setText("Top near you");
         topView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -242,7 +248,7 @@ public class TenantHomeFragment extends Fragment {
 
                 MorePropertyFragment bottomDialogFragment = new MorePropertyFragment();
                 bottomDialogFragment.setArguments(bundle);
-                bottomDialogFragment.show(((MainActivity) Objects.requireNonNull(getContext())).getSupportFragmentManager(), "ActionBottomDialogFragment.TAG");
+                bottomDialogFragment.show(((MainActivity) requireContext()).getSupportFragmentManager(), "ActionBottomDialogFragment.TAG");
             }
         });
 

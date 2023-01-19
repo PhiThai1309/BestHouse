@@ -115,6 +115,9 @@ public class PropertyAdapter extends RecyclerView.Adapter<PropertyAdapter.TaskVi
     // Return the size of the data set
     @Override
     public int getItemCount() {
+        if(propertyList == null) {
+            return 0;
+        }
         return Math.min(propertyList.size(), maxItemCount);
     }
 
