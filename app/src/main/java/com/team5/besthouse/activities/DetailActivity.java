@@ -352,15 +352,9 @@ public class DetailActivity extends BaseActivity {
 
                     try {
                         Property propertyChange = value.toObject(Property.class);
-                        if(propertyChange.getStatus() == PropertyStatus.DELETE)
-                        {
-                            finish();
-                        }
-                        else
-                        {
-                            property = propertyChange;
-                            displayPropertyInfo(propertyChange);
-                        }
+                        property = propertyChange;
+                        displayPropertyInfo(propertyChange);
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

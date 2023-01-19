@@ -374,6 +374,7 @@ public class AddPropertyActivity extends BaseActivity implements RecyclerViewInt
                                                     submitButton.setText("SUBMIT");
 
                                                     // display successful message
+                                                    clearInput();
                                                     showTextLong("New Property is Added");
                                                 }
                                         )
@@ -407,18 +408,23 @@ public class AddPropertyActivity extends BaseActivity implements RecyclerViewInt
 
     private void clearInput()
     {
-       pnameEditText.setText("");
-       pAddressEditText.setText("");
-       pBathRoomEditText.setText("");
-       pBedRoomEditText.setText("");
-       pdescEditText.setText("");
-       priceEditText.setText("");
-       pAreaEditText.setText("");
-       checkBoxInternet.setChecked(false);
-       checkBoxGas.setChecked(false);
-       checkBoxWater.setChecked(false);
-       checkBoxElectric.setChecked(false);
-       piiAdapter.clearALLItem();
+        try {
+            pnameEditText.setText("");
+            pAddressEditText.setText("");
+            pBathRoomEditText.setText("");
+            pBedRoomEditText.setText("");
+            pdescEditText.setText("");
+            priceEditText.setText("");
+            pAreaEditText.setText("");
+            checkBoxInternet.setChecked(false);
+            checkBoxGas.setChecked(false);
+            checkBoxWater.setChecked(false);
+            checkBoxElectric.setChecked(false);
+            piiAdapter.clearALLItem( convertVectorDrawableToBitmap (R.drawable.ic_baseline_add_35));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -517,6 +523,39 @@ public class AddPropertyActivity extends BaseActivity implements RecyclerViewInt
         }
         else
         {
+            try {
+                int bedroomNumber = Integer.parseInt(pBedRoomEditText.getText().toString());
+                if(bedroomNumber <= 0)
+                {
+                    throw new Exception();
+                }
+            }catch (Exception e)
+            {
+                showTextLong("Please enter valid bedroom number.");
+                return false;
+            }
+            try {
+                int bathroomNumber = Integer.parseInt(pBathRoomEditText.getText().toString());
+                if(bathroomNumber <= 0)
+                {
+                    throw new Exception();
+                }
+            }catch (Exception e)
+            {
+                showTextLong("Please enter valid bathroom number.");
+                return false;
+            }
+            try {
+                float area = Float.parseFloat(pAreaEditText.getText().toString());
+                if(area <= 0)
+                {
+                    throw new Exception();
+                }
+            }catch (Exception e)
+            {
+                showTextLong("Please enter valid property area.");
+                return false;
+            }
             return true;
         }
        return false;
