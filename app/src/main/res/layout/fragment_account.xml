@@ -34,6 +34,7 @@
                         app:menu="@menu/logout_app_bar"
                         />
                     <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/account_image"
                         android:layout_width="100dp"
                         android:layout_height="100dp"
                         android:src="@drawable/besthouse_logo"/>

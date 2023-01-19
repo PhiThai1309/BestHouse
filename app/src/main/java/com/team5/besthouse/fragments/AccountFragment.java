@@ -2,6 +2,8 @@ package com.team5.besthouse.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -27,6 +29,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.elevation.SurfaceColors;
@@ -37,6 +41,8 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
 import com.team5.besthouse.R;
 import com.team5.besthouse.activities.LoginActivity;
@@ -46,6 +52,7 @@ import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.databinding.FragmentAccountBinding;
 import com.team5.besthouse.fragments.Inflate.MoreContractFragment;
 import com.team5.besthouse.fragments.Inflate.MorePropertyFragment;
+import com.team5.besthouse.interfaces.GetBitMapCallBack;
 import com.team5.besthouse.models.Contract;
 import com.team5.besthouse.models.Property;
 import com.team5.besthouse.models.Tenant;
@@ -274,6 +281,7 @@ public class AccountFragment extends Fragment {
 //        progressIndicator = binding.getRoot().findViewById(R.id.account_progressBar);
 //        progressIndicator.setVisibility(View.VISIBLE);
 
+
         //Contract History setup here--------------------------------------------------------
         historyTitle = binding.getRoot().findViewById(R.id.contract_history_title);
         TextView seeMoreTitle = historyTitle.findViewById(R.id.see_more_title);
@@ -307,6 +315,19 @@ public class AccountFragment extends Fragment {
         adapter1 = new ContractAdapter(getContext(), contractList, 5);
         historyView.setAdapter(adapter1);
         historyView.setHasFixedSize(true);
+
+        // user image set up
+        ImageView userImage = binding.getRoot().findViewById(R.id.account_image);
+        String imageURL = storeService.getStringValue(UnchangedValues.USER_IMAGE_URL_COL);
+        if(!imageURL.isEmpty())
+        {
+            loadImageFromFSUrl(user.getImageUrl(), new GetBitMapCallBack() {
+                @Override
+                public void getBitMap(Bitmap bitmap) {
+                    userImage.setImageBitmap(bitmap);
+                }
+            });
+        }
 
         //Account name setup here---------------------------------------------------------
         TextView accountName = binding.getRoot().findViewById(R.id.account_name);
@@ -379,7 +400,34 @@ public class AccountFragment extends Fragment {
 //            }
 //        });
 //    }
+    private void loadImageFromFSUrl(String imageURL, final GetBitMapCallBack getBitMapCallBack)
+    {
+         FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
 
+    try {
+        StorageReference httpsReference = firebaseStorage.getReferenceFromUrl(imageURL);
+        final long ONE_MEGABYTE = 1024 * 1024;
+        httpsReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                try {
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0 , bytes.length);
+                    getBitMapCallBack.getBitMap(bitmap);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+            }
+        });
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+
+    }
     private void tempDisconnectGoogleAccount() {
         GoogleSignInClient mGoogleSignInAccount = GoogleSignIn.getClient(getActivity(), GoogleSignInOptions.DEFAULT_SIGN_IN) ;
         if(mGoogleSignInAccount != null)

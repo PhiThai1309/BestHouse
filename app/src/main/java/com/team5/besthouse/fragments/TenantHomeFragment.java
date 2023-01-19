@@ -445,8 +445,12 @@ public class TenantHomeFragment extends Fragment {
             httpsReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                 @Override
                 public void onSuccess(byte[] bytes) {
-                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0 , bytes.length);
-                    getBitMapCallBack.getBitMap(bitmap);
+                    try {
+                        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0 , bytes.length);
+                        getBitMapCallBack.getBitMap(bitmap);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
