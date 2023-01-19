@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -24,6 +25,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.elevation.SurfaceColors;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentChange;
@@ -179,7 +181,25 @@ public class DetailActivity extends BaseActivity {
 
         //button to ask landlord for a contract
         makeContractButton.setOnClickListener(v -> {
-            makeContract();
+            //Create a dialog
+            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
+            builder.setTitle("Confirm your reservation");
+            builder.setMessage("If you confirm, this request will be sent to the landlord for further reviewed and the outcome will be sent to you later.");
+            //Set the positive button
+            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    makeContract();
+                }
+            });
+            //Set the negative button
+            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.cancel();
+                }
+            });
+            builder.show();
         });
 
         if(property.getUtilities() != null) {
