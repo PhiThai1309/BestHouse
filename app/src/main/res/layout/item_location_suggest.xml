@@ -4,25 +4,35 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:gravity="center"
-    android:clickable="true"
-    android:padding="10dp">
+    android:orientation="vertical"
+    android:clickable="true">
 
-   <ImageView
-       android:id="@+id/imageView"
-       android:layout_width="@dimen/_40sdp"
-       android:layout_height="wrap_content"
-       android:padding="5dp"
-       android:src="@drawable/ic_outline_location_on_24"
-       android:contentDescription="Location icon" />
-
-   <TextView
-       android:id="@+id/nameTextView"
+   <LinearLayout
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
-       android:maxLines="1"
-       android:text="@string/place_holder"
-       style="@style/Bold_SubHeading"
-       />
+       android:padding="12dp"
+       android:gravity="center"
+      android:orientation="horizontal">
+      <ImageView
+          android:id="@+id/imageView"
+          android:layout_width="@dimen/_40sdp"
+          android:layout_height="wrap_content"
+          android:padding="5dp"
+          android:src="@drawable/ic_outline_location_on_24"
+          android:contentDescription="Location icon" />
+
+      <TextView
+          android:id="@+id/nameTextView"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:maxLines="1"
+          android:text="@string/place_holder"
+          style="@style/Bold_SubHeading" />
+   </LinearLayout>
+
+   <View
+       android:id="@+id/divider"
+       android:layout_width="match_parent"
+       android:layout_height="1dp"
+       android:background="?android:attr/listDivider"/>
 </LinearLayout>
