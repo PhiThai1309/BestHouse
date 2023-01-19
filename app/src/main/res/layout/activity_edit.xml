@@ -249,22 +249,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:paddingStart="@dimen/_90sdp"
                 android:weightSum="2">
-                <include
-                    android:id="@+id/delete_button"
-                    layout="@layout/layout_progressbar_button"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="20dp" />
                 <include
                     android:id="@+id/progress_button"
                     layout="@layout/layout_progressbar_button"
-                    android:layout_width="0dp"
+                    android:layout_width="@dimen/_40sdp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_marginStart="8dp"
                     android:layout_marginBottom="20dp" />
 
             </LinearLayout>
