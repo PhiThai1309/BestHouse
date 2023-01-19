@@ -49,6 +49,7 @@ public class Contract implements Parcelable {
         propertyId = in.readString();
         startDate = in.readParcelable(Timestamp.class.getClassLoader());
         endDate = in.readParcelable(Timestamp.class.getClassLoader());
+        contractStatus = ContractStatus.valueOf(in.readString());
     }
 
     public static final Creator<Contract> CREATOR = new Creator<Contract>() {
@@ -159,6 +160,7 @@ public class Contract implements Parcelable {
         parcel.writeString(propertyId);
         parcel.writeParcelable(startDate, i);
         parcel.writeParcelable(endDate, i);
+        parcel.writeString(contractStatus.toString());
     }
 
     @Exclude

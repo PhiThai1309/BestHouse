@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -272,14 +273,11 @@ public class AccountFragment extends Fragment {
         binding = FragmentAccountBinding.inflate(inflater, container, false);
         storeService = new StoreService(getActivity().getApplicationContext());
         logOutMenu();
-//        setSignOutAction();
+
         //Set color to the navigation bar to match with the bottom navigation view
         getActivity().getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(getActivity()));
         Window window = getActivity().getWindow();
-        window.setStatusBarColor(getActivity().getResources().getColor(R.color.md_theme_surfaceVariant));
-//        progressIndicator = binding.getRoot().findViewById(R.id.account_progressBar);
-//        progressIndicator.setVisibility(View.VISIBLE);
-
+        window.setStatusBarColor(Color.TRANSPARENT);
 
         //Contract History setup here--------------------------------------------------------
         historyTitle = binding.getRoot().findViewById(R.id.contract_history_title);

@@ -76,6 +76,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -145,13 +146,14 @@ public class TenantHomeFragment extends Fragment {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tenant_home, container, false);
 
         //Set color to the navigation bar to match with the bottom navigation view
-        getActivity().getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(getActivity()));
+        Objects.requireNonNull(getActivity()).getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(getActivity()));
         Window window = getActivity().getWindow();
         window.setStatusBarColor(Color.TRANSPARENT);
 
@@ -175,6 +177,7 @@ public class TenantHomeFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Fragment frag = new AccountFragment();
+                assert getFragmentManager() != null;
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 ft.replace(R.id.content, frag);
                 MainActivity.navigationView.setSelectedItemId(R.id.account);
@@ -188,8 +191,6 @@ public class TenantHomeFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(view.getContext());
-
-
 
         //Get the recycler view and
         featureView = (RecyclerView) view.findViewById(R.id.feature_property);
@@ -241,7 +242,7 @@ public class TenantHomeFragment extends Fragment {
 
                 MorePropertyFragment bottomDialogFragment = new MorePropertyFragment();
                 bottomDialogFragment.setArguments(bundle);
-                bottomDialogFragment.show(((MainActivity) getContext()).getSupportFragmentManager(), "ActionBottomDialogFragment.TAG");
+                bottomDialogFragment.show(((MainActivity) Objects.requireNonNull(getContext())).getSupportFragmentManager(), "ActionBottomDialogFragment.TAG");
             }
         });
 
@@ -262,7 +263,7 @@ public class TenantHomeFragment extends Fragment {
 
         if (ActivityCompat.checkSelfPermission(view.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(view.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
                     1000);
         } else {
             // already permission granted
@@ -400,7 +401,7 @@ public class TenantHomeFragment extends Fragment {
          * device. The result of the permission request is handled by a callback,
          * onRequestPermissionsResult.
          */
-        if (ContextCompat.checkSelfPermission((Context) getActivity(),
+        if (ContextCompat.checkSelfPermission((Context) requireActivity(),
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             locationPermissionGranted = true;

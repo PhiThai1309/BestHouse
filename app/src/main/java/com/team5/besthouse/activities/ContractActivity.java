@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -69,6 +70,9 @@ public class ContractActivity extends BaseActivity {
 
         propertyAddress = findViewById(R.id.contract_address_name);
         propertyPrice = findViewById(R.id.contract_price_detail);
+
+        CollapsingToolbarLayout toolbarLayout = findViewById(R.id.toolbar_layout);
+        toolbarLayout.setTitle(contract.getContractStatus() + "");
 
         fetchUser();
         queryProperty();
@@ -140,6 +144,7 @@ public class ContractActivity extends BaseActivity {
                                 Property property = ds.toObject(Property.class);
 
                                 TextView propertyName = findViewById(R.id.contract_property_name);
+                                assert property != null;
                                 propertyName.setText(property.getPropertyName());
 
                                 propertyAddress.setText(property.getAddress(getApplicationContext()).toString());
