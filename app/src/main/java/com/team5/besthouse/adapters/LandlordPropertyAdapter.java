@@ -80,8 +80,8 @@ public class LandlordPropertyAdapter extends RecyclerView.Adapter<LandlordProper
         public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.property_name);
-            price = itemView.findViewById(R.id.property_price);
-            address = itemView.findViewById(R.id.property_address);
+            price = itemView.findViewById(R.id.last_chat_time);
+            address = itemView.findViewById(R.id.property_price);
             cardView = itemView.findViewById(R.id.cardView);
         }
     }

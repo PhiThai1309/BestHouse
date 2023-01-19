@@ -4,6 +4,8 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.location.Address;
 import static android.content.ContentValues.TAG;
@@ -38,6 +40,8 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
 import com.google.android.gms.tasks.CancellationToken;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.OnTokenCanceledListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.elevation.SurfaceColors;
@@ -48,13 +52,17 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
 import com.team5.besthouse.R;
 import com.team5.besthouse.activities.MainActivity;
+import com.team5.besthouse.adapters.PropertyCardAdapter;
 import com.team5.besthouse.fragments.Inflate.MorePropertyFragment;
 import com.team5.besthouse.adapters.PropertyAdapter;
-import com.team5.besthouse.adapters.PropertyPartialCardAdapter;
 import com.team5.besthouse.constants.UnchangedValues;
+import com.team5.besthouse.interfaces.GetBitMapCallBack;
+import com.team5.besthouse.interfaces.SetReceiveImageURLCallBack;
 import com.team5.besthouse.models.Contract;
 import com.team5.besthouse.models.ContractStatus;
 import com.team5.besthouse.models.Property;
@@ -65,8 +73,10 @@ import com.team5.besthouse.services.StoreService;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -80,12 +90,17 @@ public class TenantHomeFragment extends Fragment {
     private RecyclerView featureView;
     private RecyclerView propertyView;
     private ArrayList<Property> list;
+    private ArrayList<Property> featureList;
     private PropertyAdapter adapter1;
-    private PropertyPartialCardAdapter adapter2;
+    private PropertyCardAdapter adapter2;
     private StoreService storeService;
     private View progressIndicator;
 
     FirebaseFirestore db;
+
+    private View topView;
+    private TextView topTitle;
+    private ImageView topImage;
 
     private TextView tv;
 
@@ -135,26 +150,38 @@ public class TenantHomeFragment extends Fragment {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tenant_home, container, false);
 
         //Set color to the navigation bar to match with the bottom navigation view
-        getActivity().getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(getActivity()));
+        requireActivity().getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(getActivity()));
         Window window = getActivity().getWindow();
         window.setStatusBarColor(Color.TRANSPARENT);
 
         context = inflater.getContext();
+        // set up store service
+        storeService = new StoreService(context);
 
         progressIndicator = view.findViewById(R.id.home_progressBar);
         progressIndicator.setVisibility(View.VISIBLE);
 
         ImageView homeAccount = view.findViewById(R.id.home_account);
+        String imageUrl = storeService.getStringValue(UnchangedValues.USER_IMAGE_URL_COL);
+        loadImageFromFSUrl(imageUrl, new GetBitMapCallBack() {
+            @Override
+            public void getBitMap(Bitmap bitmap) {
+                    homeAccount.setImageBitmap(bitmap);
+            }
+        });
+
         homeAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Fragment frag = new AccountFragment();
+                assert getFragmentManager() != null;
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 ft.replace(R.id.content, frag);
                 MainActivity.navigationView.setSelectedItemId(R.id.account);
@@ -169,9 +196,6 @@ public class TenantHomeFragment extends Fragment {
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(view.getContext());
 
-        // set up store service
-        storeService = new StoreService(context);
-
         //Get the recycler view and
         featureView = (RecyclerView) view.findViewById(R.id.feature_property);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false);
@@ -185,15 +209,12 @@ public class TenantHomeFragment extends Fragment {
         helper.attachToRecyclerView(featureView);
 
         list = new ArrayList<>();
-        adapter1 = new PropertyAdapter((MainActivity) getContext(), list);
+
+        featureList = list;
+        Collections.reverse(featureList);
+
+        adapter1 = new PropertyAdapter((MainActivity) getContext(), featureList, 5);
         featureView.setAdapter(adapter1);
-
-        //add 5 static properties to list
-//        list.addAll(Collections.nCopies(5, Property.STATICPROPERTY));
-
-        //add properties from db to list
-        //this does not update the recycler view
-        Address address = new Address(Locale.US);
 
         propertyView = (RecyclerView) view.findViewById(R.id.main_property);
         LinearLayoutManager linearLayoutManager2 = new LinearLayoutManager(getContext());
@@ -204,7 +225,7 @@ public class TenantHomeFragment extends Fragment {
         propertyView.setLayoutManager(linearLayoutManager2);
 
         propertyView.setNestedScrollingEnabled(false);
-        adapter2 = new PropertyPartialCardAdapter((MainActivity) getContext(), list);
+        adapter2 = new PropertyCardAdapter(getContext(), list, 5);
         propertyView.setAdapter(adapter2);
 
         featureView.setHasFixedSize(true);
@@ -214,44 +235,22 @@ public class TenantHomeFragment extends Fragment {
         getLocationPermission();
         getDeviceLocation(tv);
 
-        View topView = view.findViewById(R.id.home_top);
-        TextView topTitle = topView.findViewById(R.id.see_more_title);
-        topTitle.setText("Top near you");
+        topView = view.findViewById(R.id.home_top);
+        topTitle = topView.findViewById(R.id.see_more_title);
+        topImage = topView.findViewById(R.id.see_more);
 
-        TextView seeMore = topView.findViewById(R.id.see_more);
-        seeMore.setOnClickListener(new View.OnClickListener() {
+        topTitle.setText("Top near you");
+        topView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent intent = new Intent(getContext(), MoreActivity.class);
-//                startActivity(intent);
-//                getActivity().overridePendingTransition(0, R.anim.slide_in_bottom);
-
-//                CoordinatorLayout linearLayout = view.findViewById(R.id.bottom_sheet);
-//                BottomSheetDialog bottomSheet = new BottomSheetDialog(getContext());
-//                View bottomSheetView = LayoutInflater.from(getContext())
-//                        .inflate(R.layout.activity_more, (LinearLayout) getActivity().findViewById(R.id.bottom_sheet));
-//
-//                bottomSheet.setContentView(bottomSheetView);
-//
-//                bottomSheet.findViewById(R.id.more_property);
-//                bottomSheet.show();
-
                 Bundle bundle = new Bundle();
                 bundle.putParcelableArrayList("list",  list);
 
                 MorePropertyFragment bottomDialogFragment = new MorePropertyFragment();
                 bottomDialogFragment.setArguments(bundle);
-                bottomDialogFragment.show(((MainActivity) getContext()).getSupportFragmentManager(), "ActionBottomDialogFragment.TAG");
-//                addPhotoBottomDialogFragment.setCancelable(false);
+                bottomDialogFragment.show(((MainActivity) requireContext()).getSupportFragmentManager(), "ActionBottomDialogFragment.TAG");
             }
         });
-
-//        CoordinatorLayout linearLayout = view.findViewById(R.id.bottom_sheet);
-//        BottomSheetDialog bottomSheet = new BottomSheetDialog(getContext());
-//        bottomSheet.setContentView(R.layout.activity_more);
-//
-//        bottomSheet.show();
-
 
         // Inflate the layout for this fragment
         return view;
@@ -270,7 +269,7 @@ public class TenantHomeFragment extends Fragment {
 
         if (ActivityCompat.checkSelfPermission(view.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(view.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
                     1000);
         } else {
             // already permission granted
@@ -408,7 +407,7 @@ public class TenantHomeFragment extends Fragment {
          * device. The result of the permission request is handled by a callback,
          * onRequestPermissionsResult.
          */
-        if (ContextCompat.checkSelfPermission((Context) getActivity(),
+        if (ContextCompat.checkSelfPermission((Context) requireActivity(),
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             locationPermissionGranted = true;
@@ -417,5 +416,34 @@ public class TenantHomeFragment extends Fragment {
                     new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                     PERMISSIONS_FINE_LOCATION);
         }
+    }
+
+    private void loadImageFromFSUrl(String imageURL, final GetBitMapCallBack getBitMapCallBack)
+    {
+        FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+
+        try {
+            StorageReference httpsReference = firebaseStorage.getReferenceFromUrl(imageURL);
+            final long ONE_MEGABYTE = 1024 * 1024;
+            httpsReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                @Override
+                public void onSuccess(byte[] bytes) {
+                    try {
+                        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0 , bytes.length);
+                        getBitMapCallBack.getBitMap(bitmap);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle any errors
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }

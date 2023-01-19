@@ -3,6 +3,8 @@ package com.team5.besthouse.fragments;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,8 +13,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
+import androidx.appcompat.widget.SearchView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -21,33 +25,36 @@ import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.elevation.SurfaceColors;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
-import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
 import com.team5.besthouse.R;
 import com.team5.besthouse.activities.AddPropertyActivity;
 import com.team5.besthouse.activities.LandlordActivity;
+import com.team5.besthouse.adapters.HomePropertyCardAdapter;
 import com.team5.besthouse.adapters.LandlordPropertyAdapter;
-import com.team5.besthouse.adapters.PropertyAdapter;
-import com.team5.besthouse.adapters.PropertyCardAdapter;
-import com.team5.besthouse.adapters.PropertyPartialCardAdapter;
 import com.team5.besthouse.constants.UnchangedValues;
-import com.team5.besthouse.models.Contract;
+
 import com.team5.besthouse.models.ContractStatus;
 import com.team5.besthouse.models.Property;
+import com.team5.besthouse.models.PropertyDAO;
 import com.team5.besthouse.models.Tenant;
 import com.team5.besthouse.models.User;
 import com.team5.besthouse.services.StoreService;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -55,20 +62,17 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class LandlordHomeFragment extends Fragment {
-    private RecyclerView postedPropertyView;
-    private List<Property> list;
-    private LandlordPropertyAdapter landlordAdapter;
-
+    private ArrayList<PropertyDAO> list;
     private Context context;
     private RecyclerView listingView;
-    private RecyclerView propertyView;
-    private PropertyAdapter adapter1;
-    private PropertyCardAdapter adapter2;
+    private HomePropertyCardAdapter adapter;
     private StoreService storeService;
+    private SearchView searchView;
+    private FirebaseAuth firebaseAuth;
     private View progressIndicator;
 
-    FirebaseFirestore db;
-    User user;
+    private FirebaseFirestore db;
+    private User user;
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -79,6 +83,7 @@ public class LandlordHomeFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private ImageView homeAccount;
 
     public LandlordHomeFragment() {
         // Required empty public constructor
@@ -117,7 +122,7 @@ public class LandlordHomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_landlord_home, container, false);
 
         //Set color to the navigation bar to match with the bottom navigation view
-        getActivity().getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(getActivity()));
+        Objects.requireNonNull(getActivity()).getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(getActivity()));
         Window window = getActivity().getWindow();
         window.setStatusBarColor(Color.TRANSPARENT);
 
@@ -126,11 +131,15 @@ public class LandlordHomeFragment extends Fragment {
         progressIndicator = view.findViewById(R.id.home_progressBar);
         progressIndicator.setVisibility(View.VISIBLE);
 
-        ImageView homeAccount = view.findViewById(R.id.landlord_account);
+        View search = view.findViewById(R.id.search_wrapper);
+        searchView = search.findViewById(R.id.search_view);
+
+        homeAccount = view.findViewById(R.id.landlord_account);
         homeAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Fragment frag = new AccountFragment();
+                assert getFragmentManager() != null;
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 ft.replace(R.id.content, frag);
                 LandlordActivity.navigationView.setSelectedItemId(R.id.account);
@@ -143,8 +152,18 @@ public class LandlordHomeFragment extends Fragment {
         //get db instance
         db = FirebaseFirestore.getInstance();
 
+        //get login user image and name
+        firebaseAuth = FirebaseAuth.getInstance();
+
         // set up store service
         storeService = new StoreService(context);
+
+        // load user profile image
+        if(storeService.getStringValue(UnchangedValues.USER_IMAGE_URL_COL) != null)
+        {
+            Log.d("IMAGE", "onCreateView: " + storeService.getStringValue(UnchangedValues.USER_IMAGE_URL_COL));
+            loadImageFromFSUrl(storeService.getStringValue(UnchangedValues.USER_IMAGE_URL_COL));
+        }
 
         Gson gson = new Gson();
         user = gson.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), Tenant.class);
@@ -154,21 +173,19 @@ public class LandlordHomeFragment extends Fragment {
 
 
         //Get the recycler view and
-        listingView = (RecyclerView) view.findViewById(R.id.posted_property);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false);
+        listingView = view.findViewById(R.id.posted_property);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(inflater.getContext(), LinearLayoutManager.VERTICAL, false);
         //Set the layout manager
         linearLayoutManager.setStackFromEnd(false);
         linearLayoutManager.setReverseLayout(false);
-        listingView.setHasFixedSize(true);
         listingView.setLayoutManager(linearLayoutManager);
 
         SnapHelper helper = new LinearSnapHelper();
         helper.attachToRecyclerView(listingView);
 
         list = new ArrayList<>();
-        adapter2 = new PropertyCardAdapter((LandlordActivity) getContext(), list);
-        listingView.setAdapter(adapter2);
-        listingView.setHasFixedSize(true);
+        adapter = new HomePropertyCardAdapter(inflater.getContext(), list, false);
+        listingView.setAdapter(adapter);
 
         //Floating action button configure
         ExtendedFloatingActionButton floatBtn = view.findViewById(R.id.float_button);
@@ -191,6 +208,19 @@ public class LandlordHomeFragment extends Fragment {
             }
         });
 
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                adapter.getFilter().filter(s);
+                return false;
+            }
+        });
+
         // Inflate the layout for this fragment
         return view;
     }
@@ -199,29 +229,9 @@ public class LandlordHomeFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        //code for landlords to get list of contracts
-//    void getContracts(){
-//        Gson gson = new Gson();
-//        User user = gson.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), Landlord.class);
-//
-//        db.collection(UnchangedValues.CONTRACTS_TABLE)
-//                .whereEqualTo("contractStatus", ContractStatus.PENDING)
-//                .whereEqualTo("landlordEmail", user.getEmail())
-//                .get().addOnCompleteListener(task -> {
-//                    if (task.isSuccessful()) {
-//                        for (QueryDocumentSnapshot document : task.getResult()) {
-//                            Contract contract = document.toObject(Contract.class);
-//
-//                           //add to list and notify adapter
-//                        }
-//                    }
-//                });
-//    }
-
-
-        //filter for all rents such that its end date is after today on the db side
         FirebaseFirestore database = FirebaseFirestore.getInstance();
         database.collection(UnchangedValues.PROPERTIES_TABLE)
+                .whereEqualTo(UnchangedValues.LANDLORD_EMAIL_COL, user.getEmail())
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @SuppressLint("NotifyDataSetChanged")
                     @Override
@@ -229,60 +239,86 @@ public class LandlordHomeFragment extends Fragment {
                         progressIndicator.setVisibility(View.VISIBLE);
                         if(error != null)
                         {
-                            Log.w("ERROR ERROR ", error);
+                            Log.w("ERROR", error);
                             return;
                         }
-//                        Log.w("ERROR ERROR ", value.getDocumentChanges().get(0).getDocument().getData().toString());
-
-                        //filter for rents that begins before today on the client side
                         assert value != null;
+
+                        adapter.notifyDataSetChanged();
+
                         for(DocumentChange newDoc : value.getDocumentChanges()){
                             Property p = newDoc.getDocument().toObject(Property.class);
-//                            Log.i("Property", p.getId() == null ? "null address!" : p.getId());
-//                            Log.i("Property", newDoc.getType().toString());
-                            if(newDoc.getType() == DocumentChange.Type.ADDED){
-                                list.remove(p);
-                                try {
-                                    //get all contracts that have its end date after today and is from this property
 
-//                                    Log.i(TAG, "onEvent: " + p);
-                                    database.collection(UnchangedValues.CONTRACTS_TABLE)
-                                            .whereEqualTo("landlordEmail", p.getLandlordEmail())
-                                            .get()
-                                            .addOnCompleteListener(v -> {
-                                                if (v.isSuccessful()){
-                                                    boolean ok = true;
-//                                                    Log.i("TAG", "onEvent: " + v.getResult().getDocuments().size());
-                                                    for (QueryDocumentSnapshot document : v.getResult()) {
-                                                        Contract contract = document.toObject(Contract.class);
-                                                        if(contract.getStartDate().compareTo(Timestamp.now()) <= 0 && (contract.getContractStatus().equals(ContractStatus.ACTIVE) || (user.getEmail().equals(contract.getTenantEmail()) && contract.getContractStatus().equals(ContractStatus.PENDING)))){
-                                                            ok = false;
-                                                            break;
-                                                        }
-                                                    }
-                                                    if (ok) {
-                                                        list.add(p);
-//                                                        Log.i("ADDED" , p.toString());
-//                                                        adapter1.notifyDataSetChanged();
-                                                        adapter2.notifyDataSetChanged();
+                            Log.i("Property", newDoc.getType().toString());
+
+                            if(newDoc.getType() != DocumentChange.Type.REMOVED) {
+                                database.collection(UnchangedValues.CONTRACTS_TABLE)
+                                        .whereEqualTo(UnchangedValues.LANDLORD_EMAIL_COL, user.getEmail())
+                                        .whereEqualTo(UnchangedValues.PROPERTY_ID_COL, p.getId())
+                                        .whereEqualTo(UnchangedValues.CONTRACT_STATUS_COL, ContractStatus.PENDING)
+                                        .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                                                if(error != null || value == null)
+                                                {
+                                                    Log.w("ERROR", error);
+                                                    return;
+                                                }
+
+                                                adapter.notifyDataSetChanged();
+
+                                                PropertyDAO propertyDAO = new PropertyDAO(p, value.size());
+                                                int i = list.indexOf(propertyDAO);
+
+                                                if (value.size() > 0) {
+                                                    if (i >= 0) {
+                                                        list.set(i, propertyDAO);
+                                                        adapter.notifyItemChanged(i);
+                                                    } else {
+                                                        list.add(propertyDAO);
+                                                        adapter.notifyItemInserted(list.indexOf(propertyDAO));
                                                     }
                                                 }
-                                            });
-                                } catch (Exception e) {
-                                    Log.d("ERROR 2", "Error adding object : " + newDoc.toString() + ", Exception " + e.getMessage());
-                                }
-                            }
-                            else {
-                                list.remove(p);
-                                if (newDoc.getType().equals(DocumentChange.Type.MODIFIED)) {
-                                    list.add(p);
-                                }
-//                                adapter1.notifyDataSetChanged();
-                                adapter2.notifyDataSetChanged();
+                                                else if (i >= 0){
+                                                    list.remove(propertyDAO);
+                                                    adapter.notifyItemRemoved(i);
+                                                }
+                                            }
+                                        });
                             }
                         }
                         progressIndicator.setVisibility(View.GONE);
                     }
                 });
     }
+
+
+
+    private void loadImageFromFSUrl(String imageURL)
+    {
+        FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+
+        try {
+            StorageReference httpsReference = firebaseStorage.getReferenceFromUrl(imageURL);
+            final long ONE_MEGABYTE = 1024 * 1024;
+            httpsReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                @Override
+                public void onSuccess(byte[] bytes) {
+                   Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0 , bytes.length);
+                   homeAccount.setImageBitmap(bitmap);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle any errors
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+
 }

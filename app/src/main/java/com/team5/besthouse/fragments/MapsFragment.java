@@ -158,6 +158,8 @@ public class MapsFragment extends Fragment implements RecyclerViewInterface, Goo
         public void onMapReady(@NonNull GoogleMap googleMap) {
             map = googleMap;
 
+            map.getUiSettings().setZoomControlsEnabled(true);
+
             // Turn on the My Location layer and the related control on the map.
             updateLocationUI();
 
@@ -392,7 +394,7 @@ public class MapsFragment extends Fragment implements RecyclerViewInterface, Goo
             else {
                 coord = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
                 Log.i(TAG, "onSearchViewChange: no address found. Hiding places");
-                rv.setVisibility(View.GONE);
+//                rv.setVisibility(View.GONE);
                 return;
             }
             lsAdapter.sortProperties(coord);
@@ -465,12 +467,16 @@ public class MapsFragment extends Fragment implements RecyclerViewInterface, Goo
                                                     if (ok) {
                                                         lsAdapter.addNewItem(p);
 
-                                                        Marker marker = map.addMarker(new MarkerOptions().position(p.getcoordinates()).title(p.getPropertyName()));
-                                                        assert marker != null;
-                                                        marker.setTag(p);
-                                                        markers.put(marker.getId(), marker);
+                                                        try {
+                                                            Marker marker = map.addMarker(new MarkerOptions().position(p.getcoordinates()).title(p.getPropertyName()));
+                                                            assert marker != null;
+                                                            marker.setTag(p);
+                                                            markers.put(marker.getId(), marker);
 
-                                                        Log.i("MARKER" , p.toString());
+                                                            Log.i("MARKER" , p.toString());
+                                                        } catch (Exception e) {
+                                                            e.printStackTrace();
+                                                        }
                                                     }
                                                 }
                                             });

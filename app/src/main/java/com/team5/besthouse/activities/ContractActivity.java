@@ -1,7 +1,6 @@
 package com.team5.besthouse.activities;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
@@ -11,29 +10,26 @@ import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.elevation.SurfaceColors;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 import com.team5.besthouse.R;
 import com.team5.besthouse.constants.UnchangedValues;
-import com.team5.besthouse.fragments.Inflate.MoreLanlordFragment;
-import com.team5.besthouse.fragments.Inflate.MorePropertyFragment;
 import com.team5.besthouse.models.Contract;
 import com.team5.besthouse.models.Property;
 import com.team5.besthouse.models.Tenant;
 import com.team5.besthouse.models.User;
 import com.team5.besthouse.models.UserRole;
 import com.team5.besthouse.services.StoreService;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +38,6 @@ public class ContractActivity extends BaseActivity {
     private Contract contract;
     private View progressIndicator;
     private TextView propertyAddress, propertyPrice;
-    TextView seeMore;
 
     FirebaseFirestore database;
     StoreService storeService;
@@ -54,10 +49,10 @@ public class ContractActivity extends BaseActivity {
 
         database = FirebaseFirestore.getInstance();
         // set up store service
-        storeService = new StoreService(this);
+        storeService = new StoreService(getApplicationContext());
 
         //Set color to the navigation bar to match with the bottom navigation view
-        getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(this));
+        getWindow().setNavigationBarColor(Color.TRANSPARENT);
         Window window = getWindow();
         window.setStatusBarColor(Color.TRANSPARENT);
 
@@ -67,16 +62,16 @@ public class ContractActivity extends BaseActivity {
         this.setSupportActionBar(toolbar);
 
         TextView startDate = findViewById(R.id.contract_start_date);
-        startDate.setText(contract.convertStartDay().toString());
+        startDate.setText(contract.getStartDate().toDate().toString());
 
         TextView endDate = findViewById(R.id.contract_end_date);
-        endDate.setText(contract.convertEndDay().toString());
-
-        TextView propertyName = findViewById(R.id.contract_property_name);
-        propertyName.setText(contract.getPropertyId());
+        endDate.setText(contract.getEndDate().toDate().toString());
 
         propertyAddress = findViewById(R.id.contract_address_name);
         propertyPrice = findViewById(R.id.contract_price_detail);
+
+        CollapsingToolbarLayout toolbarLayout = findViewById(R.id.toolbar_layout);
+        toolbarLayout.setTitle(contract.getContractStatus() + "");
 
         fetchUser();
         queryProperty();
@@ -107,7 +102,6 @@ public class ContractActivity extends BaseActivity {
                                 View userDetails = findViewById(R.id.contract_tenant_details);
                                 TextView landlordName = userDetails.findViewById(R.id.details_landlordName);
                                 landlordName.setText(ds.getString("fullName"));
-//                                   Log.d("TESSSSS", ds.getString("email"));
 
                                 TextView landlordEmail = userDetails.findViewById(R.id.details_landlordEmail);
                                 landlordEmail.setText(ds.getString("email"));
@@ -147,26 +141,28 @@ public class ContractActivity extends BaseActivity {
                             {
                                 Property property = ds.toObject(Property.class);
 
-                                propertyAddress.setText(property.getAddress(getApplicationContext()).toString());
-                                propertyPrice.setText(String.valueOf(property.getMonthlyPrice()) + " /Month");
+                                TextView propertyName = findViewById(R.id.contract_property_name);
+                                assert property != null;
+                                propertyName.setText(property.getPropertyName());
+
+                                propertyAddress.setText(property.getAddress(getApplicationContext()));
+                                propertyPrice.setText(property.getMonthlyPrice() + " /Month");
 
                                 View propertyDetails = findViewById(R.id.property_details);
-                                seeMore = propertyDetails.findViewById(R.id.more);
-                                seeMore.setOnClickListener(new View.OnClickListener() {
+//                                seeMore = propertyDetails.findViewById(R.id.more);
+                                propertyDetails.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
                                         Intent intent = new Intent(ContractActivity.this, DetailActivity.class);
                                         intent.putExtra("property", (Parcelable) property);
                                         intent.putExtra("history", true);
+                                        intent.putExtra("chat", true);
                                         startActivity(intent);
                                     }
                                 });
 
                             }
                         }
-                        // load data in to the spinner
-//                        Log.d("NewQuestFragment", insList.toString());
-//                        progressIndicator.setVisibility(View.GONE);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override

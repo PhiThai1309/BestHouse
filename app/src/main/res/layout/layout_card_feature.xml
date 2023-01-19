@@ -44,19 +44,7 @@
                 style="@style/Rec_Heading"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxLines="1"
                 android:text="@string/place_holder" />
-
-<!--            <TextView-->
-<!--                android:id="@+id/property_price"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:maxLines="1"-->
-<!--                android:gravity="right"-->
-<!--                android:paddingVertical="4dp"-->
-<!--                android:text="@string/place_holder"-->
-<!--                android:textSize="12dp"-->
-<!--                android:textColor="@color/md_theme_outlineVariant" />-->
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -71,7 +59,7 @@
                     android:src="@drawable/ic_round_location_on_24" />
 
                 <TextView
-                    android:id="@+id/property_address"
+                    android:id="@+id/property_price"
                     style="@style/Rec_SubHeading"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

@@ -11,14 +11,16 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-
+        
         <LinearLayout
             android:id="@+id/linearSignup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingTop="20dp"
+            android:paddingHorizontal="20dp"
+            android:paddingBottom="120dp"
             android:orientation="vertical">
 
             <TextView
@@ -28,6 +30,34 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="30dp"
                 android:text="@string/signup_title" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_80sdp"
+                style="@style/CardStyle">
+                <FrameLayout
+                    android:id="@+id/selectImageLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/loginTitle"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent">
+                <ImageView
+                    android:id="@+id/avatarViewImage"
+                    android:layout_width="@dimen/_100sdp"
+                    android:layout_height="@dimen/_100sdp"
+                    />
+                    <TextView
+                        android:id="@+id/textSelectImage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/upload_avatar"
+                        android:textStyle="bold"
+                        android:layout_gravity="center"
+                        android:textSize="@dimen/_15ssp"/>
+                </FrameLayout>
+            </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
@@ -107,7 +137,7 @@
                     android:id="@+id/radio_landlord"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Landlord"
+                    android:text="@string/landlord"
                     android:textColor="@color/md_theme_onPrimaryContainer"
                     android:textSize="@dimen/_15ssp" />
 
@@ -116,7 +146,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_100sdp"
-                    android:text="Tenant"
+                    android:text="@string/tenant"
                     android:textColor="@color/md_theme_onPrimaryContainer"
                     android:textSize="@dimen/_15ssp" />
             </RadioGroup>
@@ -151,7 +181,8 @@
             android:layout_height="match_parent"
             android:orientation="horizontal"
             android:weightSum="3"
-            android:paddingHorizontal="20dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="0dp"
             android:paddingVertical="14dp">
             <TextView
                 android:id="@+id/signOutButton_textView"

@@ -3,11 +3,17 @@ package com.team5.besthouse.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.Exclude;
 
 import java.io.Serializable;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.TimeZone;
 
@@ -43,6 +49,7 @@ public class Contract implements Parcelable {
         propertyId = in.readString();
         startDate = in.readParcelable(Timestamp.class.getClassLoader());
         endDate = in.readParcelable(Timestamp.class.getClassLoader());
+        contractStatus = ContractStatus.valueOf(in.readString());
     }
 
     public static final Creator<Contract> CREATOR = new Creator<Contract>() {
@@ -70,39 +77,48 @@ public class Contract implements Parcelable {
         return Objects.hash(id);
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public String getId() {
         return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public ContractStatus getContractStatus() {
         return contractStatus;
     }
 
+    public void setContractStatus(ContractStatus contractStatus) {
+        this.contractStatus = contractStatus;
+    }
+
     public String getLandlordEmail() {
         return landlordEmail;
+    }
+
+    public void setLandlordEmail(String landlordEmail) {
+        this.landlordEmail = landlordEmail;
     }
 
     public String getTenantEmail() {
         return tenantEmail;
     }
 
+    public void setTenantEmail(String tenantEmail) {
+        this.tenantEmail = tenantEmail;
+    }
+
     public String getPropertyId() {
         return propertyId;
     }
 
-    public Timestamp getStartDate() {
-        return startDate;
+    public void setPropertyId(String propertyId) {
+        this.propertyId = propertyId;
     }
 
-    public Date convertStartDay(){
-        return startDate.toDate();
-    }
-    public Date convertEndDay(){
-        return endDate.toDate();
+    public Timestamp getStartDate() {
+        return startDate;
     }
 
     public void setStartDate(Timestamp startDate) {
@@ -115,6 +131,20 @@ public class Contract implements Parcelable {
 
     public void setEndDate(Timestamp endDate) {
         this.endDate = endDate;
+    }
+
+    @Exclude
+    public String getFormattedStartDate(){
+        Locale locale = new Locale.Builder().setLanguage("en").setRegion("US").build();
+        DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.DEFAULT, locale);
+        return dateFormat.format(getStartDate().toDate());
+    }
+
+    @Exclude
+    public String getFormattedEndDate(){
+        Locale locale = new Locale.Builder().setLanguage("en").setRegion("US").build();
+        DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.DEFAULT, locale);
+        return dateFormat.format(getEndDate().toDate());
     }
 
     @Override
@@ -130,5 +160,16 @@ public class Contract implements Parcelable {
         parcel.writeString(propertyId);
         parcel.writeParcelable(startDate, i);
         parcel.writeParcelable(endDate, i);
+        parcel.writeString(contractStatus.toString());
     }
+
+    @Exclude
+    public static Contract STATICCONTRACT = new Contract(
+            null,
+            "",
+            "",
+            "",
+            null,
+            null
+    );
 }

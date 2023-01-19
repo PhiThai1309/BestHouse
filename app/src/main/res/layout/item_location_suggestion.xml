@@ -20,7 +20,8 @@
           android:layout_height="0dp"
           android:padding="5dp"
           android:src="@drawable/ic_outline_location_on_24"
-          android:layout_weight="1"/>
+          android:layout_weight="1"
+          android:contentDescription="Location icon" />
 
       <TextView
           android:id="@+id/distance_num"
@@ -28,7 +29,7 @@
           android:layout_height="wrap_content"
           android:singleLine="true"
           android:layout_gravity="center"
-          android:text="0 KM"
+          android:text="@string/_0_km"
           style="@style/Suggestion_Location"/>
    </LinearLayout>
 

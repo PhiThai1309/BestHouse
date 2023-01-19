@@ -1,13 +1,17 @@
 package com.team5.besthouse.activities;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
-import android.app.NotificationManager;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.nfc.Tag;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.util.Log;
 import android.view.Window;
@@ -17,20 +21,32 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.elevation.SurfaceColors;
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
+import com.smarteist.autoimageslider.SliderView;
 import com.team5.besthouse.R;
+import com.team5.besthouse.adapters.ImageSliderAdapter;
 import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.fragments.MapsFragment;
+import com.team5.besthouse.models.Chat;
 import com.team5.besthouse.models.Property;
+import com.team5.besthouse.models.PropertyStatus;
 import com.team5.besthouse.models.Tenant;
 import com.team5.besthouse.models.User;
+import com.team5.besthouse.models.UserRole;
 import com.team5.besthouse.models.Utilities;
 import com.team5.besthouse.services.StoreService;
 
@@ -54,8 +70,30 @@ public class DetailActivity extends BaseActivity {
     private Property property;
     private StoreService storeService;
     private Landlord landlord;
+    private SliderView sliderView;
+    private List<Bitmap> sliderViewImageList;
 
     View progressIndicator;
+    Gson gson;
+    User user;
+
+    boolean disableEdit;
+    private Toolbar toolbar;
+    private CollapsingToolbarLayout toolbarCL;
+    private Button makeContractButton;
+    private TextView type;
+    private LinearLayout bedroom;
+    private ImageView featureBedroom;
+    private TextView bedroomText;
+    private LinearLayout bathroom;
+    private ImageView featureBathroom;
+    private TextView bathroomText;
+    private LinearLayout other;
+    private ImageView featureOther;
+    private TextView otherText;
+    private TextView desc;
+    private TextView locationText;
+    private TextView price;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +108,10 @@ public class DetailActivity extends BaseActivity {
         // set up store service
         storeService = new StoreService(getApplicationContext());
 
-        Button makeContractButton = findViewById(R.id.createPropertyBtn);
+        gson = new Gson();
+        user = gson.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), Tenant.class);
+
+        makeContractButton = findViewById(R.id.createPropertyBtn);
 
         property = (Property) getIntent().getParcelableExtra("property");
         boolean disableReservation = getIntent().getBooleanExtra("history", false);
@@ -78,115 +119,90 @@ public class DetailActivity extends BaseActivity {
             makeContractButton.setEnabled(false);
         }
 
+        disableEdit = getIntent().getBooleanExtra("chat", false);
+
         if (property == null) property = Property.STATICPROPERTY;
 
         Window window = getWindow();
         window.setStatusBarColor(Color.TRANSPARENT);
-
         //Set color to the navigation bar to match with the bottom navigation view
         getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(this));
 
+        toolbar = findViewById(R.id.homeToolbar);
+        this.setSupportActionBar(toolbar);
+
+        retrieveDataFromUI();
+        displayPropertyInfo(property);
+        fetchUser();
+        listenToCollection(property.getId());
+
+
+    }
+
+    private void retrieveDataFromUI()
+    {
+        type = findViewById(R.id.details_type);
+        bedroom = findViewById(R.id.details_bedroom);
+        featureBedroom = bedroom.findViewById(R.id.feature_image);
+        bedroomText = bedroom.findViewById(R.id.feature_text);
+        bathroom = findViewById(R.id.details_bathroom);
+        featureBathroom = bathroom.findViewById(R.id.feature_image);
+        bathroomText = bathroom.findViewById(R.id.feature_text);
+        other = findViewById(R.id.details_other);
+        featureOther = other.findViewById(R.id.feature_image);
+        otherText = other.findViewById(R.id.feature_text);
+        desc = findViewById(R.id.details_desc);
+        locationText = findViewById(R.id.details_address);
+        price = findViewById(R.id.details_price);
+        toolbarCL = findViewById(R.id.toolbar_layout);
+    }
+    private void displayPropertyInfo(@NonNull Property property)
+    {
+        type.setText(String.valueOf(property.getPropertyType()));
         //first feature
-        LinearLayout bedroom = findViewById(R.id.details_bedroom);
-        ImageView featureBedroom = bedroom.findViewById(R.id.feature_image);
         featureBedroom.setImageResource(R.drawable.ic_outline_single_bed_24);
-        TextView bedroomText = bedroom.findViewById(R.id.feature_text);
         bedroomText.setText(property.getBedrooms() + " Bedrooms");
+        sliderViewConfig();
 
         //Second feature
-        LinearLayout bathroom = findViewById(R.id.details_bathroom);
-        ImageView featureBathroom = bathroom.findViewById(R.id.feature_image);
         featureBathroom.setImageResource(R.drawable.ic_outline_bathtub_24);
-        TextView bathroomText = bathroom.findViewById(R.id.feature_text);
         bathroomText.setText(property.getBathrooms() + " Bathrooms");
-
         //Last feature
-        LinearLayout other = findViewById(R.id.details_other);
-        ImageView featureOther = other.findViewById(R.id.feature_image);
+
+
         featureOther.setImageResource(R.drawable.ic_outline_done_outline_24);
-
-        View returnView = findViewById(R.id.details_returnBar);
-        ImageView backBtn = returnView.findViewById(R.id.returnButton);
-        backBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
-
         featureOther.setImageResource(R.drawable.ic_outline_square_foot_24);
-        TextView otherText = other.findViewById(R.id.feature_text);
         otherText.setText((int) property.getArea() + " Square foot");
-
-        TextView desc = findViewById(R.id.details_desc);
         desc.setText(property.getPropertyDescription());
-
-        TextView nameText = findViewById(R.id.details_name);
-
-        TextView locationText = findViewById(R.id.details_address);
-
         //End of id get
 
-        nameText.setText(property.getPropertyName());
-
+        toolbar.setTitle(property.getPropertyName());
+        toolbarCL.setTitle(property.getPropertyName());
         String location = property.getAddress(getApplicationContext());
         locationText.setText(location);
 
         //button to ask landlord for a contract
         makeContractButton.setOnClickListener(v -> {
-//            Property property = Property.STATICPROPERTY;
-//            db.collection(UnchangedValues.PROPERTIES_TABLE).add(property);
-//
-//            Toast.makeText(this, "New property added!", Toast.LENGTH_SHORT).show();
-            makeContract();
+            //Create a dialog
+            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
+            builder.setTitle("Confirm your reservation");
+            builder.setMessage("If you confirm, this request will be sent to the landlord for further reviewed and the outcome will be sent to you later.");
+            //Set the positive button
+            builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    makeContract();
+                }
+            });
+            //Set the negative button
+            builder.setNegativeButton("Not yet", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.cancel();
+                }
+            });
+            builder.show();
         });
-
-//        if(contract == now) {
-//            Toast.makeText(getApplicationContext(), "equal", Toast.LENGTH_LONG).show();
-////            showNotification();
-//        }
-
-//        Log.d(TAG, property.getLandlordEmail());
-//        database1.collection(UnchangedValues.USERS_TABLE)
-//                .whereEqualTo("email",true)
-//                .get()
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if (task.isSuccessful()) {
-//                            for (QueryDocumentSnapshot document : task.getResult()) {
-//                                User user = document.toObject(User.class);
-//                                TextView landlordID = findViewById(R.id.details_lanlordID);
-//                                if(user.getEmail() == property.getLandlordEmail()) {
-//                                    landlordID.setText(user.getEmail());
-//                                    Log.d("Hello", document.get("propertyName").toString());
-////                                Log.d(TAG, user.getEmail());
-//                                }
-//                            }
-//                        } else {
-//                            Log.d(TAG, "Error getting documents: ", task.getException());
-//                        }
-//
-//                    }
-//                });
-
-//        TextView type = findViewById(R.id.property_type);
-//        type.setText(property.getPropertyType().toString().toLowerCase(Locale.ROOT));
-//
-//        TextView utilities = findViewById(R.id.Utilities);
-//        utilities.setText(property.getUtilities().toString().substring(1));
-
-//        GridView grid = findViewById(R.id.home_grid_view);
-
-//        List<Utilities> utilitiesList = new ArrayList<>();
-//        for(int i = 0; i < property.getUtilities().size(); i++) {
-//            utilitiesList.add(property.getUtilities().get(i));
-//        }
-
-//        final ArrayAdapter adapter = new ArrayAdapter<>(this,
-//                android.R.layout.simple_list_item_1, property.getUtilities());
-//        GridViewCustomAdapter GridViewCustomAdapter = new GridViewCustomAdapter(this, property.getUtilities());
-//        grid.setAdapter(GridViewCustomAdapter);
 
         if(property.getUtilities() != null) {
             for(Utilities utility : property.getUtilities()) {
@@ -197,7 +213,7 @@ public class DetailActivity extends BaseActivity {
                 ulText.setText(utility.toString());
             }
         }
-//
+
         for (Utilities dir : Utilities.values()) {
             String ult = dir.toString().toLowerCase(Locale.ROOT);
             View ulView = findViewById(this.getResources().
@@ -208,18 +224,21 @@ public class DetailActivity extends BaseActivity {
             imageView.setImageResource(drawable);
         }
 
-        fetchUser();
-
-        TextView price = findViewById(R.id.details_price);
         price.setText((int) property.getMonthlyPrice() + ".000 VND / Month");
+    }
 
-
+    private void sliderViewConfig()
+    {
+        sliderView = findViewById(R.id.imageSlider);
+        if(property.getImageURLList() != null)
+        {
+            ImageSliderAdapter sliderAdapter = new ImageSliderAdapter(this, property.getImageURLList()) ;
+            sliderView.setSliderAdapter(sliderAdapter);
+            sliderView.startAutoCycle();
+        }
     }
 
     public void makeContract() {
-        Gson gson = new Gson();
-        User user = gson.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), Tenant.class);
-
         //get final day to check for last day that the user can hire
         AtomicReference<Timestamp> finalDayToHire = new AtomicReference<>(new Timestamp(Date.from(Instant.now().plusSeconds(68400L * 30 * 12 * 100))));
 
@@ -248,18 +267,32 @@ public class DetailActivity extends BaseActivity {
 
         contract.setId(dc.getId());
 
+        Intent intent = new Intent(this, MapsFragment.class);
+
         dc.set(contract)
                 .addOnCompleteListener(task -> {
-                    Intent intent = new Intent(this, MapsFragment.class);
-                    if (task.isSuccessful()) {
-                        Toast.makeText(this, "Contract created!", Toast.LENGTH_SHORT).show();
-                        intent.putExtra("created", true);
-                        setResult(200, intent);
+                    if (task.isSuccessful()){
+                        DocumentReference dr =  db.collection("chats").document();
+                        Chat chat = new Chat(contract.getId());
+                        chat.setId(dr.getId());
+                        dr.set(chat).addOnCompleteListener(task1 -> {
+                            if (task1.isSuccessful()) {
+                                Toast.makeText(this, "Contract created!", Toast.LENGTH_SHORT).show();
+                                intent.putExtra("created", true);
+                                setResult(200, intent);
+                            }
+                            else {
+                                dc.delete();
+                                Toast.makeText(this, "Contract creation failed!", Toast.LENGTH_SHORT).show();
+                                intent.putExtra("created", false);
+                            }
+                            finish();
+                        });
                     } else {
                         Toast.makeText(this, "Contract creation failed!", Toast.LENGTH_SHORT).show();
                         intent.putExtra("created", false);
+                        finish();
                     }
-                    finish();
                 });
     }
 
@@ -299,5 +332,61 @@ public class DetailActivity extends BaseActivity {
                         Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        if(user.getRole() != UserRole.TENANT && !disableEdit){
+            getMenuInflater().inflate(R.menu.edit_app_bar, menu);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.edit:
+                Intent editIntent = new Intent(getApplicationContext(), EditActivity.class);
+                editIntent.putExtra("property", property);
+                startActivity(editIntent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    /**
+     * learned from https://firebase.google.com/docs/firestore/query-data/listen
+     */
+    private void listenToCollection(String propertyId) {
+        FirebaseFirestore database =  FirebaseFirestore.getInstance();
+
+        database.collection(UnchangedValues.PROPERTIES_TABLE).document(propertyId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                if(error != null) return;
+
+                if(value != null && value.exists() && value.getId().compareTo(propertyId) == 0 )
+                {
+
+                    try {
+                        Property propertyChange = value.toObject(Property.class);
+                        property = propertyChange;
+                        displayPropertyInfo(propertyChange);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }

@@ -11,11 +11,13 @@
         android:layout_height="wrap_content"
         style="@style/Bold_Heading"
         android:layout_weight="1"
-        android:text="Property details"/>
-    <TextView
+        android:text="@string/property_details"/>
+    <ImageView
         android:id="@+id/more"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="40dp"
+        android:layout_height="match_parent"
+        android:paddingTop="14dp"
+        android:paddingBottom="2dp"
         style="@style/SeeMore"
-        android:text="@string/see_more"/>
+        android:src="@drawable/ic_round_arrow_forward_24"/>
 </LinearLayout>

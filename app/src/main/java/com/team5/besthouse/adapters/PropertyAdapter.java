@@ -2,26 +2,41 @@ package com.team5.besthouse.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.os.Parcelable;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.gson.Gson;
 import com.team5.besthouse.R;
 import com.team5.besthouse.activities.DetailActivity;
 import com.team5.besthouse.activities.MainActivity;
+import com.team5.besthouse.constants.UnchangedValues;
+import com.team5.besthouse.interfaces.GetBitMapCallBack;
 import com.team5.besthouse.models.Property;
+import com.team5.besthouse.models.User;
+import com.team5.besthouse.models.UserRole;
+import com.team5.besthouse.services.StoreService;
 
 import java.util.List;
 
 public class PropertyAdapter extends RecyclerView.Adapter<PropertyAdapter.TaskViewHolder> {
     private final LayoutInflater mInflater;
     private List<Property> propertyList;
+    private int maxItemCount = 1000;
+
+    StoreService storeService;
 
     private String key = "";
 
@@ -29,6 +44,12 @@ public class PropertyAdapter extends RecyclerView.Adapter<PropertyAdapter.TaskVi
     public PropertyAdapter(MainActivity context, List<Property> tasks) {
         mInflater = LayoutInflater.from(context);
         propertyList = tasks;
+    }
+
+    public PropertyAdapter(MainActivity context, List<Property> tasks, int maxItemCount) {
+        mInflater = LayoutInflater.from(context);
+        propertyList = tasks;
+        this.maxItemCount = maxItemCount;
     }
 
     // Create the view holder
@@ -54,14 +75,31 @@ public class PropertyAdapter extends RecyclerView.Adapter<PropertyAdapter.TaskVi
             //Set the prize of the view holder
 //            holder.price.setText(String.valueOf(current.getMonthlyPrice()));
 
+            if (current.getImageURLList() != null && current.getImageURLList().size() > 0) {
+                loadImageFromFSUrl(current.getImageURLList().get(0), new GetBitMapCallBack() {
+                    @Override
+                    public void getBitMap(Bitmap bitmap) {
+                        holder.imageView.setImageBitmap(bitmap);
+                    }
+                });
+            }
+
             // Set the click listener
             holder.cardView.setOnClickListener(new View.OnClickListener() {
                 @SuppressLint("NotifyDataSetChanged")
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(mInflater.getContext(), DetailActivity.class);
-                    intent.putExtra("property", (Parcelable) current);
+                    intent.putExtra("property", current);
 
+                    // set up store service
+                    storeService = new StoreService(mInflater.getContext());
+
+                    Gson gson = new Gson();
+                    User user = gson.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), User.class);
+                    if(user.getRole() == UserRole.LANDLORD){
+                        intent.putExtra("history", true);
+                    }
                     mInflater.getContext().startActivity(intent);
                     notifyDataSetChanged();
                 }
@@ -77,7 +115,10 @@ public class PropertyAdapter extends RecyclerView.Adapter<PropertyAdapter.TaskVi
     // Return the size of the data set
     @Override
     public int getItemCount() {
-        return Math.min(propertyList.size(), 5);
+        if(propertyList == null) {
+            return 0;
+        }
+        return Math.min(propertyList.size(), maxItemCount);
     }
 
     //TaskViewHolder class to hold the views
@@ -86,21 +127,40 @@ public class PropertyAdapter extends RecyclerView.Adapter<PropertyAdapter.TaskVi
 //        TextView price;
         TextView address;
         CardView cardView;
+        ImageView imageView;
 
         public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.property_name);
 //            price = itemView.findViewById(R.id.property_price);
-            address = itemView.findViewById(R.id.property_address);
+            address = itemView.findViewById(R.id.property_price);
             cardView = itemView.findViewById(R.id.cardView);
+            imageView = itemView.findViewById(R.id.shapeableImageView);
         }
     }
 
-//    // Create an intent to update the task
-//    public void updateTask() {
-//        Intent intent = new Intent(mInflater.getContext(), DetailsActivity.class);
-//        intent.putExtra("key", key);
-//        mInflater.getContext().startActivity(intent);
-//        notifyDataSetChanged();
-//    }
+    private void loadImageFromFSUrl(String imageURL, final GetBitMapCallBack callBack)
+    {
+        FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+
+        try {
+            StorageReference httpsReference = firebaseStorage.getReferenceFromUrl(imageURL);
+            final long ONE_MEGABYTE = 1024 * 1024;
+            httpsReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                @Override
+                public void onSuccess(byte[] bytes) {
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0 , bytes.length);
+                    callBack.getBitMap(bitmap);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle any errors
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
 }

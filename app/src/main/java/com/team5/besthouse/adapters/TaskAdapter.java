@@ -81,16 +81,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.property_name);
-            price = itemView.findViewById(R.id.property_price);
-            address = itemView.findViewById(R.id.property_address);
+            price = itemView.findViewById(R.id.last_chat_time);
+            address = itemView.findViewById(R.id.property_price);
         }
     }
-
-//    // Create an intent to update the task
-//    public void updateTask() {
-//        Intent intent = new Intent(mInflater.getContext(), DetailsActivity.class);
-//        intent.putExtra("key", key);
-//        mInflater.getContext().startActivity(intent);
-//        notifyDataSetChanged();
-//    }
 }

@@ -2,6 +2,9 @@ package com.team5.besthouse.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -17,14 +20,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.elevation.SurfaceColors;
@@ -35,13 +42,18 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
 import com.team5.besthouse.R;
 import com.team5.besthouse.activities.LoginActivity;
-import com.team5.besthouse.adapters.ContractPartialAdapter;
-import com.team5.besthouse.adapters.PropertyPartialCardAdapter;
+import com.team5.besthouse.adapters.ContractAdapter;
+import com.team5.besthouse.adapters.PropertyCardAdapter;
 import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.databinding.FragmentAccountBinding;
+import com.team5.besthouse.fragments.Inflate.MoreContractFragment;
+import com.team5.besthouse.fragments.Inflate.MorePropertyFragment;
+import com.team5.besthouse.interfaces.GetBitMapCallBack;
 import com.team5.besthouse.models.Contract;
 import com.team5.besthouse.models.Property;
 import com.team5.besthouse.models.Tenant;
@@ -69,13 +81,14 @@ public class AccountFragment extends Fragment {
 
 
     private RecyclerView historyView;
-    private List<Contract> contractList;
-    private ContractPartialAdapter adapter1;
-    private LinearProgressIndicator progressIndicator;
+    private ArrayList<Contract> contractList;
+    private ContractAdapter adapter1;
 
     private RecyclerView propertyView;
-    private List<Property> propertyList;
-    private PropertyPartialCardAdapter adapter;
+    private ArrayList<Property> propertyList;
+    private PropertyCardAdapter adapter;
+
+    private View historyTitle, historyWrapper, propertyTitle, propertyWrapper, propertyLayout;
 
     Gson gson;
     User user;
@@ -116,7 +129,7 @@ public class AccountFragment extends Fragment {
         storeService = new StoreService(getContext().getApplicationContext());
 
         gson = new Gson();
-        user = gson.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), Tenant.class);
+        user = gson.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), User.class);
     }
 
     @Override
@@ -125,8 +138,6 @@ public class AccountFragment extends Fragment {
 
         //filter for all rents such that its end date is after today on the db side
         FirebaseFirestore database = FirebaseFirestore.getInstance();
-        Gson gson = new Gson();
-        User user = gson.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), User.class);
         String userEmail = user.getEmail();
 
         if (user.getRole() == UserRole.LANDLORD){
@@ -150,7 +161,6 @@ public class AccountFragment extends Fragment {
         @SuppressLint("NotifyDataSetChanged")
         @Override
         public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-//            progressIndicator.setVisibility(View.VISIBLE);
             if(error != null)
             {
                 Log.w("ERROR: ", error);
@@ -159,25 +169,29 @@ public class AccountFragment extends Fragment {
             assert value != null;
             for(DocumentChange newDoc : value.getDocumentChanges()){
                 Contract p = newDoc.getDocument().toObject(Contract.class);
-//                            Log.i("Property", p.getId() == null ? "null address!" : p.getId());
-//                            Log.i("Property", newDoc.getType().toString());
                 contractList.remove(p);
-                contractList.add(p);
+                if (newDoc.getType() != DocumentChange.Type.REMOVED){
+                    contractList.add(p);
+                }
                 adapter1.notifyDataSetChanged();
             }
 
-            View historyTitle = binding.getRoot().findViewById(R.id.contract_history_title);
-            View historyWrapper = binding.getRoot().findViewById(R.id.contract_history_wrapper);
+            historyTitle = binding.getRoot().findViewById(R.id.contract_history_title);
+            historyWrapper = binding.getRoot().findViewById(R.id.contract_history_wrapper);
+            ImageView seeMoreBtn = historyTitle.findViewById(R.id.see_more);
+            TextView noneData = historyWrapper.findViewById(R.id.display_none);
 
             if(contractList.isEmpty()) {
-                TextView seeMoreButton = historyTitle.findViewById(R.id.see_more);
-                seeMoreButton.setVisibility(View.GONE);
+                historyTitle.setOnClickListener(null);
+                seeMoreBtn.setVisibility(View.GONE);
                 historyView.setVisibility(View.GONE);
+            } else if(contractList.size() <= 5) {
+                historyTitle.setOnClickListener(null);
+                seeMoreBtn.setVisibility(View.GONE);
+                noneData.setVisibility(View.GONE);
             } else {
-                TextView noData = historyWrapper.findViewById(R.id.display_none);
-                noData.setVisibility(View.GONE);
+                noneData.setVisibility(View.GONE);
             }
-//            progressIndicator.setVisibility(View.GONE);
         }
     };
 
@@ -185,7 +199,6 @@ public class AccountFragment extends Fragment {
         @SuppressLint("NotifyDataSetChanged")
         @Override
         public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-//            progressIndicator.setVisibility(View.VISIBLE);
             if(error != null)
             {
                 Log.w("ERROR: ", error);
@@ -194,13 +207,27 @@ public class AccountFragment extends Fragment {
             assert value != null;
             for(DocumentChange newDoc : value.getDocumentChanges()){
                 Property p = newDoc.getDocument().toObject(Property.class);
-//                            Log.i("Property", p.getId() == null ? "null address!" : p.getId());
-//                            Log.i("Property", newDoc.getType().toString());
                 propertyList.remove(p);
                 propertyList.add(p);
                 adapter.notifyDataSetChanged();
             }
-//            progressIndicator.setVisibility(View.GONE);
+
+            propertyTitle = binding.getRoot().findViewById(R.id.property_list_title);
+            propertyWrapper = binding.getRoot().findViewById(R.id.property_list);
+            ImageView seeMoreButton = propertyTitle.findViewById(R.id.see_more);
+            TextView noData = propertyWrapper.findViewById(R.id.display_none);
+
+            if(propertyList.isEmpty()) {
+                propertyLayout.setOnClickListener(null);
+                seeMoreButton.setVisibility(View.GONE);
+                propertyView.setVisibility(View.GONE);
+            } else if(propertyList.size() <= 5) {
+                propertyLayout.setOnClickListener(null);
+                seeMoreButton.setVisibility(View.GONE);
+                noData.setVisibility(View.GONE);
+            } else {
+                noData.setVisibility(View.GONE);
+            }
         }
     };
 
@@ -211,6 +238,7 @@ public class AccountFragment extends Fragment {
             public boolean onMenuItemClick(MenuItem item) {
                 if (storeService.clearTheStore()) {
                     try {
+                        LoginManager.getInstance().logOut();
                         tempDisconnectGoogleAccount();
                         firebaseAuth = FirebaseAuth.getInstance();
                         firebaseAuth.signOut(); // sign out from firebase
@@ -232,28 +260,39 @@ public class AccountFragment extends Fragment {
         });
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentAccountBinding.inflate(inflater, container, false);
         storeService = new StoreService(getActivity().getApplicationContext());
         logOutMenu();
-//        setSignOutAction();
+
         //Set color to the navigation bar to match with the bottom navigation view
         getActivity().getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(getActivity()));
         Window window = getActivity().getWindow();
-        window.setStatusBarColor(getActivity().getResources().getColor(R.color.md_theme_surfaceVariant));
-//        progressIndicator = binding.getRoot().findViewById(R.id.account_progressBar);
-//        progressIndicator.setVisibility(View.VISIBLE);
+        window.setStatusBarColor(Color.TRANSPARENT);
 
         //Contract History setup here--------------------------------------------------------
-        View historyTitle = binding.getRoot().findViewById(R.id.contract_history_title);
+        historyTitle = binding.getRoot().findViewById(R.id.contract_history_title);
         TextView seeMoreTitle = historyTitle.findViewById(R.id.see_more_title);
         seeMoreTitle.setText("Contract History");
 
-        View historyWrapper = binding.getRoot().findViewById(R.id.contract_history_wrapper);
-        historyView = historyWrapper.findViewById(R.id.contract_history);
+        historyWrapper = binding.getRoot().findViewById(R.id.contract_history_wrapper);
+        historyView = historyWrapper.findViewById(R.id.recycler_view);
 
+//        ImageView moreContract = historyTitle.findViewById(R.id.see_more);
+        historyTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle bundle = new Bundle();
+                bundle.putParcelableArrayList("list",  contractList);
+
+                MoreContractFragment bottomDialogFragment = new MoreContractFragment();
+                bottomDialogFragment.setArguments(bundle);
+                bottomDialogFragment.show(requireActivity().getSupportFragmentManager(), "ActionBottomDialogFragment.TAG");
+            }
+        });
         contractList = new ArrayList<>();
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false);
@@ -263,64 +302,108 @@ public class AccountFragment extends Fragment {
         historyView.setHasFixedSize(true);
         historyView.setLayoutManager(linearLayoutManager);
 
-        adapter1 = new ContractPartialAdapter(getContext(), contractList);
+        //limits max 5 items
+        adapter1 = new ContractAdapter(getContext(), contractList, 5);
         historyView.setAdapter(adapter1);
         historyView.setHasFixedSize(true);
+
+        // user image set up
+        ImageView userImage = binding.getRoot().findViewById(R.id.account_image);
+        String imageURL = storeService.getStringValue(UnchangedValues.USER_IMAGE_URL_COL);
+        if(!imageURL.isEmpty())
+        {
+            loadImageFromFSUrl(user.getImageUrl(), new GetBitMapCallBack() {
+                @Override
+                public void getBitMap(Bitmap bitmap) {
+                    userImage.setImageBitmap(bitmap);
+                }
+            });
+        }
 
         //Account name setup here---------------------------------------------------------
         TextView accountName = binding.getRoot().findViewById(R.id.account_name);
         accountName.setText(user.getFullName());
 
+        TextView accountType = binding.getRoot().findViewById(R.id.account_type);
+        accountType.setText(String.valueOf(user.getRole()));
+
         //Property setup here-------------------------------------------------------------
-        Gson gson = new Gson();
-        User user = gson.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), Tenant.class);
-        if(user.getRole() == UserRole.TENANT) {
-            LinearLayout propertyList = binding.getRoot().findViewById(R.id.property_list);
-            propertyList.setVisibility(View.GONE);
-        }
-        View propertyLayout = binding.getRoot().findViewById(R.id.property_list_title);
+        View propertyWrapper = binding.getRoot().findViewById(R.id.property_list);
+
+        propertyLayout = binding.getRoot().findViewById(R.id.property_list_title);
         TextView propertyTitle = propertyLayout.findViewById(R.id.see_more_title);
+
+        LinearLayout pointView = binding.getRoot().findViewById(R.id.point_section);
+        TextView point = pointView.findViewById(R.id.point);
+
+        if(user.getRole() == UserRole.TENANT) {
+            propertyWrapper.setVisibility(View.GONE);
+            propertyTitle.setVisibility(View.GONE);
+            point.setText(storeService.getIntValue(UnchangedValues.USER_LOYAL_COL) + " points");
+        } else {
+            View divider = binding.getRoot().findViewById(R.id.line);
+            divider.setVisibility(View.GONE);
+            pointView.setVisibility(View.GONE);
+        }
+
         propertyTitle.setText("Your property");
+
+        propertyLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle bundle = new Bundle();
+                bundle.putParcelableArrayList("list",  propertyList);
+
+                MorePropertyFragment bottomDialogFragment = new MorePropertyFragment();
+                bottomDialogFragment.setArguments(bundle);
+                bottomDialogFragment.show(requireActivity().getSupportFragmentManager(), "ActionBottomDialogFragment.TAG");
+            }
+        });
+
         propertyList = new ArrayList<>();
-        propertyView = binding.getRoot().findViewById(R.id.account_property);
+
+        propertyView = propertyWrapper.findViewById(R.id.recycler_view);
         LinearLayoutManager linearLayoutManager2 = new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false);
         //Set the layout manager
         linearLayoutManager.setStackFromEnd(false);
         linearLayoutManager.setReverseLayout(false);
         propertyView.setHasFixedSize(true);
         propertyView.setLayoutManager(linearLayoutManager2);
-        adapter = new PropertyPartialCardAdapter(getContext(), propertyList);
+        adapter = new PropertyCardAdapter(getContext(), propertyList, 5);
         propertyView.setAdapter(adapter);
         historyView.setHasFixedSize(true);
+
         // Inflate the layout for this fragment
         return binding.getRoot();
     }
+    private void loadImageFromFSUrl(String imageURL, final GetBitMapCallBack getBitMapCallBack)
+    {
+         FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
 
-//    private void setSignOutAction() {
-//        binding.signOutButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                // make sure to clear the store service
-//                if (storeService.clearTheStore()) {
-//                    try {
-//                        firebaseAuth = FirebaseAuth.getInstance();
-//                        firebaseAuth.signOut(); // sign out from firebase
-//                        Intent intent = new Intent(getActivity(), LoginActivity.class);
-//                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                        intent.putExtra(UnchangedValues.LOGOUT_PERFORMED, "logout");
-//                        startActivity(intent);
-//                    } catch (Exception e) {
-//                        Log.d("ErrorLogout", e.getMessage());
-//                        e.printStackTrace();
-//                        showTextLong("Error: Can't Logout");
-//                    }
-//                } else {
-//                    showTextLong("Error: Can't Logout");
-//                }
-//            }
-//        });
-//    }
+    try {
+        StorageReference httpsReference = firebaseStorage.getReferenceFromUrl(imageURL);
+        final long ONE_MEGABYTE = 1024 * 1024;
+        httpsReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                try {
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0 , bytes.length);
+                    getBitMapCallBack.getBitMap(bitmap);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+            }
+        });
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
 
+    }
     private void tempDisconnectGoogleAccount() {
         GoogleSignInClient mGoogleSignInAccount = GoogleSignIn.getClient(getActivity(), GoogleSignInOptions.DEFAULT_SIGN_IN) ;
         if(mGoogleSignInAccount != null)

@@ -45,20 +45,21 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
-                        android:text="WELCOME!" />
+                        android:text="@string/welcome" />
 
                     <TextView
                         android:id="@+id/landlord_name"
                         style="@style/Heading"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="landlord's name" />
+                        android:text="@string/landlord_s_name" />
                 </LinearLayout>
 
-                <ImageView
+                <com.google.android.material.imageview.ShapeableImageView
+                    app:shapeAppearanceOverlay="@style/roundedCorners"
                     android:id="@+id/landlord_account"
-                    android:layout_width="60dp"
-                    android:layout_height="40dp"
+                    android:layout_width="@dimen/_50sdp"
+                    android:layout_height="@dimen/_50sdp"
                     android:layout_marginStart="20dp"
                     android:src="@drawable/ic_outline_account_circle_24" />
             </LinearLayout>
@@ -69,7 +70,15 @@
                 android:layout_height="wrap_content"
                 android:indeterminate="true" />
 
-            <include layout="@layout/layout_search" />
+<!--            <androidx.appcompat.widget.SearchView-->
+<!--                android:id="@+id/search_view"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:paddingHorizontal="10dp"/>-->
+
+            <include
+                android:id="@+id/search_wrapper"
+                layout="@layout/layout_search"/>
 
             <TextView
                 style="@style/Bold_Heading"
@@ -77,7 +86,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
                 android:paddingTop="12dp"
-                android:text="Your Listing" />
+                android:text="@string/pending_request" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/posted_property"

@@ -5,5 +5,5 @@ public enum ContractStatus {
     EXPIRED,
     END,
     PENDING,
-    REJECT
+    REJECT,
 }

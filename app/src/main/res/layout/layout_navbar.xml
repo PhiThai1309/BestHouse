@@ -7,29 +7,4 @@
     android:gravity="center"
     android:background="@color/md_theme_surface"
     android:weightSum="3">
-
-<!--    <ImageView-->
-<!--        android:id="@+id/home"-->
-<!--        android:layout_width="25dp"-->
-<!--        android:layout_height="25dp"-->
-<!--        android:src="@drawable/ic_outline_home_24"-->
-<!--        android:layout_weight="1"-->
-<!--        app:tint="@color/md_theme_outline" />-->
-
-<!--    <ImageView-->
-<!--        android:id="@+id/search"-->
-<!--        android:layout_width="25dp"-->
-<!--        android:layout_height="25dp"-->
-<!--        android:src="@drawable/ic_baseline_search_24"-->
-<!--        android:layout_weight="1"-->
-<!--        app:tint="@color/md_theme_outline"/>-->
-
-<!--    <ImageView-->
-<!--        android:id="@+id/profile"-->
-<!--        android:layout_width="25dp"-->
-<!--        android:layout_height="25dp"-->
-<!--        android:src="@drawable/ic_outline_account_circle_24"-->
-<!--        android:layout_weight="1"-->
-<!--        app:tint="@color/md_theme_outline"/>-->
-
 </LinearLayout>

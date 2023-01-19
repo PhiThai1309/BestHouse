@@ -19,6 +19,8 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -68,7 +70,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
         IntentFilter filter = new IntentFilter();
         filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
         registerReceiver(connectionReceiver, filter);
-
         startService(new Intent(this, AutoLogoutService.class));
 //        Intent intentBackgroundService = new Intent (getApplicationContext(), FirebaseNotification.class);
 //        startService(intentBackgroundService);

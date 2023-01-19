@@ -15,14 +15,15 @@
         android:weightSum="3.1">
 
         <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/property_image"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:maxHeight="120dp"
             android:layout_weight="1.1"
-            android:scaleType="centerCrop"
-            app:shapeAppearanceOverlay="@style/Card2"
             android:adjustViewBounds="true"
-            android:src="@drawable/house1"/>
+            android:maxHeight="120dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/house1"
+            app:shapeAppearanceOverlay="@style/Card2" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -49,18 +50,19 @@
                     android:layout_width="15dp"
                     android:layout_height="15dp"
                     android:src="@drawable/ic_outline_location_on_grey_24"/>
+
                 <TextView
                     android:id="@+id/property_address"
+                    style="@style/Card_SubHeading"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/Card_SubHeading"
-                    android:text="@string/place_holder"
-                    android:maxLines="1"/>
+                    android:maxLines="1"
+                    android:text="@string/place_holder" />
             </LinearLayout>
 
 
             <TextView
-                android:id="@+id/property_price"
+                android:id="@+id/last_chat_time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/place_holder"
