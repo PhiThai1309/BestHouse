@@ -143,6 +143,7 @@ public class SearchLocationWithSuggestionActivity extends AppCompatActivity impl
                             Geocoder geocoder = new Geocoder(getApplicationContext());
 
                             lsAdapter.clearList();
+                            lsAdapter.notifyDataSetChanged();
 
                             try {
                                 List<Address> addresses = geocoder.getFromLocationName(query, 15);
