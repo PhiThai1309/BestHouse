@@ -158,6 +158,8 @@ public class MapsFragment extends Fragment implements RecyclerViewInterface, Goo
         public void onMapReady(@NonNull GoogleMap googleMap) {
             map = googleMap;
 
+            map.getUiSettings().setZoomControlsEnabled(true);
+
             // Turn on the My Location layer and the related control on the map.
             updateLocationUI();
 

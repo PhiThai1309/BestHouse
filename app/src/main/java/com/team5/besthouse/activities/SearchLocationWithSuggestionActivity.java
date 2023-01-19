@@ -6,7 +6,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
+import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
@@ -29,8 +34,10 @@ import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.fragments.LandLordMapsFragment;
 import com.team5.besthouse.interfaces.RecyclerViewInterface;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class SearchLocationWithSuggestionActivity extends AppCompatActivity implements RecyclerViewInterface {
 
@@ -108,51 +115,49 @@ public class SearchLocationWithSuggestionActivity extends AppCompatActivity impl
 
     }
 
-    private void setSearchAction()
-    {
-       searchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+    private void setSearchAction(){
 
-           @Override
-           public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+            final Handler handler = new Handler();
 
-              if(actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_GO || actionId == EditorInfo.IME_ACTION_SEARCH)
-              {
+            searchEditText.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-                  // create the request
-                  String query = searchEditText.getText().toString();
-                  FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
-                          .setLocationBias(bounds)
-                          .setOrigin(HCM_CEN_LATLNG)
-                          .setCountries("VN")
-//                          .setTypesFilter(Arrays.asList(TypeFilter.ADDRESS.toString()))
-                          .setSessionToken(token)
-                          .setQuery(query)
-                          .build();
-                  lsAdapter.clearList();
+                }
 
-                  // send the request
-                  placesClient.findAutocompletePredictions(request).addOnSuccessListener(response -> {
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-                      for(AutocompletePrediction prediction: response.getAutocompletePredictions())
-                      {
+                }
 
-                          Log.i("TESTER", prediction.getPrimaryText(null).toString());
-                          Log.i("TESTER", prediction.getSecondaryText(null).toString());
-                          lsAdapter.addNewItem(prediction.getFullText(null).toString());
-                      }
+                @Override
+                public void afterTextChanged(Editable editable) {
+                    handler.removeCallbacksAndMessages(null);
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
 
-                  }).addOnFailureListener((exception)->
-                  {
-                      if (exception instanceof ApiException)
-                      {
-                          ApiException apiException = (ApiException) exception;
-                          Log.e("TESTERERROR", "Place not found: " +apiException.getStatusCode());
-                      }
-                  });
-              }
-               return false;
-           }
-       });
+                            // create the request
+                            String query = searchEditText.getText().toString() + " Thành Phố Hồ Chí Minh";
+
+                            Geocoder geocoder = new Geocoder(getApplicationContext());
+
+                            lsAdapter.clearList();
+
+                            try {
+                                List<Address> addresses = geocoder.getFromLocationName(query, 15);
+                                for (Address address : addresses) {
+                                    for (int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
+                                        lsAdapter.addNewItem(address.getAddressLine(i));
+                                    }
+                                }
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }, 200);
+                }
+            });
     }
 
     /**
