@@ -44,6 +44,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.team5.besthouse.R;
 import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.databinding.ActivitySignupBinding;
 import com.team5.besthouse.interfaces.SetEmailExistedCallback;
@@ -80,9 +81,10 @@ public class SignupActivity extends BaseActivity {
         setContentView(signupBinding.getRoot());
         firebaseAuth = FirebaseAuth.getInstance();
 
+        getWindow().setNavigationBarColor(getColor(R.color.md_theme_outlineVariant));
+        Window window = getWindow();
+        window.setStatusBarColor(getColor(R.color.md_theme_outlineVariant));
 
-        //Set color to the navigation bar to match with the bottom navigation view
-        getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(this));
         Intent intent = getIntent();
         if(intent.getExtras()!=null)
         {

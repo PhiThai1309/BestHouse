@@ -9,9 +9,11 @@ import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -43,6 +45,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.Gson;
+import com.team5.besthouse.R;
 import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.databinding.ActivityLoginBinding;
 import com.team5.besthouse.interfaces.DirectUICallback;
@@ -77,6 +80,11 @@ public class LoginActivity extends BaseActivity {
         // set up store service
         storeService = new StoreService(getApplicationContext());
 
+        //Set color to the navigation bar to match with the bottom navigation view
+        getWindow().setNavigationBarColor(getColor(R.color.md_theme_outlineVariant));
+        Window window = getWindow();
+        window.setStatusBarColor(getColor(R.color.md_theme_outlineVariant));
+
         database = FirebaseFirestore.getInstance();
 
         GoogleSignInOptions googleSignInOptions =  new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -88,8 +96,6 @@ public class LoginActivity extends BaseActivity {
 
 
         firebaseAuth = FirebaseAuth.getInstance();
-
-        getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(this));
 
         // check if user already login
         checkAlreadyLogin();

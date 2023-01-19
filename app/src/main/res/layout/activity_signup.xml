@@ -181,7 +181,8 @@
             android:layout_height="match_parent"
             android:orientation="horizontal"
             android:weightSum="3"
-            android:paddingHorizontal="20dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="0dp"
             android:paddingVertical="14dp">
             <TextView
                 android:id="@+id/signOutButton_textView"

@@ -106,7 +106,7 @@ public class DetailActivity extends BaseActivity {
         gson = new Gson();
         user = gson.fromJson(storeService.getStringValue(UnchangedValues.LOGIN_USER), Tenant.class);
 
-         makeContractButton = findViewById(R.id.createPropertyBtn);
+        makeContractButton = findViewById(R.id.createPropertyBtn);
 
         property = (Property) getIntent().getParcelableExtra("property");
         boolean disableReservation = getIntent().getBooleanExtra("history", false);
