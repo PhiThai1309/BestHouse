@@ -465,12 +465,16 @@ public class MapsFragment extends Fragment implements RecyclerViewInterface, Goo
                                                     if (ok) {
                                                         lsAdapter.addNewItem(p);
 
-                                                        Marker marker = map.addMarker(new MarkerOptions().position(p.getcoordinates()).title(p.getPropertyName()));
-                                                        assert marker != null;
-                                                        marker.setTag(p);
-                                                        markers.put(marker.getId(), marker);
+                                                        try {
+                                                            Marker marker = map.addMarker(new MarkerOptions().position(p.getcoordinates()).title(p.getPropertyName()));
+                                                            assert marker != null;
+                                                            marker.setTag(p);
+                                                            markers.put(marker.getId(), marker);
 
-                                                        Log.i("MARKER" , p.toString());
+                                                            Log.i("MARKER" , p.toString());
+                                                        } catch (Exception e) {
+                                                            e.printStackTrace();
+                                                        }
                                                     }
                                                 }
                                             });

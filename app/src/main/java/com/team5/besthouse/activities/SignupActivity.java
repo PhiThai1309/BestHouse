@@ -314,7 +314,7 @@ public class SignupActivity extends BaseActivity {
         {
            user = new Tenant(signupBinding.email.getText().toString(),
                    signupBinding.password.getText().toString(),
-                   signupBinding.name.getText().toString(), signupBinding.phoneNumber.getText().toString(),imageUrl);
+                   signupBinding.name.getText().toString(), signupBinding.phoneNumber.getText().toString(),imageUrl, 0);
         }
 
         database = FirebaseFirestore.getInstance();
