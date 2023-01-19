@@ -351,11 +351,11 @@ public class EditActivity extends AppCompatActivity {
         {
             showTextLong("Please Select property address");
         }
-//        else if(getSelectUtilities().isEmpty())
-//        {
-//            showTextLong("Please select property's utilities");
-//            return false;
-//        }
+        else if(getSelectUtilities().isEmpty())
+        {
+            showTextLong("Please select property's utilities");
+            return false;
+        }
         else if(pBedRoomEditText.getText().toString().isEmpty())
         {
             showTextLong("Please enter valid bedroom number");

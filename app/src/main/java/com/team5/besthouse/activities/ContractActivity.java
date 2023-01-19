@@ -165,9 +165,6 @@ public class ContractActivity extends BaseActivity {
 
                             }
                         }
-                        // load data in to the spinner
-//                        Log.d("NewQuestFragment", insList.toString());
-//                        progressIndicator.setVisibility(View.GONE);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override

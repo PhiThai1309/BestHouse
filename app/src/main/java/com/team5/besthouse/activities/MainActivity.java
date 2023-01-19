@@ -22,39 +22,20 @@ import com.team5.besthouse.R;
 import com.team5.besthouse.services.StoreService;
 
 public class MainActivity extends BaseActivity {
-    ActionBar actionBar;
     public static NavigationBarView navigationView;
     private StoreService storeService;
-
 
     public boolean locationPermissionGranted;
     public Location lastKnownLocation;
     protected FusedLocationProviderClient fusedLocationProviderClient;
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.logout_app_bar, menu);
-//        MenuItem item = menu.getItem(0);
-//        item.setVisible(true);
-//        return true;
-//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        actionBar = getSupportActionBar();
-
         storeService = new StoreService(getApplicationContext());
-//        LinearLayout navbar = findViewById(R.id.main_navbar);
-//
-//        ImageView home = navbar.findViewById(R.id.home);
-//        ImageView search = navbar.findViewById(R.id.search);
-//        ImageView profile = navbar.findViewById(R.id.profile);
-//
-//        home.setImageResource(R.drawable.ic_round_home_24);
-//        home.setColorFilter(getResources().getColor(R.color.md_theme_onPrimaryContainer));
 
         navigationView = findViewById(R.id.bottom_navigation);
         navigationView.setOnItemSelectedListener(selectedListener);

@@ -55,6 +55,7 @@ import com.team5.besthouse.utilities.UpdateTenantLoyal;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class LoginActivity extends BaseActivity {
@@ -175,7 +176,7 @@ public class LoginActivity extends BaseActivity {
                e.printStackTrace();
             }
 
-            if(accountCreated == true)
+            if(accountCreated)
             {
                 showTextLong("Your Account Is Created");
             }
@@ -285,7 +286,7 @@ public class LoginActivity extends BaseActivity {
                             loginBinding.signInButtonTextView.setText("Login");
                             loginBinding.signInButtonImageView.setVisibility(View.VISIBLE);
                             loginBinding.signInButtonProgressBar.setVisibility(View.GONE);
-                            showTextLong(task.getException().getMessage());
+                            showTextLong(Objects.requireNonNull(task.getException()).getMessage());
                         }
                     }
                 });
@@ -348,6 +349,7 @@ public class LoginActivity extends BaseActivity {
         }
         else if(requestCode == 200 && resultCode == RESULT_OK)
         {
+            assert data != null;
             String id = data.getStringExtra("userid") ;
             performGetDataFromFS(id, new DirectUICallback() {
                 @Override
@@ -449,18 +451,19 @@ public class LoginActivity extends BaseActivity {
     {
         FirebaseUser user = firebaseAuth.getCurrentUser();
         // check if user is new or existing
-        if(authResult.getAdditionalUserInfo().isNewUser())
+        if(Objects.requireNonNull(authResult.getAdditionalUserInfo()).isNewUser())
         {
             //user is new
-            Log.d("FACEBOOK_USER", ""+authResult.getUser().getEmail());
-            Log.d("FACEBOOK_USER", ""+authResult.getUser().getPhoneNumber());
-            Log.d("FACEBOOK_USER", ""+authResult.getUser().getUid());
-            Log.d("FACEBOOK_USER", ""+authResult.getUser().getPhotoUrl());
+            Log.d("FACEBOOK_USER", ""+ Objects.requireNonNull(authResult.getUser()).getEmail());
+            Log.d("FACEBOOK_USER", ""+ Objects.requireNonNull(authResult.getUser()).getPhoneNumber());
+            Log.d("FACEBOOK_USER", ""+ Objects.requireNonNull(authResult.getUser()).getUid());
+            Log.d("FACEBOOK_USER", ""+ Objects.requireNonNull(authResult.getUser()).getPhotoUrl());
 
             onDirect(authResult.getUser());
         }
         else
         {
+            assert user != null;
             performGetDataFromFS(user.getUid(), new DirectUICallback() {
                 @Override
                 public void direct(boolean isCredentialCorrected, UserRole loginUserRole) {

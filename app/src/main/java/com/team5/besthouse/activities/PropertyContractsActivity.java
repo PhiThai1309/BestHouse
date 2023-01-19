@@ -31,7 +31,6 @@ import com.team5.besthouse.services.StoreService;
 import java.util.ArrayList;
 
 public class PropertyContractsActivity extends AppCompatActivity {
-
     RecyclerView recyclerView;
     StoreService storeService;
     Context context;

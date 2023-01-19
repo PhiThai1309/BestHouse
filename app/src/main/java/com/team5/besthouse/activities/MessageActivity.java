@@ -44,7 +44,6 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 
 public class MessageActivity extends AppCompatActivity {
-
     private Chat chat;
     private Contract contract;
     private Property property;
@@ -52,14 +51,13 @@ public class MessageActivity extends AppCompatActivity {
 
     private StoreService storeService;
 
-    MessageAdapter messageAdapter;
+    private MessageAdapter messageAdapter;
 
-    RecyclerView msgRecyclerView;
+    private RecyclerView msgRecyclerView;
 
-    Gson gson;
-    User user;
-
-    FirebaseFirestore db;
+    private Gson gson;
+    private User user;
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
