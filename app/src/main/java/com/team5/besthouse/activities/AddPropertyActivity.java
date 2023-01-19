@@ -455,7 +455,7 @@ public class AddPropertyActivity extends BaseActivity implements RecyclerViewInt
     {
        Geocoder geocoder = new Geocoder(this) ;
         try {
-            List<Address> alist = geocoder.getFromLocationName(pAddressEditText.getText().toString(), 1);
+            List<Address> alist = geocoder.getFromLocationName(pAddressEditText.getText().toString() + " Thành Phố Hồ Chí Minh", 1);
             List<Utilities> listU = new ArrayList<>();
             listU.add(Utilities.ELECTRIC);
             listU.add(Utilities.INTERNET);
