@@ -122,6 +122,13 @@
         <item name="android:lineSpacingExtra">10sp</item>
     </style>
 
+    <style name="Account_Heading" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/md_theme_onPrimaryContainer</item>
+        <item name="android:fontFamily">sans-serif-thin</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
 <!--    Details view    -->
     <style name="Price" parent="@android:style/Widget.TextView">
         <item name="android:textSize">20sp</item>
