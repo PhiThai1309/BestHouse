@@ -33,7 +33,6 @@ public class ConnectionReceiver extends BroadcastReceiver {
             listener.onConnectivityChanged(isConnected);
             builder = new AlertDialog.Builder(context);
             if (!isConnected) {
-
                 View layout_dialog = LayoutInflater.from(context).inflate(R.layout.wifi_connection_alert, null);
                 builder.setView(layout_dialog);
 
@@ -49,7 +48,6 @@ public class ConnectionReceiver extends BroadcastReceiver {
                 btnRetry.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-
                         dialog.dismiss();
                         onReceive(context, intent);
                     }
@@ -58,7 +56,6 @@ public class ConnectionReceiver extends BroadcastReceiver {
         }
 
     public interface OnConnectivityChangedListener {
-
         void onConnectivityChanged(boolean isConnected);
     }
 }
