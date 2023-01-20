@@ -22,7 +22,7 @@ import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.services.StoreService;
 
 public class AutoLogoutService extends Service {
-    private static final long LOGOUT_TIMEOUT = 10 * 10000; // 10 seconds
+    private static final long LOGOUT_TIMEOUT = 10 * 100000; // 10 seconds
     private static final String TAG = "UserInteractionService";
 
     private FirebaseAuth firebaseAuth;
@@ -64,6 +64,7 @@ public class AutoLogoutService extends Service {
             tempDisconnectGoogleAccount();
             LoginManager.getInstance().logOut();
             FirebaseAuth.getInstance().signOut(); // sign out from firebase;
+            storeService.clearTheStore();
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             intent.putExtra(UnchangedValues.LOGOUT_PERFORMED, "logout");

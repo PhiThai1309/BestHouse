@@ -311,6 +311,10 @@ public class EditActivity extends AppCompatActivity {
         FirebaseFirestore fs = FirebaseFirestore.getInstance();
         CollectionReference pCollect = fs.collection(UnchangedValues.PROPERTIES_TABLE);
         deleteProgress.setVisibility(View.VISIBLE);
+//        for(int i = 0; i < property.getImageURLList().size(); i ++)
+//        {
+//            deletePropertyImages(property.getImageURLList().get(i));
+//        }
         performDeleteOnContracts(new DeleteCollectionCallBack() {
             @Override
             public void callback() {
@@ -333,6 +337,16 @@ public class EditActivity extends AppCompatActivity {
                 });
             }
         });
+    }
+
+    private void deletePropertyImages(String url)
+    {
+        try {
+            FirebaseStorage fstorage = FirebaseStorage.getInstance();
+            StorageReference storageReference = fstorage.getReferenceFromUrl(url);
+            storageReference.delete();
+        } catch (Exception e) {
+        }
     }
 
     private void performDeleteOnContracts(final DeleteCollectionCallBack dcallBack)
