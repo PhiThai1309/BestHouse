@@ -184,13 +184,13 @@ public class LoginActivity extends BaseActivity {
 
             if(accountCreated)
             {
-                showTextLong("Your Account Is Created");
+                //showTextLong("Your Account Is Created");
             }
 
             try {
                if(b.get(UnchangedValues.LOGOUT_PERFORMED) != null)
                {
-                   showTextLong("Logout Successfully");
+                   //showTextLong("Logout Successfully");
                }
             }catch (Exception e)
             {

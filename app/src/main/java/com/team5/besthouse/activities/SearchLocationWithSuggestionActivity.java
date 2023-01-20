@@ -39,7 +39,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class SearchLocationWithSuggestionActivity extends AppCompatActivity implements RecyclerViewInterface {
+public class SearchLocationWithSuggestionActivity extends BaseActivity implements RecyclerViewInterface {
 
 
     private ArrayList<String> locationTextList = new ArrayList<>();

@@ -164,7 +164,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
         String message = "Your Contract Ends Today!";
         Notification notification = new NotificationCompat.Builder(getApplicationContext(),
                 CHANNEL_1_ID)
-                .setSmallIcon(R.drawable.ic_launcher_background)
+                .setSmallIcon(R.drawable.besthouse_logo)
                 .setContentTitle(title)
                 .setContentText(message)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
@@ -183,7 +183,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
         String message = "Your Pending Contract Is Now Active!";
         Notification notification = new NotificationCompat.Builder(getApplicationContext(),
                 CHANNEL_2_ID)
-                .setSmallIcon(R.drawable.ic_launcher_background)
+                .setSmallIcon(R.drawable.besthouse_logo)
                 .setContentTitle(title)
                 .setContentText(message)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
@@ -202,7 +202,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
         String message = "Your Have A Pending Contract";
         Notification notification = new NotificationCompat.Builder(getApplicationContext(),
                 CHANNEL_3_ID)
-                .setSmallIcon(R.drawable.ic_launcher_background)
+                .setSmallIcon(R.drawable.besthouse_logo)
                 .setContentTitle(title)
                 .setContentText(message)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
@@ -221,7 +221,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
         String message = "The Contract Has Been Rejected";
         Notification notification = new NotificationCompat.Builder(getApplicationContext(),
                 CHANNEL_4_ID)
-                .setSmallIcon(R.drawable.ic_launcher_background)
+                .setSmallIcon(R.drawable.besthouse_logo)
                 .setContentTitle(title)
                 .setContentText(message)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)

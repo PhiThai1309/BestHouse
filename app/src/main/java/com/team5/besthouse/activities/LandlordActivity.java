@@ -56,7 +56,7 @@ public class LandlordActivity extends BaseActivity {
         String a = storeService.getStringValue(UnchangedValues.LOGIN_USER);
         storeService.storeBooleanValue(UnchangedValues.IS_LOGIN_LANDLORD, true);
 
-        showTextLong(a);
+        //showTextLong(a);
     }
 
     private void showTextLong(String text) {
