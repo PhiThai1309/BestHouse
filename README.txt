@@ -48,10 +48,12 @@ We intend to provide more quality-of-life improvements to the application and to
 
 
 ## Author
-- Nguyen Nam Cuong (s3891758)
-- Nguyen Ngoc Minh (s3907086)
-- Nguyen Vu Minh Duy (s3878076)
-- Thai Manh Phi (s3878070)
+- Nguyen Nam Cuong (s3891758): 25%, Authentication function, FireStore handle, Image handle
+- Nguyen Ngoc Minh (s3907086): 25%, Service, Broadcast, Notification
+- Nguyen Vu Minh Duy (s3878076): 25% Map API, Chat
+- Thai Manh Phi (s3878070): 25% UI design, Frontend developer, FireStore handle
+
+Total contribution: 100%
 
 ## Acknowledgments
 Details in code files
