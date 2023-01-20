@@ -73,7 +73,6 @@
                 <action android:name="android.intent.action.RESPOND_VIA_MESSAGE"/>
             </intent-filter>
         </service>
-
         <activity
             android:name=".activities.BaseActivity"
             android:exported="false">

@@ -30,6 +30,8 @@ public class UnchangedValues {
     public static final String PROPERTY_ID_COL = "propertyId";
     public static final String CONTRACT_STATUS_COL = "contractStatus";
     public static final String PROPERTY_NAME_COL = "propertyName";
+    public static final String MESSAGE_CHAT_ID_COL = "chatId";
+    public static final String CHAT_CONTRACT_ID_COL = "contractId";
 
     public static final String IS_LOGIN_TENANT = "tenantLoginSession";
     public static final String IS_LOGIN_LANDLORD = "landlordLoginSession";
@@ -46,6 +48,4 @@ public class UnchangedValues {
 
     public static final String PLACES_API_KEY = "AIzaSyBv1GNlSbCCAeBxZZIEBA1K9HH5UWgAdFw";
     public static final String WEB_CLIENT_DEFAULT_ID = "989436101239-m5c8v64515a9ka9c243u64elm79mpnjh.apps.googleusercontent.com";
-    public static final String FCM_API = "notificationKey";
-
 }
