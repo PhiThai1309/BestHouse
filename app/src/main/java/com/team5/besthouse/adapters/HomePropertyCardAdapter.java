@@ -36,7 +36,7 @@ import com.team5.besthouse.services.StoreService;
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class HomePropertyCardAdapter extends RecyclerView.Adapter<HomePropertyCardAdapter.TaskViewHolder> implements Filterable{
+public class HomePropertyCardAdapter extends RecyclerView.Adapter<HomePropertyCardAdapter.TaskViewHolder> implements Filterable {
     private final LayoutInflater mInflater;
     private ArrayList<PropertyDAO> propertyDAOList;
     private ArrayList<PropertyDAO> propertyDAOListFiltered;

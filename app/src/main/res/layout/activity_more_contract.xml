@@ -25,6 +25,57 @@
         style="@style/Bold_Heading_None"
         android:text="@string/all_contract"/>
 
+    <com.google.android.material.chip.ChipGroup
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <HorizontalScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scrollbarSize="0dp">
+            <com.google.android.material.chip.ChipGroup
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="20dp">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/pending_chip"
+                    style="@style/Widget.Material3.Chip.Filter.Elevated"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="pending" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/active_chip"
+                    style="@style/Widget.Material3.Chip.Filter.Elevated"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="active" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/reject_chip"
+                    style="@style/Widget.Material3.Chip.Filter.Elevated"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="reject" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/expired_chip"
+                    style="@style/Widget.Material3.Chip.Filter.Elevated"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="expired" />
+
+            </com.google.android.material.chip.ChipGroup>
+        </HorizontalScrollView>
+
+
+    </com.google.android.material.chip.ChipGroup>
+
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">

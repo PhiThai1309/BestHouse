@@ -43,8 +43,11 @@ public class LandLordMapsFragment extends FragmentActivity implements OnMapReady
         binding = ActivityLandLordMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+
         returnImageBtn = binding.searchBar.returnButton;
         searchEditText = binding.searchBar.box;
+
+
 
         setReturnButtonAction();
         setSearchBarAction();
@@ -168,16 +171,35 @@ public class LandLordMapsFragment extends FragmentActivity implements OnMapReady
 
         //initiate the geocoder
         Geocoder geocoder = new Geocoder(getApplicationContext());
-        // update content of the search bar
-        try {
-            List<Address> addressesList = geocoder.getFromLocation(latLng.latitude,latLng.longitude, 1);
-            if(addressesList.size() > 0)
-            {
-                // update the search bar content
-                searchEditText.setText(addressesList.get(0).getAddressLine(0));
+
+        Intent intent = getIntent();
+        String address = intent.getStringExtra("address");
+        if (address != null && !address.isEmpty()){
+
+            searchEditText.setText(address);
+            // update content of the search bar
+            try {
+                List<Address> addressesList = geocoder.getFromLocationName(address, 1);
+                if(addressesList.size() > 0)
+                {
+                    // update the search bar content
+                    searchEditText.setText(addressesList.get(0).getAddressLine(0));
+                }
+            } catch (IOException e) {
+                Log.i(this.getClass().toString(), "moveZoomMarker: " + e.getMessage());
             }
-        } catch (IOException e) {
-            Log.i(this.getClass().toString(), "moveZoomMarker: " + e.getMessage());
+        }
+        else {
+            // update content of the search bar
+            try {
+                List<Address> addressesList = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
+                if (addressesList.size() > 0) {
+                    // update the search bar content
+                    searchEditText.setText(addressesList.get(0).getAddressLine(0));
+                }
+            } catch (IOException e) {
+                Log.i(this.getClass().toString(), "moveZoomMarker: " + e.getMessage());
+            }
         }
     }
 
