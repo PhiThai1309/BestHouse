@@ -12,7 +12,7 @@ public class UpdateTenantLoyal {
     public UpdateTenantLoyal() {
     }
 
-    public void increaseLoyalPointBy50(Context context, String userId)
+    public static void increaseLoyalPointBy50(Context context, String userId)
     {
         FirebaseFirestore fs = FirebaseFirestore.getInstance();
         StoreService storeService = new StoreService(context);
