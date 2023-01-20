@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -31,17 +32,23 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -79,12 +86,9 @@ public class EditActivity extends AppCompatActivity {
     private PropertyType selectPropertyType = PropertyType.HOUSE;
 
     private CheckBox checkBoxElectric, checkBoxWater, checkBoxInternet, checkBoxGas;
-    Button submitButton;
+    Button submitButton, deleteBtn;
     private Landlord loginLandlord;
-
-    View progressIndicator;
-    Gson gson;
-    User user;
+    private ProgressBar deleteProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,6 +155,13 @@ public class EditActivity extends AppCompatActivity {
         desWrapper.setHint("Describe the Property in Detail");
         pdescEditText.setText(property.getPropertyDescription());
 
+        //set the delete button
+        View deleteBtnView = findViewById(R.id.delete_button);
+         deleteProgress =deleteBtnView.findViewById(R.id.progress_bar);
+         deleteBtn = deleteBtnView.findViewById(R.id.button);
+        deleteBtn.setBackgroundColor(Color.TRANSPARENT);
+        deleteBtn.setTextColor(getResources().getColor(R.color.md_theme_error));
+        deleteBtn.setText("DELETE");
         // set the submit button
         View submitButtonHolder = findViewById(R.id.progress_button);
         submitButton = submitButtonHolder.findViewById(R.id.button);
@@ -168,6 +179,7 @@ public class EditActivity extends AppCompatActivity {
         initializeSpinner();
         setSpinSelectAction();
         setSubmitButton();
+        setDeleteBtn();
 
     }
 
@@ -241,10 +253,6 @@ public class EditActivity extends AppCompatActivity {
                             .addOnSuccessListener(
                                     documentReference -> {
                                         // display successful message
-//                                            progressBar.setVisibility(View.GONE);
-//                                            submitButton.setText("SUBMIT");
-
-                                        // display successful message
                                         showTextLong("Property change successfully");
                                         finish();
                                     }
@@ -252,8 +260,6 @@ public class EditActivity extends AppCompatActivity {
                             .addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-//                                        progressBar.setVisibility(View.GONE);
-//                                        submitButton.setText("SUBMIT");
                                     showTextLong(e.getMessage());
                                 }
                             });
@@ -265,6 +271,143 @@ public class EditActivity extends AppCompatActivity {
                 createNewProperty();
             }
         });
+    }
+
+    private void setDeleteBtn()
+    {
+        deleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteConfirmation();
+            }
+        });
+    }
+
+    //override on back pressed with a dialog if the user click delete button
+    public void deleteConfirmation() {
+        //Create a dialog
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
+        builder.setTitle("Delete confirmation");
+        builder.setMessage("Do you want to delete this property?");
+        //Set the positive button
+        builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                performDeleteOnProperty();
+            }
+        });
+        //Set the negative button
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
+        builder.show();
+    }
+
+    private void performDeleteOnProperty()
+    {
+        FirebaseFirestore fs = FirebaseFirestore.getInstance();
+        CollectionReference pCollect = fs.collection(UnchangedValues.PROPERTIES_TABLE);
+        deleteProgress.setVisibility(View.VISIBLE);
+//        for(int i = 0; i < property.getImageURLList().size(); i ++)
+//        {
+//            deletePropertyImages(property.getImageURLList().get(i));
+//        }
+        performDeleteOnContracts(new DeleteCollectionCallBack() {
+            @Override
+            public void callback() {
+                pCollect.document(property.getId()).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                            Intent intent = new Intent(getApplicationContext(), LandlordActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            showTextLong("Property is deleted successfully.");
+                            deleteProgress.setVisibility(View.GONE);
+                            startActivity(intent);
+                            finish();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        deleteProgress.setVisibility(View.GONE);
+                        showTextLong("Error. Can't delete the property.");
+                    }
+                });
+            }
+        });
+    }
+
+    private void deletePropertyImages(String url)
+    {
+        try {
+            FirebaseStorage fstorage = FirebaseStorage.getInstance();
+            StorageReference storageReference = fstorage.getReferenceFromUrl(url);
+            storageReference.delete();
+        } catch (Exception e) {
+        }
+    }
+
+    private void performDeleteOnContracts(final DeleteCollectionCallBack dcallBack)
+    {
+        FirebaseFirestore fs = FirebaseFirestore.getInstance();
+        CollectionReference pCollect = fs.collection(UnchangedValues.CONTRACTS_TABLE);
+
+
+        pCollect.whereEqualTo(UnchangedValues.PROPERTY_ID_COL, property.getId()).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+               for(DocumentSnapshot ds: queryDocumentSnapshots.getDocuments())
+               {
+                   performDeleteOnChat(ds.getId(), new DeleteCollectionCallBack() {
+                       @Override
+                       public void callback() {
+                           ds.getReference().delete();
+                       }
+                   });
+               }
+               dcallBack.callback();
+            }
+        });
+    }
+
+    private void performDeleteOnChat(String contractId, final DeleteCollectionCallBack dcallback)
+    {
+        FirebaseFirestore fs = FirebaseFirestore.getInstance();
+        CollectionReference chatCollect = fs.collection(UnchangedValues.CHATS_TABLE);
+
+        chatCollect.whereEqualTo(UnchangedValues.CONTRACTS_ID_COL, contractId).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                    performDeleteOnMessage(documentSnapshot.getId(), new DeleteCollectionCallBack() {
+                        @Override
+                        public void callback() {
+                            documentSnapshot.getReference().delete();
+                        }
+                    });
+                }
+                dcallback.callback();
+            }
+        });
+    }
+
+    private void performDeleteOnMessage(String messageId, final DeleteCollectionCallBack dcallback)
+    {
+        FirebaseFirestore fs = FirebaseFirestore.getInstance();
+        CollectionReference messageCollect = fs.collection(UnchangedValues.MESSAGES_TABLE);
+
+        messageCollect.whereEqualTo(UnchangedValues.MESSAGE_CHAT_ID_COL, messageId).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                    documentSnapshot.getReference().delete();
+                }
+                dcallback.callback();
+            }
+        });
+
     }
 
     private List<Utilities> getSelectUtilities()
@@ -381,5 +524,10 @@ public class EditActivity extends AppCompatActivity {
             return true;
         }
         return false;
+    }
+
+    interface DeleteCollectionCallBack
+    {
+        void callback( );
     }
 }

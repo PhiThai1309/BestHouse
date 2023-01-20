@@ -31,6 +31,8 @@ import com.team5.besthouse.models.Contract;
 import com.team5.besthouse.models.ContractStatus;
 import com.team5.besthouse.models.User;
 import com.team5.besthouse.services.StoreService;
+import com.team5.besthouse.utilities.UpdateTenantLoyal;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -110,6 +112,10 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
                                             if (endDate.equals(currentTime)) {
                                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                                                     showContractEndNotification();
+                                                    if(storeService.getStringValue(UnchangedValues.USER_ID_COL) != null)
+                                                    {
+                                                        UpdateTenantLoyal.increaseLoyalPointBy50(getApplicationContext(), storeService.getStringValue(UnchangedValues.USER_ID_COL));
+                                                    }
                                                 }
                                             }
                                             else if(startDate.equals(currentTime)) {

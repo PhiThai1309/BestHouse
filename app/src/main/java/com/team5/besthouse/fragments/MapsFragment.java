@@ -385,7 +385,7 @@ public class MapsFragment extends Fragment implements RecyclerViewInterface, Goo
     private void onSearchViewChange(String query) {
         Geocoder geocoder = new Geocoder(getContext());
         try {
-            List<Address> addressesList = geocoder.getFromLocationName(query,1);
+            List<Address> addressesList = geocoder.getFromLocationName(query + " Thành Phố Hồ Chí Minh, Việt Nam",1);
             LatLng coord;
             if(addressesList.size() > 0) {
                 Address address = addressesList.get(0);

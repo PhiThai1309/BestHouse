@@ -92,7 +92,7 @@ public class AddPropertyActivity extends BaseActivity implements RecyclerViewInt
         setContentView(R.layout.activity_add_property);
 
         //Set color to the navigation bar to match with the bottom navigation view
-        getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(this));
+        getWindow().setNavigationBarColor(Color.TRANSPARENT);
         Window window = getWindow();
         window.setStatusBarColor(Color.TRANSPARENT);
 
