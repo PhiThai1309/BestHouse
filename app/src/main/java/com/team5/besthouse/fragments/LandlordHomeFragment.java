@@ -122,7 +122,7 @@ public class LandlordHomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_landlord_home, container, false);
 
         //Set color to the navigation bar to match with the bottom navigation view
-        Objects.requireNonNull(getActivity()).getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(getActivity()));
+        requireActivity().getWindow().setNavigationBarColor(SurfaceColors.SURFACE_2.getColor(getActivity()));
         Window window = getActivity().getWindow();
         window.setStatusBarColor(Color.TRANSPARENT);
 

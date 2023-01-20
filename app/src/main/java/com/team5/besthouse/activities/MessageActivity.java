@@ -43,7 +43,7 @@ import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
-public class MessageActivity extends AppCompatActivity {
+public class MessageActivity extends BaseActivity {
     private Chat chat;
     private Contract contract;
     private Property property;

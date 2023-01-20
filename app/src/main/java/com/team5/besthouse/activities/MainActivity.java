@@ -53,8 +53,7 @@ public class MainActivity extends BaseActivity {
 
         //mark user is login
         storeService.storeBooleanValue(UnchangedValues.IS_LOGIN_TENANT, true);
-
-//        showTextLong(a);
+        
     }
 
 
