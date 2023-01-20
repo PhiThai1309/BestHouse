@@ -1,20 +1,14 @@
 package com.team5.besthouse.broadcastreceiverandservice;
 
-import android.app.Activity;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
-
-import androidx.annotation.NonNull;
-
 import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.team5.besthouse.activities.LoginActivity;
@@ -22,8 +16,7 @@ import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.services.StoreService;
 
 public class AutoLogoutService extends Service {
-    private static final long LOGOUT_TIMEOUT = 1000 * 1000; // 10 seconds
-    private static final String TAG = "UserInteractionService";
+    private static final long LOGOUT_TIMEOUT = 1000 * 1000; // in milliseconds
 
     private FirebaseAuth firebaseAuth;
     private StoreService storeService;
@@ -45,7 +38,6 @@ public class AutoLogoutService extends Service {
             @Override
             public void run() {
                 if (System.currentTimeMillis() - lastInteractionTime > LOGOUT_TIMEOUT) {
-                    Log.d(TAG, "Logging out due to inactivity");
                     if(currentUser != null) {
                         setSignOutAction();
                         stopSelf();
@@ -61,9 +53,9 @@ public class AutoLogoutService extends Service {
 
     private void setSignOutAction() {
         if(storeService.clearTheStore()) {
-            tempDisconnectGoogleAccount();
+            tempDisconnectGoogleAccount();        //sign out from google
             LoginManager.getInstance().logOut();
-            FirebaseAuth.getInstance().signOut(); // sign out from firebase;
+            FirebaseAuth.getInstance().signOut(); // sign out from firebase
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             intent.putExtra(UnchangedValues.LOGOUT_PERFORMED, "logout");
@@ -83,7 +75,7 @@ public class AutoLogoutService extends Service {
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         super.onTaskRemoved(rootIntent);
-        Log.d(TAG, "Task removed, stopping service");
+        Log.d("TAG", "Task removed, stopping service");
         stopSelf();
     }
 

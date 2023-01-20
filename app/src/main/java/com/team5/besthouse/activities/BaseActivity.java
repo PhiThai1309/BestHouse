@@ -8,8 +8,6 @@ import androidx.core.app.NotificationCompat;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
@@ -17,20 +15,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.widget.Toast;
-
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GetTokenResult;
-import com.google.firebase.auth.SignInMethodQueryResult;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -42,16 +30,8 @@ import com.team5.besthouse.constants.UnchangedValues;
 import com.team5.besthouse.models.Contract;
 import com.team5.besthouse.models.ContractStatus;
 import com.team5.besthouse.models.User;
-import com.team5.besthouse.services.FirebaseNotification;
 import com.team5.besthouse.services.StoreService;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.sql.Time;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.util.Date;
 
 public abstract class BaseActivity extends AppCompatActivity implements ConnectionReceiver.OnConnectivityChangedListener {
@@ -70,24 +50,24 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        firebaseAuth = FirebaseAuth.getInstance();
         connectionReceiver = new ConnectionReceiver(this);
         IntentFilter filter = new IntentFilter();
         filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
         registerReceiver(connectionReceiver, filter);
+
+        //Auto-Logout service
         startService(new Intent(this, AutoLogoutService.class));
-//        Intent intentBackgroundService = new Intent (getApplicationContext(), FirebaseNotification.class);
-//        startService(intentBackgroundService);
 
-        firebaseAuth = FirebaseAuth.getInstance();
+        //User notification
+        createAllNotificationChannels();
+    }
 
-        //Notification
+    public void createAllNotificationChannels() {
         notificationManager = getSystemService(NotificationManager.class);
         createNotificationChannels1();
-        notificationManager = getSystemService(NotificationManager.class);
         createNotificationChannels2();
-        notificationManager = getSystemService(NotificationManager.class);
         createNotificationChannels3();
-        notificationManager = getSystemService(NotificationManager.class);
         createNotificationChannels4();
     }
 
@@ -176,9 +156,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
         //Save notification
         String title = "BESTHOUSE NOTIFICATION";
         String message = "Your Contract Ends Today!";
-        //Intent notificationIntent = new Intent(getApplicationContext(), ContractActivity.class);
-        //notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        //PendingIntent notificationPendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, notificationIntent, PendingIntent.FLAG_MUTABLE);
         Notification notification = new NotificationCompat.Builder(getApplicationContext(),
                 CHANNEL_1_ID)
                 .setSmallIcon(R.drawable.ic_launcher_background)
@@ -186,7 +163,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
                 .setContentText(message)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                //.setContentIntent(notificationPendingIntent)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setAutoCancel(false)
                 .setOnlyAlertOnce(true)
@@ -199,9 +175,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
         //Save notification
         String title = "BESTHOUSE NOTIFICATION";
         String message = "Your Pending Contract Is Now Active!";
-        //Intent notificationIntent = new Intent(getApplicationContext(), ContractActivity.class);
-        //notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        //PendingIntent notificationPendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, notificationIntent, PendingIntent.FLAG_MUTABLE);
         Notification notification = new NotificationCompat.Builder(getApplicationContext(),
                 CHANNEL_2_ID)
                 .setSmallIcon(R.drawable.ic_launcher_background)
@@ -209,7 +182,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
                 .setContentText(message)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                //.setContentIntent(notificationPendingIntent)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setAutoCancel(false)
                 .setOnlyAlertOnce(true)
@@ -222,9 +194,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
         //Save notification
         String title = "BESTHOUSE NOTIFICATION";
         String message = "Your Have A Pending Contract";
-        //Intent notificationIntent = new Intent(getApplicationContext(), ContractActivity.class);
-        //notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        //PendingIntent notificationPendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, notificationIntent, PendingIntent.FLAG_MUTABLE);
         Notification notification = new NotificationCompat.Builder(getApplicationContext(),
                 CHANNEL_3_ID)
                 .setSmallIcon(R.drawable.ic_launcher_background)
@@ -232,7 +201,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
                 .setContentText(message)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                //.setContentIntent(notificationPendingIntent)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setAutoCancel(false)
                 .setOnlyAlertOnce(true)
@@ -245,9 +213,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
         //Save notification
         String title = "BESTHOUSE NOTIFICATION";
         String message = "The Contract Has Been Rejected";
-        //Intent notificationIntent = new Intent(getApplicationContext(), ContractActivity.class);
-        //notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        //PendingIntent notificationPendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, notificationIntent, PendingIntent.FLAG_MUTABLE);
         Notification notification = new NotificationCompat.Builder(getApplicationContext(),
                 CHANNEL_4_ID)
                 .setSmallIcon(R.drawable.ic_launcher_background)
@@ -255,7 +220,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
                 .setContentText(message)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                //.setContentIntent(notificationPendingIntent)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setAutoCancel(false)
                 .setOnlyAlertOnce(true)
@@ -264,7 +228,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
     }
 
     private void createNotificationChannels1() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             NotificationChannel channel1 = new NotificationChannel(
                     CHANNEL_1_ID,
                     "Channel 1",
@@ -277,7 +241,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
     }
 
     private void createNotificationChannels2() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             NotificationChannel channel2 = new NotificationChannel(
                     CHANNEL_2_ID,
                     "Channel 2",
@@ -290,7 +254,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
     }
 
     private void createNotificationChannels3() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             NotificationChannel channel3 = new NotificationChannel(
                     CHANNEL_3_ID,
                     "Channel 3",
@@ -303,7 +267,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
     }
 
     private void createNotificationChannels4() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             NotificationChannel channel4 = new NotificationChannel(
                     CHANNEL_4_ID,
                     "Channel 4",
@@ -328,12 +292,12 @@ public abstract class BaseActivity extends AppCompatActivity implements Connecti
     @Override
     protected void onStop() {
         super.onStop();
-        stopService(new Intent(this, AutoLogoutService.class));
+        Intent intent = new Intent (this, AutoLogoutService.class);
+        stopService(intent);
     }
 
     @Override
-    public void onConnectivityChanged(boolean isConnected) {
-    }
+    public void onConnectivityChanged(boolean isConnected) {}
 
     @Override
     protected void onDestroy() {
