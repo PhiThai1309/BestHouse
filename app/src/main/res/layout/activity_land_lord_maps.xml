@@ -6,12 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".fragments.LandLordMapsFragment"
     android:orientation="vertical">
-<!--    <fragment-->
-<!--        android:id="@+id/map"-->
-<!--        android:name="com.google.android.gms.maps.SupportMapFragment"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        tools:layout="@layout/activity_land_lord_maps" />-->
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/activity_land_lord_maps" />
 
     <LinearLayout
         android:layout_width="match_parent"
