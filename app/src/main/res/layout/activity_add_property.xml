@@ -217,26 +217,32 @@
             </LinearLayout>
 
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/property_image_select_recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/item_property_image_add"
-                android:layout_marginBottom="20dp"/>
 
-            <include
-                android:id="@+id/property_description"
-                layout="@layout/layout_addproperty_propertydetail_textbox"/>
-
-            <include
-                android:id="@+id/progress_button"
-                layout="@layout/layout_progressbar_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"/>
         </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/property_image_select_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_property_image_add"
+            android:layout_marginBottom="20dp"/>
+
+        <include
+            android:id="@+id/property_description"
+            android:layout_marginHorizontal="20dp"
+            layout="@layout/layout_addproperty_propertydetail_textbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <include
+            android:id="@+id/progress_button"
+            layout="@layout/layout_progressbar_button"
+            android:layout_width="match_parent"
+            android:layout_marginHorizontal="20dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"/>
 
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

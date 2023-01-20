@@ -130,7 +130,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.TaskViewHolder
                 });
             });
 
-            holder.lastMessage.setText("");
+            holder.lastMessage.setText("No Chats Yet");
             holder.lastChatTime.setText("");
 
             database.collection(UnchangedValues.MESSAGES_TABLE)
