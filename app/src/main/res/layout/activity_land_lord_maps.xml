@@ -6,12 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".fragments.LandLordMapsFragment"
     android:orientation="vertical">
-    <fragment
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout="@layout/activity_land_lord_maps" />
+<!--    <fragment-->
+<!--        android:id="@+id/map"-->
+<!--        android:name="com.google.android.gms.maps.SupportMapFragment"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        tools:layout="@layout/activity_land_lord_maps" />-->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,10 +25,11 @@
             layout="@layout/layout_searchlocation"/>
     </LinearLayout>
 
-    <androidx.appcompat.widget.AppCompatButton
+    <Button
         android:id="@+id/selectAddressBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        style="@style/Bold_SubHeading2"
         android:layout_marginBottom="@dimen/_20sdp"
         android:text="@string/select_location"
         android:layout_centerHorizontal="true"
