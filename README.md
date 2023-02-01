@@ -1,8 +1,7 @@
 # Best House Application
 
 <p align="center">
-  <img src="https://skillicons.dev/icons?i=androidstudio" />
-  <img src="https://skillicons.dev/icons?i=firebase">
+  
 </p>
 
 ## Table of contents
@@ -35,6 +34,11 @@ Users should be able to:
 - creating a contract will notify the landlord of a new contract, whereas accepting or rejecting a contract for a property will notify all tenant with a current pending contract to that property.
 
 ### Built with
+
+<p align="center">
+  <img src="https://skillicons.dev/icons?i=androidstudio" />
+  <img src="https://skillicons.dev/icons?i=firebase">
+</p>
 
 - Android Studio is the official IDE is used to develop our android application.
 - Firebase
