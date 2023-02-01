@@ -1,5 +1,9 @@
 # Best House Application
 
+<p align="center">
+  <img src="https://skillicons.dev/icons?i=androidstudio" />
+  <img width="200" src="https://i.imgur.com/6jovHGu.png">
+</p>
 
 ## Table of contents
 
