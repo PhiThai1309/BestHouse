@@ -4,7 +4,7 @@
 ## Table of contents
 
 - [Overview](#overview)
-- [Functionalities](# Functionalities)
+- [Functionalities](#Functionalities)
 - [Built with](#built-with)
 - [What our team learned](#what-our-team-learned)
 - [Continued development](#continued-development)
