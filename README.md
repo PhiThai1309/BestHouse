@@ -1,7 +1,12 @@
 # Best House Application
 
 <p align="center">
+  <img height=500 src="https://user-images.githubusercontent.com/71892904/215958698-a4cc8cbe-97f8-492d-bc68-3b73fa2ff820.png"/>
   
+  <img height=500 src="https://user-images.githubusercontent.com/71892904/215959761-b5db94d4-3f34-49df-ba2b-9f51b9ebb639.png"/>
+  
+  <img height=500 src="https://user-images.githubusercontent.com/71892904/215960228-2474fd07-2e9a-48bb-a540-a34ab152beec.png"/>
+
 </p>
 
 ## Table of contents
@@ -38,6 +43,7 @@ Users should be able to:
 <p align="center">
   <img src="https://skillicons.dev/icons?i=androidstudio" />
   <img src="https://skillicons.dev/icons?i=firebase">
+  <img src="https://skillicons.dev/icons?i=figma">
 </p>
 
 - Android Studio is the official IDE is used to develop our android application.
