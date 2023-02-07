@@ -50,6 +50,7 @@ Users should be able to:
 - Firebase
 - Github & Git
 - Google Map API
+- Place API
 - Figma
 - Material Design Framework
 - Microsoft Visio
